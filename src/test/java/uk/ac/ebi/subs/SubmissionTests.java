@@ -13,6 +13,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.SubmissionResource;
+import uk.ac.ebi.subs.data.SubmissionStatusResource;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -24,7 +25,20 @@ public class SubmissionTests {
 
     String apiBaseUrl = "http://submission-dev.ebi.ac.uk/api/";
     String submissions = "submissions/";
-    String submissionId = "a0cc6017-84d9-4d2b-9b75-7302036cf748";
+    String submissionId = "a0cc6017-84d9-4d2b-9b75-7302036cf748/";
+
+    @Test
+    public void givenSubmissionDoesNotExists_whenSubmissionStatusIsRetrieved_then404IsReceived() throws IOException {
+
+        String randomSubmissionId = UUID.randomUUID().toString();
+        HttpUriRequest request = new HttpGet( apiBaseUrl + "submissionStatuses/" + randomSubmissionId);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        assertThat(
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND)
+        );
+    }
 
     //@Test - Temp to avoid repetitive submission creation
     public void whenSubmissionIsCreated_then201IsReceived () throws IOException {
@@ -85,7 +99,6 @@ public class SubmissionTests {
         HttpUriRequest request = new HttpGet( apiBaseUrl + submissions + submissionId);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
         SubmissionResource resource = RetrieveUtil.retrieveResourceFromResponse(response, SubmissionResource.class);
 
         assertThat(
@@ -94,15 +107,42 @@ public class SubmissionTests {
     }
 
     @Test
-    public void givenSubmissionDoesNotExists_whenSubmissionStatusIsRetrieved_then404IsReceived() throws IOException {
+    public void givenSubmissionExists_whenSubmissionStatusIsRetrieved_then200IsReceived() throws IOException {
 
-        String randomSubmissionId = UUID.randomUUID().toString();
-        HttpUriRequest request = new HttpGet( apiBaseUrl + "submissionStatuses/" + randomSubmissionId);
+        HttpUriRequest request = new HttpGet(apiBaseUrl + submissions + submissionId + "/submissionStatus");
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         assertThat(
-                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NOT_FOUND)
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
         );
     }
+
+    @Test
+    public void givenSubmissionExists_whenSubmissionStatusIsRetrieved_thenDefaultResponseContentTypeIsHalJson() throws IOException {
+
+        String halJsonMimeType = "application/hal+json";
+        HttpUriRequest request = new HttpGet(apiBaseUrl + submissions + submissionId + "/submissionStatus");
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
+
+        assertThat(
+                halJsonMimeType, equalTo(mimeType)
+        );
+    }
+
+    @Test
+    public void givenSubmissionDraftExists_whenSubmissionStatusIsRetrieved_thenRetrievedResourceIsCorrect() throws IOException {
+
+        HttpUriRequest request = new HttpGet(apiBaseUrl + submissions + submissionId + "/submissionStatus");
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        SubmissionStatusResource resource =RetrieveUtil.retrieveResourceFromResponse(response, SubmissionStatusResource.class);
+
+        assertThat(
+                "Draft", equalTo(resource.getStatus())
+        );
+    }
+
 }
