@@ -11,15 +11,29 @@ public class WrapperObject {
     public String getFirstSubmissionUrl() {
         return _embedded.getSubmissions()[0].get_links().getSelf().getHref();
     }
+
+    public String getFirstSampleUrl() {
+        return _embedded.getSamples()[0].get_links().getSelf().getHref();
+    }
 }
 
 @Getter @Setter @ToString
 class Embedded {
     Submission[] submissions;
+    Sample[] samples;
 }
 
 @Getter @Setter @ToString
 class Submission {
+    String submitter;
+
+    String team;
+
+    Link _links;
+}
+
+@Getter @Setter @ToString
+class Sample {
     String submitter;
 
     String team;

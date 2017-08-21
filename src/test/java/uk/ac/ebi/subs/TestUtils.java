@@ -5,11 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import uk.ac.ebi.subs.data.structures.WrapperObject;
 
 import java.io.IOException;
 
@@ -45,4 +48,17 @@ public class TestUtils {
         HttpClientBuilder.create().build().execute(request);
     }
 
+    public static String getFirstSubmissionUrlForTeam(String teamName) throws IOException {
+        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/submissions/search/by-team?teamName=" + teamName);
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
+        return resource.getFirstSubmissionUrl();
+    }
+
+    public static String getFirstSampleUrlForTeam(String teamName) throws IOException {
+        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/samples/search/by-team?teamName=api-tester" + teamName);
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
+        return resource.getFirstSampleUrl();
+    }
 }

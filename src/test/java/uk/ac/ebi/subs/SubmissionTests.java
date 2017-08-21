@@ -12,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.SubmissionResource;
 import uk.ac.ebi.subs.data.SubmissionStatusResource;
-import uk.ac.ebi.subs.data.structures.WrapperObject;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -31,13 +30,7 @@ public class SubmissionTests {
     @BeforeClass
     public static void setUp() throws Exception {
         TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
-
-        //Get Submission URL
-        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/submissions/search/by-team?teamName=" + teamName);
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
-        submissionUrl = resource.getFirstSubmissionUrl();
+        submissionUrl = TestUtils.getFirstSubmissionUrlForTeam(teamName);
     }
 
     @Test
