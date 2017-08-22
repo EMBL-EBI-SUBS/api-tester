@@ -12,13 +12,16 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.io.IOException;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SampleTests {
 
     static String submitterEmail = "api-tester@ebi.ac.uk";
@@ -37,7 +40,7 @@ public class SampleTests {
     }
 
     @Test
-    public void givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
+    public void a_givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
 
         Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
@@ -77,7 +80,7 @@ public class SampleTests {
     }
 
     @Test
-    public void givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
+    public void b_givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
         HttpPut request = new HttpPut(sampleUrl);
 
         Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");

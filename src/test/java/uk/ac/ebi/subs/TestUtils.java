@@ -56,7 +56,7 @@ public class TestUtils {
     }
 
     public static String getFirstSampleUrlForTeam(String teamName) throws IOException {
-        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/samples/search/by-team?teamName=api-tester" + teamName);
+        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/samples/search/by-team?teamName=" + teamName);
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
         return resource.getFirstSampleUrl();

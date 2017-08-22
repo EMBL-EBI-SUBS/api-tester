@@ -3,6 +3,7 @@ package uk.ac.ebi.subs.data.structures;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import uk.ac.ebi.subs.data.TeamResource;
 
 @Getter @Setter @ToString
 public class WrapperObject {
@@ -34,9 +35,7 @@ class Submission {
 
 @Getter @Setter @ToString
 class Sample {
-    String submitter;
-
-    String team;
+    TeamResource team;
 
     Link _links;
 }
