@@ -15,6 +15,9 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import uk.ac.ebi.subs.data.SampleResource;
+import uk.ac.ebi.subs.utils.TestJsonUtils;
+import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 
@@ -48,26 +51,7 @@ public class SampleTests {
         Header[] headers = {contentType, accept};
         request.setHeaders(headers);
 
-        StringEntity payload = new StringEntity("{\n" +
-                "  \"alias\" : \"D1\",\n" +
-                //"  \"archive\" : \"BioSamples\",\n" +
-                "  \"title\" : \"NA12878_D1\",\n" +
-                "  \"description\" : \"Material derived from cell line NA12878\",\n" +
-                "  \"attributes\" : [ {\n" +
-                "    \"name\" : \"Cell line type\",\n" +
-                "    \"value\" : \"EBV-LCL cell line\",\n" +
-                "    \"terms\" : [ {\n" +
-                "      \"url\" : \"http://purl.obolibrary.org/obo/BTO_0003335\"\n" +
-                "    } ]\n" +
-                "  } ],\n" +
-                "  \"sampleRelationships\" : [ {\n" +
-                "    \"accession\" : \"SAME123392\",\n" +
-                "    \"relationshipNature\" : \"Derived from\"\n" +
-                "  } ],\n" +
-                "  \"taxonId\" : 9606,\n" +
-                "  \"taxon\" : \"Homo sapiens\",\n" +
-                "  \"submission\" : \"" + submissionUrl + "\"\n" +
-                "}");
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -88,30 +72,7 @@ public class SampleTests {
         Header[] headers = {contentType, accept};
         request.setHeaders(headers);
 
-        StringEntity payload = new StringEntity("{\n" +
-                "  \"alias\" : \"D1\",\n" +
-                //"  \"archive\" : \"BioSamples\",\n" +
-                "  \"title\" : \"NA12878_D1\",\n" +
-                "  \"description\" : \"Material derived from cell line NA12878\",\n" +
-                "  \"attributes\" : [ {\n" +
-                "    \"name\" : \"Cell line type\",\n" +
-                "    \"value\" : \"EBV-LCL cell line\",\n" +
-                "    \"terms\" : [ {\n" +
-                "      \"url\" : \"http://purl.obolibrary.org/obo/BTO_0003335\"\n" +
-                "    } ]\n" +
-                "  } ],\n" +
-                "  \"sampleRelationships\" : [ {\n" +
-                "    \"accession\" : \"SAME123392\",\n" +
-                "    \"relationshipNature\" : \"Derived from\"\n" +
-                "  }, {\n" +
-                "    \"alias\" : \"D0\",\n" +
-                "    \"team\" : \"my-team\",\n" +
-                "    \"relationshipNature\" : \"Child of\"\n" +
-                "  } ],\n" +
-                "  \"taxonId\" : 9606,\n" +
-                "  \"taxon\" : \"Homo sapiens\",\n" +
-                "  \"submission\" : \"" + submissionUrl + "\"\n" +
-                "}");
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleRelationshipsJson(submissionUrl));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -121,13 +82,30 @@ public class SampleTests {
         );
     }
 
+    @Test
+    public void c_givenSampleExists_whenDeletingSampleRelationships_thenRetrievedResourceIsCorrect() throws IOException {
+        HttpPut request = new HttpPut(sampleUrl);
+
+        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
+        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
+        Header[] headers = {contentType, accept};
+        request.setHeaders(headers);
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        SampleResource resource = TestUtils.retrieveResourceFromResponse(response, SampleResource.class);
+
+        assertThat(
+                resource.getSampleRelationships(), equalTo(null)
+        );
+
+    }
+
     @AfterClass
     public static void tearDown() throws Exception {
         HttpDelete request = new HttpDelete(submissionUrl);
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        assertThat(
-                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_NO_CONTENT)
-        );
     }
 }

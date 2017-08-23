@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.SubmissionResource;
 import uk.ac.ebi.subs.data.SubmissionStatusResource;
+import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -68,7 +69,7 @@ public class SubmissionTests {
         String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
 
         assertThat(
-                halJsonMimeType, equalTo(mimeType)
+                mimeType, equalTo(halJsonMimeType)
         );
     }
 
@@ -81,7 +82,7 @@ public class SubmissionTests {
         SubmissionResource resource = TestUtils.retrieveResourceFromResponse(response, SubmissionResource.class);
 
         assertThat(
-                submitterEmail, equalTo(resource.getSubmitter().getEmail())
+                resource.getSubmitter().getEmail(), equalTo(submitterEmail)
         );
     }
 
@@ -107,7 +108,7 @@ public class SubmissionTests {
         String mimeType = ContentType.getOrDefault(response.getEntity()).getMimeType();
 
         assertThat(
-                halJsonMimeType, equalTo(mimeType)
+                mimeType, equalTo(halJsonMimeType)
         );
     }
 
@@ -120,7 +121,7 @@ public class SubmissionTests {
         SubmissionStatusResource resource = TestUtils.retrieveResourceFromResponse(response, SubmissionStatusResource.class);
 
         assertThat(
-                "Draft", equalTo(resource.getStatus())
+                resource.getStatus(), equalTo("Draft")
         );
     }
 

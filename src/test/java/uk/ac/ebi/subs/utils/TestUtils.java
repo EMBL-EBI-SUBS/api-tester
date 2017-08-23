@@ -1,4 +1,4 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,14 +35,7 @@ public class TestUtils {
         Header[] headers = {contentType, accept};
         request.setHeaders(headers);
 
-        StringEntity payload = new StringEntity("{\n" +
-                "  \"submitter\" : {\n" +
-                "    \"email\" : \"" + submitterEmail + "\"\n" +
-                "  },\n" +
-                "  \"team\" : {\n" +
-                "    \"name\" : \"" + teamName + "\"\n" +
-                "  }\n" +
-                "}");
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSubmissionJson(submitterEmail, teamName));
         request.setEntity(payload);
 
         HttpClientBuilder.create().build().execute(request);
