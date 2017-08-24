@@ -1,7 +1,5 @@
 package uk.ac.ebi.subs;
 
-import org.apache.http.Header;
-import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
@@ -9,7 +7,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicHeader;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -45,12 +42,9 @@ public class SampleTests {
 
     @Test
     public void a_givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
-        HttpPost request = new HttpPost(samplesApiBaseUrl);
 
-        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
-        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
-        Header[] headers = {contentType, accept};
-        request.setHeaders(headers);
+        HttpPost request = new HttpPost(samplesApiBaseUrl);
+        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
         StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
         request.setEntity(payload);
@@ -66,12 +60,9 @@ public class SampleTests {
 
     @Test
     public void b_givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
-        HttpPut request = new HttpPut(sampleUrl);
 
-        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
-        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
-        Header[] headers = {contentType, accept};
-        request.setHeaders(headers);
+        HttpPut request = new HttpPut(sampleUrl);
+        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
         StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleRelationshipsJson(submissionUrl));
         request.setEntity(payload);
@@ -85,12 +76,9 @@ public class SampleTests {
 
     @Test
     public void c_givenSampleExists_whenDeletingSampleRelationships_thenRetrievedResourceIsCorrect() throws IOException {
-        HttpPut request = new HttpPut(sampleUrl);
 
-        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
-        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
-        Header[] headers = {contentType, accept};
-        request.setHeaders(headers);
+        HttpPut request = new HttpPut(sampleUrl);
+        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
         StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl));
         request.setEntity(payload);
