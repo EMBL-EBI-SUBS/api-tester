@@ -28,19 +28,3 @@ class Error {
 class InvalidValue {
     String email;
 }
-
-
-/*
-{
-    "errors": [
-        {
-            "entity": "Submission",
-            "property": "submitter",
-            "invalidValue": {
-                "email": "test@email"
-            },
-            "message": "resource_locked"
-        }
-    ]
-}
-*/
