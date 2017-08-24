@@ -27,13 +27,14 @@ import static org.junit.Assert.assertThat;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SampleTests {
 
-    static String submitterEmail = "api-tester@ebi.ac.uk";
-    static String teamName = "api-tester";
+    static PropertiesManager propertiesManager = PropertiesManager.getInstance();
 
-    static String submissionsApiBaseUrl = "http://submission-dev.ebi.ac.uk/api/submissions/";
+    static String submitterEmail = propertiesManager.getSubmitterEmail();
+    static String teamName = propertiesManager.getTeamName();
+    static String submissionsApiBaseUrl = propertiesManager.getSubmissionsApiBaseUrl();
+    static String samplesApiBaseUrl = propertiesManager.getSamplesApiBaseUrl();
+
     static String submissionUrl = "";
-
-    String samplesApiBaseUrl = "http://submission-dev.ebi.ac.uk/api/samples/";
     static String sampleUrl = "";
 
     @BeforeClass
@@ -100,12 +101,11 @@ public class SampleTests {
         assertThat(
                 resource.getSampleRelationships(), equalTo(null)
         );
-
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         HttpDelete request = new HttpDelete(submissionUrl);
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpClientBuilder.create().build().execute(request);
     }
 }

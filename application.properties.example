@@ -1,0 +1,4 @@
+submitterEmail=api-tester@ebi.ac.uk
+teamName=api-tester
+submissionsApiBaseUrl=http://submission-dev.ebi.ac.uk/api/submissions/
+samplesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/samples/
