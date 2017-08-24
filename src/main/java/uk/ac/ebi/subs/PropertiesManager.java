@@ -16,8 +16,7 @@ public class PropertiesManager {
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("WARNING: Using default properties.");
+            System.out.println("WARNING: No application.properties file found. Using default properties.");
         } catch (IOException e) {
             e.printStackTrace();
         }

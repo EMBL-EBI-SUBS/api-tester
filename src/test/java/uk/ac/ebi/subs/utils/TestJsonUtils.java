@@ -2,7 +2,7 @@ package uk.ac.ebi.subs.utils;
 
 public class TestJsonUtils {
 
-    public static String getCreateSubmissionJson(String submitterEmail, String teamName) {
+    public static String getSubmissionJson(String submitterEmail, String teamName) {
         return "{\n" +
                 "  \"submitter\" : {\n" +
                 "    \"email\" : \"" + submitterEmail + "\"\n" +

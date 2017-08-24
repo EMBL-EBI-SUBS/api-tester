@@ -4,14 +4,18 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.SubmissionResource;
 import uk.ac.ebi.subs.data.SubmissionStatusResource;
+import uk.ac.ebi.subs.data.structures.ErrorWrapperObject;
+import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
@@ -89,6 +93,39 @@ public class SubmissionTests {
     }
 
     @Test
+    public void givenSubmissionExists_whenUpdatingSubmitterEmail_then400IsReceived() throws IOException {
+
+        HttpPut request = new HttpPut(submissionUrl);
+        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getSubmissionJson("test@email.com", teamName));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        assertThat(
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST)
+        );
+    }
+
+    @Test
+    public void givenSubmissionExists_whenUpdatingSubmitterEmail_thenRetrievedResourceIsCorrect() throws IOException {
+
+        HttpPut request = new HttpPut(submissionUrl);
+        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getSubmissionJson("test@email.com", teamName));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        ErrorWrapperObject resource = TestUtils.retrieveResourceFromResponse(response, ErrorWrapperObject.class);
+
+        assertThat(
+                resource.getFirstErrorMessage(), equalTo("resource_locked")
+        );
+    }
+
+        @Test
     public void givenSubmissionExists_whenSubmissionStatusIsRetrieved_then200IsReceived() throws IOException {
 
         HttpUriRequest request = new HttpGet(submissionUrl + "/submissionStatus");
