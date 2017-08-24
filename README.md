@@ -13,10 +13,9 @@ Another important aspect of the integration tests is adherence to the *Single Le
 
 ## Running the tests
 The tests are run using Gradle you don't need to have Gradle installed as the project ships with it's own gradle wrapper. To run the API tests 4 properties are required, these are set by default to point at the current USI development deployment and can be overridden by defining an `application.properties` file in the project root.
-You can find an example properties [file](application.properties.example) there that can serve as a template.
-If no properties file ii provided the tests will still run against the current USI development API. 
 
-The default property values are:
+You can find an example properties [file](application.properties.example) there that can serve as a template.
+If no properties file ii provided the tests will still run against the current USI development API. The default property values are:
 ````
 submitterEmail=api-tester@ebi.ac.uk
 teamName=api-tester
