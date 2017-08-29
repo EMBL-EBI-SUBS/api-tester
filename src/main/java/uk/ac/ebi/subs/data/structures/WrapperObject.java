@@ -9,12 +9,28 @@ import uk.ac.ebi.subs.data.TeamResource;
 public class WrapperObject {
     Embedded _embedded;
 
+    public int getSamplesLength() {
+        return _embedded.getSamples().length;
+    }
+
     public String getFirstSubmissionUrl() {
         return _embedded.getSubmissions()[0].get_links().getSelf().getHref();
     }
 
+    public String[] getNSubmissionsUrls(int n) {
+        String[] urls = new String[n];
+        for(int i = 0; i < n; i++) {
+            urls[i] = _embedded.getSubmissions()[i].get_links().getSelf().getHref();
+        }
+        return urls;
+    }
+
     public String getFirstSampleUrl() {
         return _embedded.getSamples()[0].get_links().getSelf().getHref();
+    }
+
+    public String getNSampleAlias(int n) {
+        return _embedded.getSamples()[n].getAlias();
     }
 }
 
@@ -38,6 +54,12 @@ class Sample {
     TeamResource team;
 
     Link _links;
+
+    String title;
+
+    String alias;
+
+    String processingStatus;
 }
 
 @Getter @Setter @ToString

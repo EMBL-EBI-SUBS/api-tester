@@ -37,11 +37,34 @@ public class TestUtils {
         HttpClientBuilder.create().build().execute(request);
     }
 
+    public static void createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+        HttpPost request = new HttpPost(samplesApiBaseUrl);
+        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
+        request.setEntity(payload);
+
+        HttpClientBuilder.create().build().execute(request);
+    }
+
+    public static void createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
+        for (int i = 0; i < n; i++) {
+            createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
+        }
+    }
+
     public static String getFirstSubmissionUrlForTeam(String teamName) throws IOException {
         HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/submissions/search/by-team?teamName=" + teamName);
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
         return resource.getFirstSubmissionUrl();
+    }
+
+    public static String[] getNSubmissionsUrlsForTeam(String teamName, int n) throws IOException {
+        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/submissions/search/by-team?teamName=" + teamName);
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
+        return resource.getNSubmissionsUrls(n);
     }
 
     public static String getFirstSampleUrlForTeam(String teamName) throws IOException {
@@ -56,5 +79,10 @@ public class TestUtils {
         Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
         Header[] headers = {contentType, accept};
         return headers;
+    }
+
+    public static String getIdFromUrl(String url) {
+        String[] array = url.split("/");
+        return array[array.length - 1];
     }
 }
