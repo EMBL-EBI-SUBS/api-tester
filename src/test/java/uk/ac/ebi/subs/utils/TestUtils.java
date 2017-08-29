@@ -29,13 +29,9 @@ public class TestUtils {
 
     public static void createSubmission(String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
         HttpPost request = new HttpPost(submissionsApiBaseUrl);
+        request.setHeaders(getContentTypeAndAcceptHeaders());
 
-        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
-        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
-        Header[] headers = {contentType, accept};
-        request.setHeaders(headers);
-
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSubmissionJson(submitterEmail, teamName));
+        StringEntity payload = new StringEntity(TestJsonUtils.getSubmissionJson(submitterEmail, teamName));
         request.setEntity(payload);
 
         HttpClientBuilder.create().build().execute(request);
@@ -53,5 +49,12 @@ public class TestUtils {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
         return resource.getFirstSampleUrl();
+    }
+
+    public static Header[] getContentTypeAndAcceptHeaders() {
+        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
+        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
+        Header[] headers = {contentType, accept};
+        return headers;
     }
 }
