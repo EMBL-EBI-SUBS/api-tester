@@ -6,5 +6,6 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class Self {
-    String href;
+
+    private String href;
 }

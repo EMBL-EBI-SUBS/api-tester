@@ -1,12 +1,11 @@
-package uk.ac.ebi.subs.data;
+package uk.ac.ebi.subs.data.objects;
 
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter @Setter @ToString
-public class TeamResource {
+public class Submitter {
 
-    String name;
-
+    private String email;
 }

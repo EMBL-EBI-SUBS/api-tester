@@ -12,8 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-import uk.ac.ebi.subs.data.SampleResource;
-import uk.ac.ebi.subs.data.structures.CreateSampleResponseObject;
+import uk.ac.ebi.subs.data.objects.Sample;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -51,7 +50,7 @@ public class SampleTests {
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
-        CreateSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, CreateSampleResponseObject.class);
+        Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
         sampleUrl = resource.get_links().getSelf().getHref();
 
         assertThat(
@@ -85,7 +84,7 @@ public class SampleTests {
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        SampleResource resource = TestUtils.retrieveResourceFromResponse(response, SampleResource.class);
+        Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
 
         assertThat(
                 resource.getSampleRelationships(), equalTo(null)

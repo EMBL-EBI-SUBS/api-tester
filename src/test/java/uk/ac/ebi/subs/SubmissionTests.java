@@ -12,8 +12,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import uk.ac.ebi.subs.data.SubmissionResource;
-import uk.ac.ebi.subs.data.SubmissionStatusResource;
+import uk.ac.ebi.subs.data.objects.SubmissionStatus;
+import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.structures.ErrorWrapperObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
@@ -84,7 +84,7 @@ public class SubmissionTests {
         HttpUriRequest request = new HttpGet(submissionUrl);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        SubmissionResource resource = TestUtils.retrieveResourceFromResponse(response, SubmissionResource.class);
+        Submission resource = TestUtils.retrieveResourceFromResponse(response, Submission.class);
 
         assertThat(
                 resource.getSubmitter().getEmail(), equalTo(submitterEmail)
@@ -156,7 +156,7 @@ public class SubmissionTests {
         HttpUriRequest request = new HttpGet(submissionUrl + "/submissionStatus");
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        SubmissionStatusResource resource = TestUtils.retrieveResourceFromResponse(response, SubmissionStatusResource.class);
+        SubmissionStatus resource = TestUtils.retrieveResourceFromResponse(response, SubmissionStatus.class);
 
         assertThat(
                 resource.getStatus(), equalTo("Draft")
