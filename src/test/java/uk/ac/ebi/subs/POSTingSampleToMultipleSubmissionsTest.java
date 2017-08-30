@@ -52,7 +52,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
         assertThat(1, equalTo(resource2.getSamplesLength()));
 
         assertThat(
-                resource1.getNSampleAlias(0), equalTo(resource2.getNSampleAlias(0))
+                resource1.getNthSampleAlias(0), equalTo(resource2.getNthSampleAlias(0))
         );
     }
 

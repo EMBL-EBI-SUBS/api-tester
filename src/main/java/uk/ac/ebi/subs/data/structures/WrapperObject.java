@@ -29,7 +29,7 @@ public class WrapperObject {
         return _embedded.getSamples()[0].get_links().getSelf().getHref();
     }
 
-    public String getNSampleAlias(int n) {
+    public String getNthSampleAlias(int n) {
         return _embedded.getSamples()[n].getAlias();
     }
 }
