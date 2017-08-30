@@ -13,6 +13,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.data.SampleResource;
+import uk.ac.ebi.subs.data.structures.CreateSampleResponseObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -36,8 +37,7 @@ public class SampleTests {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
-        submissionUrl = TestUtils.getFirstSubmissionUrlForTeam(teamName);
+        submissionUrl = TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
     }
 
     @Test
@@ -51,11 +51,12 @@ public class SampleTests {
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
+        CreateSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, CreateSampleResponseObject.class);
+        sampleUrl = resource.get_links().getSelf().getHref();
+
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
         );
-
-        sampleUrl = TestUtils.getFirstSampleUrlForTeam(teamName);
     }
 
     @Test

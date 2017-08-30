@@ -36,8 +36,7 @@ public class SubmissionTests {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
-        submissionUrl = TestUtils.getFirstSubmissionUrlForTeam(teamName);
+        submissionUrl = TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
     }
 
     @Test

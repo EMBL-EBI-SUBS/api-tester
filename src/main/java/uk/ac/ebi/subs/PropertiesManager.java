@@ -45,4 +45,7 @@ public class PropertiesManager {
         return this.properties.getProperty("samplesApiBaseUrl", "http://submission-dev.ebi.ac.uk/api/samples/");
     }
 
+    public String getSamplesInSubmissionByIdUrl() {
+        return this.properties.getProperty("samplesInSubmissionByIdUrl", "http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=");
+    }
 }
