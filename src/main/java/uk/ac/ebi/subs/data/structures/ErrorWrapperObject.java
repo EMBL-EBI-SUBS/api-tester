@@ -6,7 +6,8 @@ import lombok.ToString;
 
 @Getter @Setter @ToString
 public class ErrorWrapperObject {
-    Error[] errors;
+
+    private Error[] errors;
 
     public String getFirstErrorMessage() {
         return errors[0].getMessage();
@@ -15,16 +16,18 @@ public class ErrorWrapperObject {
 
 @Getter @Setter @ToString
 class Error {
-    String entity;
 
-    String property;
+    private String entity;
 
-    InvalidValue invalidValue;
+    private String property;
 
-    String message;
+    private InvalidValue invalidValue;
+
+    private String message;
 }
 
 @Getter @Setter @ToString
 class InvalidValue {
-    String email;
+
+    private String email;
 }

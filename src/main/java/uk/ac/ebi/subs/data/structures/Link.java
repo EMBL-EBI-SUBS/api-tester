@@ -8,5 +8,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class Link {
-    Self self;
+
+    private Self self;
 }

@@ -10,8 +10,8 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import uk.ac.ebi.subs.data.structures.CreateSampleResponseObject;
-import uk.ac.ebi.subs.data.structures.CreateSubmissionResponseObject;
+import uk.ac.ebi.subs.data.objects.Sample;
+import uk.ac.ebi.subs.data.objects.Submission;
 
 import java.io.IOException;
 
@@ -35,7 +35,7 @@ public class TestUtils {
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
-        CreateSubmissionResponseObject resource = retrieveResourceFromResponse(response, CreateSubmissionResponseObject.class);
+        Submission resource = retrieveResourceFromResponse(response, Submission.class);
         return resource.get_links().getSelf().getHref();
     }
 
@@ -47,7 +47,7 @@ public class TestUtils {
         request.setEntity(payload);
 
         HttpResponse response =  HttpClientBuilder.create().build().execute(request);
-        CreateSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, CreateSampleResponseObject.class);
+        Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
         return resource.get_links().getSelf().getHref();
     }
 
