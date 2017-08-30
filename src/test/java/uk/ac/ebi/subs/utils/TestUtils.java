@@ -5,14 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import uk.ac.ebi.subs.data.structures.WrapperObject;
+import uk.ac.ebi.subs.data.structures.CreateSampleResponseObject;
+import uk.ac.ebi.subs.data.structures.CreateSubmissionResponseObject;
 
 import java.io.IOException;
 
@@ -27,51 +26,37 @@ public class TestUtils {
         return mapper.readValue(jsonFromResponse, clazz);
     }
 
-    public static void createSubmission(String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
+    public static String createSubmission(String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
         HttpPost request = new HttpPost(submissionsApiBaseUrl);
         request.setHeaders(getContentTypeAndAcceptHeaders());
 
         StringEntity payload = new StringEntity(TestJsonUtils.getSubmissionJson(submitterEmail, teamName));
         request.setEntity(payload);
 
-        HttpClientBuilder.create().build().execute(request);
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        CreateSubmissionResponseObject resource = retrieveResourceFromResponse(response, CreateSubmissionResponseObject.class);
+        return resource.get_links().getSelf().getHref();
     }
 
-    public static void createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
         StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
         request.setEntity(payload);
 
-        HttpClientBuilder.create().build().execute(request);
+        HttpResponse response =  HttpClientBuilder.create().build().execute(request);
+        CreateSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, CreateSampleResponseObject.class);
+        return resource.get_links().getSelf().getHref();
     }
 
-    public static void createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
+    public static String[] createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
+        String[] urls = new String[n];
         for (int i = 0; i < n; i++) {
-            createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
+            urls[i] = createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
         }
-    }
-
-    public static String getFirstSubmissionUrlForTeam(String teamName) throws IOException {
-        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/submissions/search/by-team?teamName=" + teamName);
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
-        return resource.getFirstSubmissionUrl();
-    }
-
-    public static String[] getNSubmissionsUrlsForTeam(String teamName, int n) throws IOException {
-        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/submissions/search/by-team?teamName=" + teamName);
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
-        return resource.getNSubmissionsUrls(n);
-    }
-
-    public static String getFirstSampleUrlForTeam(String teamName) throws IOException {
-        HttpUriRequest request = new HttpGet("http://submission-dev.ebi.ac.uk/api/samples/search/by-team?teamName=" + teamName);
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        WrapperObject resource = TestUtils.retrieveResourceFromResponse(response, WrapperObject.class);
-        return resource.getFirstSampleUrl();
+        return urls;
     }
 
     public static Header[] getContentTypeAndAcceptHeaders() {

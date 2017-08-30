@@ -12,11 +12,11 @@ public class WrapperObject {
     public int getSamplesLength() {
         return _embedded.getSamples().length;
     }
-
+/*
     public String getFirstSubmissionUrl() {
         return _embedded.getSubmissions()[0].get_links().getSelf().getHref();
     }
-
+*/
     public String[] getNSubmissionsUrls(int n) {
         String[] urls = new String[n];
         for(int i = 0; i < n; i++) {
@@ -60,14 +60,4 @@ class Sample {
     String alias;
 
     String processingStatus;
-}
-
-@Getter @Setter @ToString
-class Link {
-    Self self;
-}
-
-@Getter @Setter @ToString
-class Self {
-    String href;
 }

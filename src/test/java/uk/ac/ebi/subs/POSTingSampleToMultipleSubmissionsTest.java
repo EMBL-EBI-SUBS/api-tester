@@ -30,9 +30,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        TestUtils.createNSubmissions(2, submissionsApiBaseUrl, submitterEmail, teamName);
-        submissionsUrls = TestUtils.getNSubmissionsUrlsForTeam(teamName, 2);
-
+        submissionsUrls = TestUtils.createNSubmissions(2, submissionsApiBaseUrl, submitterEmail, teamName);
         TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[0]);
     }
 
