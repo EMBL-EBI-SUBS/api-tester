@@ -14,6 +14,7 @@ import uk.ac.ebi.subs.data.objects.Sample;
 import uk.ac.ebi.subs.data.objects.Submission;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class TestUtils {
 
@@ -43,7 +44,7 @@ public class TestUtils {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, getRandomAlias()));
         request.setEntity(payload);
 
         HttpResponse response =  HttpClientBuilder.create().build().execute(request);
@@ -69,5 +70,11 @@ public class TestUtils {
     public static String getIdFromUrl(String url) {
         String[] array = url.split("/");
         return array[array.length - 1];
+    }
+
+    public static String getRandomAlias() {
+        Random random = new Random();
+        String digit = String.format("%04d", random.nextInt(10000));
+        return "alias-" + digit;
     }
 }

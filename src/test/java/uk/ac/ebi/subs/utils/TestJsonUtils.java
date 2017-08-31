@@ -13,9 +13,9 @@ public class TestJsonUtils {
                 "}";
     }
 
-    public static String getCreateSampleJson(String submissionUrl) {
+    public static String getCreateSampleJson(String submissionUrl, String alias) {
         return "{\n" +
-                "  \"alias\" : \"D1\",\n" +
+                "  \"alias\" : \"" + alias + "\",\n" +
                 "  \"title\" : \"NA12878_D1\",\n" +
                 "  \"description\" : \"Material derived from cell line NA12878\",\n" +
                 "  \"attributes\" : [ {\n" +

@@ -9,9 +9,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.data.objects.Sample;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
@@ -21,7 +19,6 @@ import java.io.IOException;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class SampleTests {
 
     static PropertiesManager propertiesManager = PropertiesManager.getInstance();
@@ -37,21 +34,19 @@ public class SampleTests {
     @BeforeClass
     public static void setUp() throws Exception {
         submissionUrl = TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
+        sampleUrl = TestUtils.createSample(samplesApiBaseUrl, submissionUrl);
     }
 
     @Test
-    public void a_givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
+    public void givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
 
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, "test-alias"));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
-        sampleUrl = resource.get_links().getSelf().getHref();
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -59,7 +54,7 @@ public class SampleTests {
     }
 
     @Test
-    public void b_givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
+    public void givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
 
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
@@ -75,7 +70,7 @@ public class SampleTests {
     }
 
     @Test
-    public void c_givenSampleExists_whenDeletingSampleRelationships_thenRetrievedResourceIsCorrect() throws IOException {
+    public void givenSampleExists_whenDeletingSampleRelationships_thenRetrievedResourceIsCorrect() throws IOException {
 
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
