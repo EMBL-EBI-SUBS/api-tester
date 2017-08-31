@@ -14,6 +14,7 @@ import uk.ac.ebi.subs.data.objects.Sample;
 import uk.ac.ebi.subs.data.objects.Submission;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class TestUtils {
 
@@ -39,16 +40,20 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+    public static String createSample(String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, alias));
         request.setEntity(payload);
 
         HttpResponse response =  HttpClientBuilder.create().build().execute(request);
         Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
         return resource.get_links().getSelf().getHref();
+    }
+
+    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+        return createSample(samplesApiBaseUrl, submissionUrl, getRandomAlias());
     }
 
     public static String[] createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
@@ -69,5 +74,11 @@ public class TestUtils {
     public static String getIdFromUrl(String url) {
         String[] array = url.split("/");
         return array[array.length - 1];
+    }
+
+    public static String getRandomAlias() {
+        Random random = new Random();
+        String digit = String.format("%04d", random.nextInt(10000));
+        return "alias-" + digit;
     }
 }
