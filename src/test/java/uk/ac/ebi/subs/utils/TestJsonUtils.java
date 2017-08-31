@@ -1,16 +1,18 @@
 package uk.ac.ebi.subs.utils;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class TestJsonUtils {
 
-    public static String getSubmissionJson(String submitterEmail, String teamName) {
-        return "{\n" +
-                "  \"submitter\" : {\n" +
-                "    \"email\" : \"" + submitterEmail + "\"\n" +
-                "  },\n" +
-                "  \"team\" : {\n" +
-                "    \"name\" : \"" + teamName + "\"\n" +
-                "  }\n" +
-                "}";
+    public static String getSubmissionJson(String submitterEmail, String teamName) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("Submission.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace("{submitter.email.placeholder}", submitterEmail);
+        return json.replace("{team.name.placeholder}", teamName);
     }
 
     public static String getCreateSampleJson(String submissionUrl, String alias) {
