@@ -21,6 +21,7 @@ submitterEmail=api-tester@ebi.ac.uk
 teamName=api-tester
 submissionsApiBaseUrl=http://submission-dev.ebi.ac.uk/api/submissions/
 samplesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/samples/
+samplesInSubmissionByIdUrl=http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=
 ````
 :warning: When running the tests without the default configuration make sure to use a different `teamName` as the tests rely on the uniqueness of this value.
 
