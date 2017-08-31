@@ -82,7 +82,7 @@ public class SampleTests {
         Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
 
         assertThat(
-                resource.getSampleRelationships(), equalTo(null)
+                resource.getSampleRelationships(), equalTo(new String[0])
         );
     }
 
