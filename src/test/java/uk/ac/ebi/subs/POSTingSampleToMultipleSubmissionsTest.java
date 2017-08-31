@@ -31,12 +31,12 @@ public class POSTingSampleToMultipleSubmissionsTest {
     @BeforeClass
     public static void setUp() throws Exception {
         submissionsUrls = TestUtils.createNSubmissions(2, submissionsApiBaseUrl, submitterEmail, teamName);
-        TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[0]);
+        TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[0], "S1234");
     }
 
     @Test
     public void givenSampleExistsInASubmission_whenAddingItToOtherSubmission_thenItShouldExistInBothSubmissions() throws IOException {
-        TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[1]);
+        TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[1], "S1234");
 
         HttpUriRequest request1 = new HttpGet(samplesInSubmissionByIdUrl + TestUtils.getIdFromUrl(submissionsUrls[0]));
         HttpResponse response1 = HttpClientBuilder.create().build().execute(request1);

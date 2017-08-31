@@ -35,9 +35,9 @@ public class TestJsonUtils {
                 "}";
     }
 
-    public static String getUpdateSampleRelationshipsJson(String submissionUrl) {
+    public static String getUpdateSampleRelationshipsJson(String submissionUrl, String alias) {
         return "{\n" +
-                "  \"alias\" : \"D1\",\n" +
+                "  \"alias\" : \"" + alias + "\",\n" +
                 "  \"title\" : \"NA12878_D1\",\n" +
                 "  \"description\" : \"Material derived from cell line NA12878\",\n" +
                 "  \"attributes\" : [ {\n" +
@@ -61,9 +61,9 @@ public class TestJsonUtils {
                 "}";
     }
 
-    public static String getDeleteSampleRelationshipsJson(String submissionUrl) {
+    public static String getDeleteSampleRelationshipsJson(String submissionUrl, String alias) {
         return "{\n" +
-                "  \"alias\" : \"D1\",\n" +
+                "  \"alias\" : \"" + alias + "\",\n" +
                 "  \"title\" : \"NA12878_D1\",\n" +
                 "  \"description\" : \"Material derived from cell line NA12878\",\n" +
                 "  \"attributes\" : [ {\n" +

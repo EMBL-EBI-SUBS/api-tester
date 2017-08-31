@@ -40,16 +40,20 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+    public static String createSample(String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, getRandomAlias()));
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, alias));
         request.setEntity(payload);
 
         HttpResponse response =  HttpClientBuilder.create().build().execute(request);
         Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
         return resource.get_links().getSelf().getHref();
+    }
+
+    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+        return createSample(samplesApiBaseUrl, submissionUrl, getRandomAlias());
     }
 
     public static String[] createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {

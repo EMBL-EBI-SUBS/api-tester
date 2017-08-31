@@ -31,10 +31,12 @@ public class SampleTests {
     static String submissionUrl = "";
     static String sampleUrl = "";
 
+    static String sampleAlias = TestUtils.getRandomAlias();
+
     @BeforeClass
     public static void setUp() throws Exception {
         submissionUrl = TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
-        sampleUrl = TestUtils.createSample(samplesApiBaseUrl, submissionUrl);
+        sampleUrl = TestUtils.createSample(samplesApiBaseUrl, submissionUrl, sampleAlias);
     }
 
     @Test
@@ -43,7 +45,7 @@ public class SampleTests {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, "test-alias"));
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, TestUtils.getRandomAlias()));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -59,7 +61,7 @@ public class SampleTests {
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleRelationshipsJson(submissionUrl));
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleRelationshipsJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -75,7 +77,7 @@ public class SampleTests {
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl));
+        StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
