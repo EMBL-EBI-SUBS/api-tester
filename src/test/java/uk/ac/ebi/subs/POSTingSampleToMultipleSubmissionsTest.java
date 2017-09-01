@@ -26,11 +26,17 @@ public class POSTingSampleToMultipleSubmissionsTest {
     static String samplesApiBaseUrl = propertiesManager.getSamplesApiBaseUrl();
     static String samplesInSubmissionByIdUrl = propertiesManager.getSamplesInSubmissionByIdUrl();
 
+    static String authUrl = propertiesManager.getAuthenticationUrl();
+    static String aapUsername = propertiesManager.getAapUsername();
+    static String aapPassword = propertiesManager.getAapPassword();
+
+    static String token = "";
     static String[] submissionsUrls;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        submissionsUrls = TestUtils.createNSubmissions(2, submissionsApiBaseUrl, submitterEmail, teamName);
+        token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
+        submissionsUrls = TestUtils.createNSubmissions(2, token, submissionsApiBaseUrl, submitterEmail, teamName);
         TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[0], "S1234");
     }
 

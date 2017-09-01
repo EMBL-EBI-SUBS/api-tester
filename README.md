@@ -35,3 +35,5 @@ This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LIC
 
 ### Acknowledgments
 Thanks to [Eugen Paraschiv](https://twitter.com/baeldung) for the article on how to [Test a REST API with Java](http://www.baeldung.com/integration-testing-a-rest-api).
+
+For details about how to use HttpClient Basic Authentication check [this article](http://www.baeldung.com/httpclient-4-basic-authentication) from the same author.

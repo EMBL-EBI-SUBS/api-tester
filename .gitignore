@@ -3,3 +3,4 @@
 .gradle/
 api-tester.iml
 out/
+application.properties

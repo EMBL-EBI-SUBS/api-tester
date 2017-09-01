@@ -28,6 +28,11 @@ public class SampleTests {
     static String submissionsApiBaseUrl = propertiesManager.getSubmissionsApiBaseUrl();
     static String samplesApiBaseUrl = propertiesManager.getSamplesApiBaseUrl();
 
+    static String authUrl = propertiesManager.getAuthenticationUrl();
+    static String aapUsername = propertiesManager.getAapUsername();
+    static String aapPassword = propertiesManager.getAapPassword();
+
+    static String token = "";
     static String submissionUrl = "";
     static String sampleUrl = "";
 
@@ -35,7 +40,8 @@ public class SampleTests {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        submissionUrl = TestUtils.createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
+        token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
+        submissionUrl = TestUtils.createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
         sampleUrl = TestUtils.createSample(samplesApiBaseUrl, submissionUrl, sampleAlias);
     }
 
