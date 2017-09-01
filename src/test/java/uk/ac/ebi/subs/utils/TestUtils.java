@@ -52,10 +52,6 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
-        return createSample(samplesApiBaseUrl, submissionUrl, getRandomAlias());
-    }
-
     public static String[] createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
         String[] urls = new String[n];
         for (int i = 0; i < n; i++) {
