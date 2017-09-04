@@ -26,7 +26,7 @@ The AAP authentication credentials are the only required properties, without whi
 All the other properties, when not provided in the properties file, will default to the values in the [PropertiesManager](/src/main/java/uk/ac/ebi/subs/PropertiesManager.java).
 
 Required properties:
-````
+````properties
 aapUsername=username
 aapPassword=password
 ````
