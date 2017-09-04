@@ -19,7 +19,7 @@ The USI API relies on the [AAP Service](https://api.aap.tsi.ebi.ac.uk/docs/index
 The AAP service (Authentication, Authorisation and Profile) provides a central repository for identities (Authentication), group management/permissions via domains (Authorisation) and attributes (Profile).
 
 ### Properties
-To run the API tests a couple of properties are required and the others default to point at the current USI development deployment and can be overridden by defining an `application.properties` file in the project root.
+To run the API tests a couple of properties are required, the others will default to point at the current USI development deployment and can be overridden by defining an `application.properties` file in the project root.
 You can find an example properties file [here](application.properties.example).
 
 The AAP authentication credentials are the only required properties, without which the tests will NOT be able to run. 
@@ -32,7 +32,7 @@ aapPassword=password
 ````
 
 ### Run the tests
-To run the tests do the following:
+To run the tests, after having clonned this project, do the following:
 ````bash
  $ cd api-tester/
  $ ./gradlew test
