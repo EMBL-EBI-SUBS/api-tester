@@ -32,7 +32,7 @@ aapPassword=password
 ````
 
 ### Run the tests
-To run the tests, after having clonned this project, do the following:
+To run the tests, after having cloned this project, do the following:
 ````bash
  $ cd api-tester/
  $ ./gradlew test
