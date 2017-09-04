@@ -42,14 +42,14 @@ public class SampleTests {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
         submissionUrl = TestUtils.createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
-        sampleUrl = TestUtils.createSample(samplesApiBaseUrl, submissionUrl, sampleAlias);
+        sampleUrl = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, sampleAlias);
     }
 
     @Test
     public void givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
 
         HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, TestUtils.getRandomAlias()));
         request.setEntity(payload);
@@ -65,7 +65,7 @@ public class SampleTests {
     public void givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
 
         HttpPut request = new HttpPut(sampleUrl);
-        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleRelationshipsJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
@@ -81,7 +81,7 @@ public class SampleTests {
     public void givenSampleExists_whenDeletingSampleRelationships_thenRetrievedResourceIsCorrect() throws IOException {
 
         HttpPut request = new HttpPut(sampleUrl);
-        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
@@ -97,6 +97,7 @@ public class SampleTests {
     @AfterClass
     public static void tearDown() throws Exception {
         HttpDelete request = new HttpDelete(submissionUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request);
     }
 }

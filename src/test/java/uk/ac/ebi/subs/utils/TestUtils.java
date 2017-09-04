@@ -46,9 +46,9 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createSample(String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
+    public static String createSample(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, alias));
         request.setEntity(payload);
@@ -64,13 +64,6 @@ public class TestUtils {
             urls[i] = createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
         }
         return urls;
-    }
-
-    public static Header[] getContentTypeAndAcceptHeaders() {
-        Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
-        Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
-        Header[] headers = {contentType, accept};
-        return headers;
     }
 
     public static Header[] getContentTypeAcceptAndTokenHeaders(String jwtToken) {
