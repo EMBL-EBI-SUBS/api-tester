@@ -13,8 +13,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.Submission;
+import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.structures.ErrorWrapperObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
@@ -22,7 +22,6 @@ import uk.ac.ebi.subs.utils.TestUtils;
 import java.io.IOException;
 import java.util.UUID;
 
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -72,10 +71,8 @@ public class SubmissionTests {
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
-        Submission resource = TestUtils.retrieveResourceFromResponse(response, Submission.class);
-
         assertThat(
-                resource.get_links().getSelf().getHref(), startsWith("http://submission-dev.ebi.ac.uk/api/submissions/")
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
         );
     }
 
