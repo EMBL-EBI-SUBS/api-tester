@@ -1,0 +1,8 @@
+{
+  "submitter" : {
+    "email" : "{submitter.email.placeholder}"
+  },
+  "team" : {
+    "name" : "{team.name.placeholder}"
+  }
+}

@@ -26,23 +26,31 @@ public class POSTingSampleToMultipleSubmissionsTest {
     static String samplesApiBaseUrl = propertiesManager.getSamplesApiBaseUrl();
     static String samplesInSubmissionByIdUrl = propertiesManager.getSamplesInSubmissionByIdUrl();
 
+    static String authUrl = propertiesManager.getAuthenticationUrl();
+    static String aapUsername = propertiesManager.getAapUsername();
+    static String aapPassword = propertiesManager.getAapPassword();
+
+    static String token = "";
     static String[] submissionsUrls;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        submissionsUrls = TestUtils.createNSubmissions(2, submissionsApiBaseUrl, submitterEmail, teamName);
-        TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[0]);
+        token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
+        submissionsUrls = TestUtils.createNSubmissions(2, token, submissionsApiBaseUrl, submitterEmail, teamName);
+        TestUtils.createSample(token, samplesApiBaseUrl, submissionsUrls[0], "S1234");
     }
 
     @Test
     public void givenSampleExistsInASubmission_whenAddingItToOtherSubmission_thenItShouldExistInBothSubmissions() throws IOException {
-        TestUtils.createSample(samplesApiBaseUrl, submissionsUrls[1]);
+        TestUtils.createSample(token, samplesApiBaseUrl, submissionsUrls[1], "S1234");
 
         HttpUriRequest request1 = new HttpGet(samplesInSubmissionByIdUrl + TestUtils.getIdFromUrl(submissionsUrls[0]));
+        request1.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpResponse response1 = HttpClientBuilder.create().build().execute(request1);
         WrapperObject resource1 = TestUtils.retrieveResourceFromResponse(response1, WrapperObject.class);
 
         HttpUriRequest request2 = new HttpGet(samplesInSubmissionByIdUrl + TestUtils.getIdFromUrl(submissionsUrls[1]));
+        request2.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpResponse response2 = HttpClientBuilder.create().build().execute(request2);
         WrapperObject resource2 = TestUtils.retrieveResourceFromResponse(response2, WrapperObject.class);
 
@@ -57,9 +65,11 @@ public class POSTingSampleToMultipleSubmissionsTest {
     @AfterClass
     public static void tearDown() throws Exception {
         HttpDelete request1 = new HttpDelete(submissionsUrls[0]);
+        request1.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request1);
 
         HttpDelete request2 = new HttpDelete(submissionsUrls[1]);
+        request2.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request2);
     }
 }

@@ -1,5 +1,8 @@
 submitterEmail=api-tester@ebi.ac.uk
-teamName=api-tester
+teamName=self.usi-user
 submissionsApiBaseUrl=http://submission-dev.ebi.ac.uk/api/submissions/
 samplesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/samples/
 samplesInSubmissionByIdUrl=http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=
+authenticationUrl=https://explore.api.aap.tsi.ebi.ac.uk/auth
+aapUsername=username
+aapPassword=password

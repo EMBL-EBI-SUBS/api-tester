@@ -8,32 +8,40 @@ A series of black box tests will be run focusing on:
 - the payload (JSON)
 
 Each test will only be focused on a **single responsability**.
-
 Another important aspect of the integration tests is adherence to the *Single Level of Abstraction Principle* – the logic within a test should be written at a high level.
 
 ## Running the tests
-The tests are run using Gradle you don't need to have Gradle installed as the project ships with it's own gradle wrapper. To run the API tests 4 properties are required, these are set by default to point at the current USI development deployment and can be overridden by defining an `application.properties` file in the project root.
+The Api Tester consists of a series of _black box_ tests that are run using Gradle.
+You don't need to have Gradle installed as the project ships with it's own gradle wrapper.
 
-You can find an example properties [file](application.properties.example) there that can serve as a template.
-If no properties file is provided the tests will still run against the current USI development API. The default property values are:
-````
-submitterEmail=api-tester@ebi.ac.uk
-teamName=api-tester
-submissionsApiBaseUrl=http://submission-dev.ebi.ac.uk/api/submissions/
-samplesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/samples/
-````
-:warning: When running the tests without the default configuration make sure to use a different `teamName` as the tests rely on the uniqueness of this value.
+### Authentication
+The USI API relies on the [AAP Service](https://api.aap.tsi.ebi.ac.uk/docs/index.html) to secure it.
+The AAP service (Authentication, Authorisation and Profile) provides a central repository for identities (Authentication), group management/permissions via domains (Authorisation) and attributes (Profile).
 
-To run the tests do the following:
+### Properties
+To run the API tests a couple of properties are required, the others will default to point at the current USI development deployment and can be overridden by defining an `application.properties` file in the project parent directory.
+You can find an example properties file [here](application.properties.example).
+
+The AAP authentication credentials are the only required properties, without which the tests will NOT be able to run. 
+All the other properties, when not provided in the properties file, will default to the values in the [PropertiesManager](/src/main/java/uk/ac/ebi/subs/PropertiesManager.java).
+
+Required properties:
+````
+aapUsername=username
+aapPassword=password
+````
+
+### Run the tests
+To run the tests, after having cloned this project, do the following:
 ````bash
  $ cd api-tester/
  $ ./gradlew test
 ````
 
-
-
 ## License
 This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details.
 
-### Acknowledgments
+## Acknowledgments
 Thanks to [Eugen Paraschiv](https://twitter.com/baeldung) for the article on how to [Test a REST API with Java](http://www.baeldung.com/integration-testing-a-rest-api).
+
+For details about how to use HttpClient Basic Authentication check [this article](http://www.baeldung.com/httpclient-4-basic-authentication) from the same author.

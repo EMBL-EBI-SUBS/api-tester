@@ -5,8 +5,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
@@ -14,6 +20,7 @@ import uk.ac.ebi.subs.data.objects.Sample;
 import uk.ac.ebi.subs.data.objects.Submission;
 
 import java.io.IOException;
+import java.util.Random;
 
 public class TestUtils {
 
@@ -26,9 +33,9 @@ public class TestUtils {
         return mapper.readValue(jsonFromResponse, clazz);
     }
 
-    public static String createSubmission(String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
+    public static String createSubmission(String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
         HttpPost request = new HttpPost(submissionsApiBaseUrl);
-        request.setHeaders(getContentTypeAndAcceptHeaders());
+        request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getSubmissionJson(submitterEmail, teamName));
         request.setEntity(payload);
@@ -39,11 +46,11 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createSample(String samplesApiBaseUrl, String submissionUrl) throws IOException {
+    public static String createSample(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
         HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAndAcceptHeaders());
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl));
+        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, alias));
         request.setEntity(payload);
 
         HttpResponse response =  HttpClientBuilder.create().build().execute(request);
@@ -51,23 +58,41 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String[] createNSubmissions(int n, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
+    public static String[] createNSubmissions(int n, String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
         String[] urls = new String[n];
         for (int i = 0; i < n; i++) {
-            urls[i] = createSubmission(submissionsApiBaseUrl, submitterEmail, teamName);
+            urls[i] = createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
         }
         return urls;
     }
 
-    public static Header[] getContentTypeAndAcceptHeaders() {
+    public static Header[] getContentTypeAcceptAndTokenHeaders(String jwtToken) {
         Header contentType = new BasicHeader(HttpHeaders.CONTENT_TYPE, "application/hal+json");
         Header accept = new BasicHeader(HttpHeaders.ACCEPT, "application/hal+json");
-        Header[] headers = {contentType, accept};
+        Header token = new BasicHeader(HttpHeaders.AUTHORIZATION, "Bearer " + jwtToken);
+        Header[] headers = {contentType, accept, token};
         return headers;
+    }
+
+    public static String getJWTToken (String authUrl, String username, String password) throws IOException {
+        CredentialsProvider provider = new BasicCredentialsProvider();
+        UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
+        provider.setCredentials(AuthScope.ANY, credentials);
+
+        HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
+        HttpResponse response = client.execute(new HttpGet(authUrl));
+
+        return EntityUtils.toString(response.getEntity());
     }
 
     public static String getIdFromUrl(String url) {
         String[] array = url.split("/");
         return array[array.length - 1];
+    }
+
+    public static String getRandomAlias() {
+        Random random = new Random();
+        String digit = String.format("%04d", random.nextInt(10000));
+        return "alias-" + digit;
     }
 }

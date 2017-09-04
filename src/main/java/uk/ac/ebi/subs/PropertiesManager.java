@@ -12,11 +12,11 @@ public class PropertiesManager {
 
     private PropertiesManager() {
         properties = new Properties();
-        String path = "./application.properties";
+        String path = "../application.properties";
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
         } catch (FileNotFoundException e) {
-            System.out.println("WARNING: No application.properties file found. Using default properties.");
+            throw new RuntimeException("ERROR: No application.properties file found.", e);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -34,7 +34,7 @@ public class PropertiesManager {
     }
 
     public String getTeamName() {
-        return this.properties.getProperty("teamName", "api-tester");
+        return this.properties.getProperty("teamName", "self.usi-user");
     }
 
     public String getSubmissionsApiBaseUrl() {
@@ -47,5 +47,17 @@ public class PropertiesManager {
 
     public String getSamplesInSubmissionByIdUrl() {
         return this.properties.getProperty("samplesInSubmissionByIdUrl", "http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=");
+    }
+
+    public String getAuthenticationUrl() {
+        return this.properties.getProperty("authenticationUrl", "https://explore.api.aap.tsi.ebi.ac.uk/auth");
+    }
+
+    public String getAapUsername() {
+        return this.properties.getProperty("aapUsername");
+    }
+
+    public String getAapPassword() {
+        return this.properties.getProperty("aapPassword");
     }
 }
