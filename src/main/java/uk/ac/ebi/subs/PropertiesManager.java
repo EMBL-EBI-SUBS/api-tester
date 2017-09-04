@@ -12,12 +12,11 @@ public class PropertiesManager {
 
     private PropertiesManager() {
         properties = new Properties();
-        String path = "./application.properties";
+        String path = "../application.properties";
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
         } catch (FileNotFoundException e) {
-            System.out.println("ERROR: No application.properties file found.");
-            System.exit(1);
+            throw new RuntimeException("ERROR: No application.properties file found.", e);
         } catch (IOException e) {
             e.printStackTrace();
         }
