@@ -67,7 +67,7 @@ public class SampleTests {
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleRelationshipsJson(submissionUrl, sampleAlias));
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
