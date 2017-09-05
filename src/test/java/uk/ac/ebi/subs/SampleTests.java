@@ -3,6 +3,7 @@ package uk.ac.ebi.subs;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
@@ -11,6 +12,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.objects.Sample;
+import uk.ac.ebi.subs.data.structures.PutSampleResponseObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -74,6 +76,86 @@ public class SampleTests {
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenUpdatingItsContentsWithPUT_thenStatusShouldRemainTheSame() throws IOException {
+
+        String localAlias = TestUtils.getRandomAlias();
+        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+
+        HttpPut request = new HttpPut(localSample);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+
+        assertThat(
+                resource.get_embedded().getProcessingStatus().getStatus(), equalTo("Draft")
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenUpdatingItsContentsWithPATCH_thenStatusShouldRemainTheSame() throws IOException {
+
+        String localAlias = TestUtils.getRandomAlias();
+        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+
+        HttpPatch request = new HttpPatch(localSample);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+
+        assertThat(
+                resource.get_embedded().getProcessingStatus().getStatus(), equalTo("Draft")
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenUpdatingItsContentsWithPUT_thenTeamShouldRemainTheSame() throws IOException {
+
+        String localAlias = TestUtils.getRandomAlias();
+        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+
+        HttpPut request = new HttpPut(localSample);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+
+        assertThat(
+                resource.getTeam().getName(), equalTo(teamName)
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenUpdatingItsContentsWithPATCH_thenTeamShouldRemainTheSame() throws IOException {
+
+        String localAlias = TestUtils.getRandomAlias();
+        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+
+        HttpPatch request = new HttpPatch(localSample);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+
+        assertThat(
+                resource.getTeam().getName(), equalTo(teamName)
         );
     }
 
