@@ -16,7 +16,9 @@ public class PropertiesManager {
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("ERROR: No application.properties file found.", e);
+            if(System.getProperty("aapUsername") == null || System.getProperty("aapPassword") == null) {
+                throw new RuntimeException("ERROR: Required properties not provided.", e);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -54,10 +56,10 @@ public class PropertiesManager {
     }
 
     public String getAapUsername() {
-        return this.properties.getProperty("aapUsername");
+        return this.properties.getProperty("aapUsername", System.getProperty("aapUsername"));
     }
 
     public String getAapPassword() {
-        return this.properties.getProperty("aapPassword");
+        return this.properties.getProperty("aapPassword", System.getProperty("aapPassword"));
     }
 }

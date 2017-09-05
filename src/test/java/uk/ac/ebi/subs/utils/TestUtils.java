@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -82,6 +83,9 @@ public class TestUtils {
         HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(provider).build();
         HttpResponse response = client.execute(new HttpGet(authUrl));
 
+        if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+            throw new RuntimeException("ERROR: Invalid AAP credentials.");
+        }
         return EntityUtils.toString(response.getEntity());
     }
 
