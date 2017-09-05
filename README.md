@@ -19,24 +19,42 @@ The USI API relies on the [AAP Service](https://api.aap.tsi.ebi.ac.uk/docs/index
 The AAP service (Authentication, Authorisation and Profile) provides a central repository for identities (Authentication), group management/permissions via domains (Authorisation) and attributes (Profile).
 
 ### Properties
-To run the API tests a couple of properties are required, the others will default to point at the current USI development deployment and can be overridden by defining an `application.properties` file in the project parent directory.
+To run the API tests the AAP authentication credentials are required. These may be provided either as properties in a properties file or as command line parameters.
+The properties file takes precedence over the command line parameters.
+
+All the other properties will default to point at the current USI development deployment unless overridden by defining an `application.properties` file in the project parent directory.
 You can find an example properties file [here](application.properties.example).
 
+It's possible to provide the AAP credentials through the command line and the remaining properties in the properties file or all in the properties file.
 The AAP authentication credentials are the only required properties, without which the tests will NOT be able to run. 
-All the other properties, when not provided in the properties file, will default to the values in the [PropertiesManager](/src/main/java/uk/ac/ebi/subs/PropertiesManager.java).
 
 Required properties:
 ````properties
 aapUsername=username
 aapPassword=password
 ````
+Optional properties and their default values:
+````properties
+submitterEmail=api-tester@ebi.ac.uk
+teamName=team-alpha
+submissionsApiBaseUrl=http://submission-dev.ebi.ac.uk/api/submissions/
+samplesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/samples/
+samplesInSubmissionByIdUrl=http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=
+authenticationUrl=https://explore.api.aap.tsi.ebi.ac.uk/auth
+````
 
 ### Run the tests
-To run the tests, after having cloned this project, do the following:
-````bash
- $ cd api-tester/
- $ ./gradlew test
-````
+As explained above, there are two ways of running the tests depending on the way you pass the AAP credentials.
+1. Passing the credentials in the `application.properties` file:
+    ````bash
+     $ cd api-tester/
+     $ ./gradlew test
+    ````
+2. Passing the credentials in the command line:
+    ````bash
+     $ cd api-tester/
+     $ ./gradlew test -DaapUsername=username -DaaPassword=password
+    ````
 
 ## License
 This project is licensed under the Apache 2.0 License - see the [LICENSE.md](LICENSE.md) file for details.
