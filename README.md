@@ -1,4 +1,5 @@
 # API Tester
+[![Build Status](https://travis-ci.org/EMBL-EBI-SUBS/api-tester.svg?branch=master)](https://travis-ci.org/EMBL-EBI-SUBS/api-tester)
 
 The main goal of this tool is to test the basic correctness of the API. It will run as a late step in a Continuous Integration process, consuming the REST API after it has already been deployed.
 

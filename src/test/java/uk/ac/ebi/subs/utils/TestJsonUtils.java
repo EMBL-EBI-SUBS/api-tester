@@ -29,7 +29,7 @@ public class TestJsonUtils {
         return json.replace(SUBMISSION_URL, submissionUrl);
     }
 
-    public static String getUpdateSampleRelationshipsJson(String submissionUrl, String alias) throws IOException {
+    public static String getUpdateSampleJson(String submissionUrl, String alias) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("UpdateSample.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 

@@ -84,7 +84,7 @@ public class TestUtils {
         HttpResponse response = client.execute(new HttpGet(authUrl));
 
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new RuntimeException("ERROR: Invalid AAP credentials.");
+            throw new RuntimeException("ERROR: An error occurred when trying to obtain the AAP token.");
         }
         return EntityUtils.toString(response.getEntity());
     }
