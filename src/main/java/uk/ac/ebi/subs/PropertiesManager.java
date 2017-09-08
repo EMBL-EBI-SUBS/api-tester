@@ -17,7 +17,7 @@ public class PropertiesManager {
             properties.load(fileInputStream);
         } catch (FileNotFoundException e) {
             if(System.getProperty("aapUsername") == null || System.getProperty("aapPassword") == null) {
-                throw new RuntimeException("ERROR: Required properties not provided.", e);
+                throw new PropertiesNotFoundException("ERROR: Required properties not provided.", e);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -69,5 +69,12 @@ public class PropertiesManager {
 
     public String getAapPassword() {
         return this.properties.getProperty("aapPassword", System.getProperty("aapPassword"));
+    }
+}
+
+class PropertiesNotFoundException extends RuntimeException {
+
+    public PropertiesNotFoundException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
