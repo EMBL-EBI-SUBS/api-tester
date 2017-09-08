@@ -27,18 +27,18 @@ import static org.junit.Assert.assertThat;
 
 public class SubmissionTests {
 
-    static PropertiesManager propertiesManager = PropertiesManager.getInstance();
+    private static PropertiesManager propertiesManager = PropertiesManager.getInstance();
 
-    static String submitterEmail = propertiesManager.getSubmitterEmail();
-    static String teamName = propertiesManager.getTeamName();
-    static String submissionsApiBaseUrl = propertiesManager.getSubmissionsApiBaseUrl();
+    private static String submitterEmail = propertiesManager.getSubmitterEmail();
+    private static String teamName = propertiesManager.getTeamName();
+    private static String submissionsApiBaseUrl = propertiesManager.getSubmissionsApiBaseUrl();
 
-    static String authUrl = propertiesManager.getAuthenticationUrl();
-    static String aapUsername = propertiesManager.getAapUsername();
-    static String aapPassword = propertiesManager.getAapPassword();
+    private static String authUrl = propertiesManager.getAuthenticationUrl();
+    private static String aapUsername = propertiesManager.getAapUsername();
+    private static String aapPassword = propertiesManager.getAapPassword();
 
-    static String token = "";
-    static String submissionUrl = "";
+    private static String token = "";
+    private static String submissionUrl = "";
 
     @BeforeClass
     public static void setUp() throws Exception {
