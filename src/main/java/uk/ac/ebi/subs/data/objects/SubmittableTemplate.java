@@ -6,7 +6,7 @@ import lombok.ToString;
 import uk.ac.ebi.subs.data.structures.Link;
 
 @Getter @Setter @ToString
-public class Sample {
+public class SubmittableTemplate {
 
     private String alias;
 

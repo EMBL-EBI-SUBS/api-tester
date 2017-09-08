@@ -1,0 +1,30 @@
+{
+  "alias": "{alias.placeholder}",
+  "title": "Study title",
+  "description": "Description",
+  "attributes": [
+    {
+      "name": "study_type",
+      "value": "Whole Genome Sequencing",
+      "units": null,
+      "terms": []
+    },
+    {
+      "name": "Project Coordinator",
+      "value": "John Doe",
+      "units": null,
+      "terms": []
+    },
+    {
+      "name": "study_abstract",
+      "value": "study abstract",
+      "units": null
+    }
+  ],
+  "publications": [],
+  "contacts": [],
+  "protocolRefs": [],
+  "projectRef": null,
+  "releaseDate": "{release.date.placeholder}",
+  "submission" : "{submissionUrl.placeholder}"
+}

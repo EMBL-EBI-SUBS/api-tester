@@ -39,16 +39,24 @@ public class PropertiesManager {
         return this.properties.getProperty("teamName", "self.usi-user");
     }
 
+    public String getApiRoot() {
+        return this.properties.getProperty("apiRoot", "http://submission-dev.ebi.ac.uk/api/");
+    }
+
     public String getSubmissionsApiBaseUrl() {
-        return this.properties.getProperty("submissionsApiBaseUrl", "http://submission-dev.ebi.ac.uk/api/submissions/");
+        return this.properties.getProperty("submissionsApiBaseUrl", getApiRoot() + "submissions/");
     }
 
     public String getSamplesApiBaseUrl() {
-        return this.properties.getProperty("samplesApiBaseUrl", "http://submission-dev.ebi.ac.uk/api/samples/");
+        return this.properties.getProperty("samplesApiBaseUrl", getApiRoot() + "samples/");
+    }
+
+    public String getStudiesApiBaseUrl() {
+        return this.properties.getProperty("studiesApiBaseUrl", getApiRoot() + "studies/");
     }
 
     public String getSamplesInSubmissionByIdUrl() {
-        return this.properties.getProperty("samplesInSubmissionByIdUrl", "http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=");
+        return this.properties.getProperty("samplesInSubmissionByIdUrl", getApiRoot() + "samples/search/by-submission?submissionId=");
     }
 
     public String getAuthenticationUrl() {

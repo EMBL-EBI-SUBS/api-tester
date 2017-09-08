@@ -18,10 +18,11 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import uk.ac.ebi.subs.data.objects.Sample;
+import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.Submission;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class TestUtils {
@@ -33,14 +34,6 @@ public class TestUtils {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return mapper.readValue(jsonFromResponse, clazz);
-    }
-
-    public static <T> T retrieveResourceFromString(String json, Class<T> clazz) throws IOException {
-
-        ObjectMapper mapper = new ObjectMapper()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        return mapper.readValue(json, clazz);
     }
 
     public static String createSubmission(String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
@@ -64,7 +57,24 @@ public class TestUtils {
         request.setEntity(payload);
 
         HttpResponse response =  HttpClientBuilder.create().build().execute(request);
-        Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
+        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
+        return resource.get_links().getSelf().getHref();
+    }
+
+    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias) throws IOException {
+        return createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, LocalDateTime.now().toString());
+    }
+
+    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String releaseDate) throws IOException {
+        HttpPost request = new HttpPost(studiesApiBaseUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, studyAlias, releaseDate));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
+
         return resource.get_links().getSelf().getHref();
     }
 
@@ -114,6 +124,6 @@ public class TestUtils {
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        return TestUtils.retrieveResourceFromResponse(response, Sample.class).getValidationResultsUrl();
+        return TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class).getValidationResultsUrl();
     }
 }

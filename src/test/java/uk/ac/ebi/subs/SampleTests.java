@@ -13,7 +13,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import uk.ac.ebi.subs.data.objects.Sample;
+import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.PutSampleResponseObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
@@ -39,10 +39,10 @@ public class SampleTests {
     private static String aapUsername = pm.getAapUsername();
     private static String aapPassword = pm.getAapPassword();
 
-    private static String token = "";
-    private static String submissionUrl = "";
-    private static String sampleUrl = "";
-    private static String sampleValidationResultsUrl = "";
+    private static String token;
+    private static String submissionUrl;
+    private static String sampleUrl;
+    private static String sampleValidationResultsUrl;
 
     private static String sampleAlias = TestUtils.getRandomAlias();
 
@@ -51,7 +51,7 @@ public class SampleTests {
         token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
         submissionUrl = TestUtils.createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
         sampleUrl = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, sampleAlias);
-        sampleValidationResultsUrl = TestUtils.getValidationResultsUrl(sampleUrl, token);
+        sampleValidationResultsUrl = sampleUrl + "/validationResult";
     }
 
     @Test
@@ -176,7 +176,7 @@ public class SampleTests {
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        Sample resource = TestUtils.retrieveResourceFromResponse(response, Sample.class);
+        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
 
         assertThat(
                 resource.getSampleRelationships(), equalTo(new String[0])
@@ -218,6 +218,8 @@ public class SampleTests {
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+
+        Thread.sleep(2000);
 
         assertThat(
                 resource.getValidationResultsFromTaxonomy()[0], notNullValue()
