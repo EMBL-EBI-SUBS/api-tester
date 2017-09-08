@@ -12,6 +12,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -32,6 +33,14 @@ public class TestUtils {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         return mapper.readValue(jsonFromResponse, clazz);
+    }
+
+    public static <T> T retrieveResourceFromString(String json, Class<T> clazz) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        return mapper.readValue(json, clazz);
     }
 
     public static String createSubmission(String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
@@ -98,5 +107,13 @@ public class TestUtils {
         Random random = new Random();
         String digit = String.format("%04d", random.nextInt(10000));
         return "alias-" + digit;
+    }
+
+    public static String getValidationResultsUrl(String sampleUrl, String token) throws IOException {
+        HttpUriRequest request = new HttpGet(sampleUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        return TestUtils.retrieveResourceFromResponse(response, Sample.class).getValidationResultsUrl();
     }
 }

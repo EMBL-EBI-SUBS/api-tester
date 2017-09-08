@@ -10,4 +10,6 @@ import lombok.ToString;
 public class Link {
 
     private Self self;
+
+    private ValidationResultLink validationResult;
 }

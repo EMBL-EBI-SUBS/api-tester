@@ -3,48 +3,55 @@ package uk.ac.ebi.subs;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.objects.Sample;
+import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.PutSampleResponseObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 
+import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class SampleTests {
 
-    static PropertiesManager propertiesManager = PropertiesManager.getInstance();
+    private static PropertiesManager pm = PropertiesManager.getInstance();
 
-    static String submitterEmail = propertiesManager.getSubmitterEmail();
-    static String teamName = propertiesManager.getTeamName();
-    static String submissionsApiBaseUrl = propertiesManager.getSubmissionsApiBaseUrl();
-    static String samplesApiBaseUrl = propertiesManager.getSamplesApiBaseUrl();
+    private static String submitterEmail = pm.getSubmitterEmail();
+    private static String teamName = pm.getTeamName();
+    private static String submissionsApiBaseUrl = pm.getSubmissionsApiBaseUrl();
+    private static String samplesApiBaseUrl = pm.getSamplesApiBaseUrl();
 
-    static String authUrl = propertiesManager.getAuthenticationUrl();
-    static String aapUsername = propertiesManager.getAapUsername();
-    static String aapPassword = propertiesManager.getAapPassword();
+    private static String authUrl = pm.getAuthenticationUrl();
+    private static String aapUsername = pm.getAapUsername();
+    private static String aapPassword = pm.getAapPassword();
 
-    static String token = "";
-    static String submissionUrl = "";
-    static String sampleUrl = "";
+    private static String token = "";
+    private static String submissionUrl = "";
+    private static String sampleUrl = "";
+    private static String sampleValidationResultsUrl = "";
 
-    static String sampleAlias = TestUtils.getRandomAlias();
+    private static String sampleAlias = TestUtils.getRandomAlias();
 
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
         submissionUrl = TestUtils.createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
         sampleUrl = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, sampleAlias);
+        sampleValidationResultsUrl = TestUtils.getValidationResultsUrl(sampleUrl, token);
     }
 
     @Test
@@ -173,6 +180,47 @@ public class SampleTests {
 
         assertThat(
                 resource.getSampleRelationships(), equalTo(new String[0])
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenGettingValidationResults_then200IsReceived() throws IOException {
+
+        HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        assertThat(
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenGettingValidationResults_thenStatusIsCompleteOrPending() throws IOException {
+
+        HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+
+        assertThat(
+                resource.getValidationStatus(), anyOf(equalTo("Pending"), equalTo("Complete"))
+        );
+    }
+
+    @Test
+    public void givenSampleExists_whenGettingValidationResults_thenTaxonomyValidationResultIsAvailable() throws IOException, InterruptedException {
+
+        HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+
+        assertThat(
+                resource.getValidationResultsFromTaxonomy()[0], notNullValue()
         );
     }
 
