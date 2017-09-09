@@ -199,19 +199,15 @@ public class SampleTests {
     @Test
     public void givenSampleExists_whenGettingValidationResults_thenStatusIsCompleteOrPending() throws IOException {
 
-        HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+        String validationStatus = TestUtils.getValidationStatus(sampleValidationResultsUrl, token);
 
         assertThat(
-                resource.getValidationStatus(), anyOf(equalTo("Pending"), equalTo("Complete"))
+                validationStatus, anyOf(equalTo("Pending"), equalTo("Complete"))
         );
     }
 
     @Test
-    public void givenSampleExists_whenGettingValidationResults_thenTaxonomyValidationResultIsAvailable() throws IOException, InterruptedException {
+    public void givenSampleExists_whenGettingTaxonomyValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
         HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));

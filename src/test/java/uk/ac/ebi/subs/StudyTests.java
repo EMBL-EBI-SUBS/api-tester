@@ -99,14 +99,42 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingValidationResults_thenStatusIsCompleteOrPending() throws IOException {
 
+        String validationStatus = TestUtils.getValidationStatus(studyValidationResultsUrl, token);
+
+        assertThat(
+                validationStatus, anyOf(equalTo("Pending"), equalTo("Complete"))
+        );
+    }
+
+    @Test
+    public void givenStudyExists_whenGettingCoreValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
+
         HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
 
+        Thread.sleep(2000);
+
         assertThat(
-                resource.getValidationStatus(), anyOf(equalTo("Pending"), equalTo("Complete"))
+                resource.getValidationResultsFromCore()[0].getValidationStatus(), equalTo("Pass")
+        );
+    }
+
+    @Test
+    public void givenStudyExists_whenGettingEnaValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
+
+        HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+
+        Thread.sleep(2000);
+
+        assertThat(
+                resource.getValidationResultsFromEna()[0].getValidationStatus(), equalTo("Pass")
         );
     }
 

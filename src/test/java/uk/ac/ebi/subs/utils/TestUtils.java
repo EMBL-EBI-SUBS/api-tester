@@ -12,6 +12,7 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -19,6 +20,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
+import uk.ac.ebi.subs.data.objects.ValidationResult;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -116,6 +118,16 @@ public class TestUtils {
         Random random = new Random();
         String digit = String.format("%04d", random.nextInt(10000));
         return "alias-" + digit;
+    }
+
+    public static String getValidationStatus(String validationResultsUrl, String token) throws IOException {
+        HttpUriRequest request = new HttpGet(validationResultsUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+
+        return resource.getValidationStatus();
     }
 }
 
