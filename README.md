@@ -38,9 +38,13 @@ Optional properties and their default values:
 ````properties
 submitterEmail=api-tester@ebi.ac.uk
 teamName=team-alpha
+
+apiRoot=http://submission-dev.ebi.ac.uk/api/
 submissionsApiBaseUrl=http://submission-dev.ebi.ac.uk/api/submissions/
 samplesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/samples/
 samplesInSubmissionByIdUrl=http://submission-dev.ebi.ac.uk/api/samples/search/by-submission?submissionId=
+studiesApiBaseUrl=http://submission-dev.ebi.ac.uk/api/studies/
+
 authenticationUrl=https://explore.api.aap.tsi.ebi.ac.uk/auth
 ````
 
