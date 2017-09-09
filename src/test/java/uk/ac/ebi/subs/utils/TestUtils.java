@@ -12,14 +12,13 @@ import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
-import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.Submission;
+import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -103,7 +102,7 @@ public class TestUtils {
         HttpResponse response = client.execute(new HttpGet(authUrl));
 
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-            throw new RuntimeException("ERROR: An error occurred when trying to obtain the AAP token.");
+            throw new CouldNotGetTokenException("ERROR: An error occurred when trying to obtain the AAP token.");
         }
         return EntityUtils.toString(response.getEntity());
     }
@@ -118,12 +117,11 @@ public class TestUtils {
         String digit = String.format("%04d", random.nextInt(10000));
         return "alias-" + digit;
     }
+}
 
-    public static String getValidationResultsUrl(String sampleUrl, String token) throws IOException {
-        HttpUriRequest request = new HttpGet(sampleUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+class CouldNotGetTokenException extends RuntimeException {
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        return TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class).getValidationResultsUrl();
+    public CouldNotGetTokenException(String message) {
+        super(message);
     }
 }
