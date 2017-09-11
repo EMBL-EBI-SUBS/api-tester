@@ -14,7 +14,6 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.objects.Submission;
-import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.structures.ErrorWrapperObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
@@ -176,20 +175,6 @@ public class SubmissionTests {
 
         assertThat(
                 mimeType, equalTo(halJsonMimeType)
-        );
-    }
-
-    @Test
-    public void givenSubmissionDraftExists_whenSubmissionStatusIsRetrieved_thenRetrievedResourceIsCorrect() throws IOException {
-
-        HttpUriRequest request = new HttpGet(submissionUrl + "/submissionStatus");
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        SubmissionStatus resource = TestUtils.retrieveResourceFromResponse(response, SubmissionStatus.class);
-
-        assertThat(
-                resource.getStatus(), equalTo("Draft")
         );
     }
 
