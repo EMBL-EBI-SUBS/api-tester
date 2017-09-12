@@ -26,22 +26,18 @@ import static org.junit.Assert.assertThat;
 
 public class SubmissionTests {
 
-    private static PropertiesManager propertiesManager = PropertiesManager.getInstance();
+    private static PropertiesManager pm = PropertiesManager.getInstance();
 
-    private static String submitterEmail = propertiesManager.getSubmitterEmail();
-    private static String teamName = propertiesManager.getTeamName();
-    private static String submissionsApiBaseUrl = propertiesManager.getSubmissionsApiBaseUrl();
+    private static String submitterEmail = pm.getSubmitterEmail();
+    private static String teamName = pm.getTeamName();
+    private static String submissionsApiBaseUrl = pm.getSubmissionsApiBaseUrl();
 
-    private static String authUrl = propertiesManager.getAuthenticationUrl();
-    private static String aapUsername = propertiesManager.getAapUsername();
-    private static String aapPassword = propertiesManager.getAapPassword();
-
-    private static String token = "";
-    private static String submissionUrl = "";
+    private static String token;
+    private static String submissionUrl;
 
     @BeforeClass
     public static void setUp() throws Exception {
-        token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
+        token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
     }
 

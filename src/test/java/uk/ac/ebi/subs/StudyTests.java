@@ -26,15 +26,7 @@ public class StudyTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
 
-    private static String submitterEmail = pm.getSubmitterEmail();
-    private static String teamName = pm.getTeamName();
-    private static String submissionsApiBaseUrl = pm.getSubmissionsApiBaseUrl();
     private static String studiesApiBaseUrl = pm.getStudiesApiBaseUrl();
-
-
-    private static String authUrl = pm.getAuthenticationUrl();
-    private static String aapUsername = pm.getAapUsername();
-    private static String aapPassword = pm.getAapPassword();
 
     private static String token;
     private static String submissionUrl;
@@ -45,8 +37,8 @@ public class StudyTests {
 
     @BeforeClass
     public static void setUp() throws Exception {
-        token = TestUtils.getJWTToken(authUrl, aapUsername, aapPassword);
-        submissionUrl = TestUtils.createSubmission(token, submissionsApiBaseUrl, submitterEmail, teamName);
+        token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
+        submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), pm.getTeamName());
         studyUrl = TestUtils.createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias);
         studyValidationResultsUrl = studyUrl + "/validationResult";
     }
