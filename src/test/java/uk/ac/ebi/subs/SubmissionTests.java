@@ -20,6 +20,7 @@ import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertThat;

@@ -62,6 +62,16 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
+    public static String createSample(String token, String samplesApiBaseUrl, StringEntity payload) throws IOException {
+        HttpPost request = new HttpPost(samplesApiBaseUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setEntity(payload);
+
+        HttpResponse response =  HttpClientBuilder.create().build().execute(request);
+        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
+        return resource.get_links().getSelf().getHref();
+    }
+
     public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias) throws IOException {
         return createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, LocalDateTime.now().toString());
     }

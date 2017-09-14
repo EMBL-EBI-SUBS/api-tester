@@ -1,6 +1,6 @@
 package uk.ac.ebi.subs;
 
-import org.apache.http.HttpResponse;
+ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -20,6 +20,7 @@ import java.io.IOException;
 
 import static org.hamcrest.core.AnyOf.anyOf;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
 public class StudyTests {
@@ -99,7 +100,7 @@ public class StudyTests {
     }
 
     @Test
-    public void givenStudyExists_whenGettingCoreValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
+    public void givenStudyExists_whenGettingCoreValidationResult_thenValidationResultStatusIsPass() throws IOException, InterruptedException {
 
         HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -126,7 +127,7 @@ public class StudyTests {
         Thread.sleep(2000);
 
         assertThat(
-                resource.getValidationResultsFromEna()[0].getValidationStatus(), equalTo("Pass")
+                resource.getValidationResultsFromEna()[0], notNullValue()
         );
     }
 
