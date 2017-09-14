@@ -8,6 +8,8 @@ import uk.ac.ebi.subs.data.structures.Link;
 @Getter @Setter @ToString
 public class SubmittableTemplate {
 
+    private String accession;
+
     private String alias;
 
     private Team team;

@@ -203,13 +203,13 @@ public class SampleTests {
     @Test
     public void givenSampleExists_whenGettingTaxonomyValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
+        Thread.sleep(2000);
+
         HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
-
-        Thread.sleep(2000);
 
         assertThat(
                 resource.getValidationResultsFromTaxonomy()[0], notNullValue()
