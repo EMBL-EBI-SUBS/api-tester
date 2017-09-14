@@ -102,13 +102,13 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingCoreValidationResult_thenValidationResultStatusIsPass() throws IOException, InterruptedException {
 
+        Thread.sleep(2000);
+
         HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
-
-        Thread.sleep(2000);
 
         assertThat(
                 resource.getValidationResultsFromCore()[0].getValidationStatus(), equalTo("Pass")
@@ -118,13 +118,13 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingEnaValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
+        Thread.sleep(2000);
+
         HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
-
-        Thread.sleep(2000);
 
         assertThat(
                 resource.getValidationResultsFromEna()[0], notNullValue()
