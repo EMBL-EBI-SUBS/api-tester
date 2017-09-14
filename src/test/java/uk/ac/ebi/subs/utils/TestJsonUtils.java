@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 
 public class TestJsonUtils {
 
@@ -45,6 +46,15 @@ public class TestJsonUtils {
 
         String json = template.replace(ALIAS, alias);
         return json.replace(SUBMISSION_URL, submissionUrl);
+    }
+
+    public static String getSampleJson(String submissionUrl, String alias) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("Sample.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace(ALIAS, alias);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        return json.replace(RELEASE_DATE, LocalDateTime.now().toString());
     }
 
     public static String getStudyJson(String submissionUrl, String alias, String releaseDate) throws IOException {
