@@ -21,6 +21,7 @@ import org.apache.http.util.EntityUtils;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
+import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -139,6 +140,26 @@ public class TestUtils {
 
         return resource.getValidationStatus();
     }
+
+    public static ValidationResultStatusAndLink getValidationResultStatusAndLinkFromStudy(
+            String studyValidationResultsUrl, String token) throws IOException {
+        HttpUriRequest createStudyRequest = new HttpGet(studyValidationResultsUrl);
+        createStudyRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        HttpResponse CreateStudyResponse = HttpClientBuilder.create().build().execute(createStudyRequest);
+
+        return TestUtils.retrieveResourceFromResponse(CreateStudyResponse, ValidationResultStatusAndLink.class);
+    }
+
+    public static ValidationResult getValidationResultFromValidationResultStatus(String validationResultURI, String token)
+            throws IOException {
+        HttpUriRequest validationResultRequest = new HttpGet(validationResultURI);
+        validationResultRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse validationResultResponse = HttpClientBuilder.create().build().execute(validationResultRequest);
+
+        return TestUtils.retrieveResourceFromResponse(validationResultResponse, ValidationResult.class);
+    }
+
 }
 
 class CouldNotGetTokenException extends RuntimeException {

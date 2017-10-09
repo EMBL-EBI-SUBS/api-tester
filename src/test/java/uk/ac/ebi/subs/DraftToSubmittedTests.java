@@ -109,7 +109,9 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws IOException {
+    public void givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws Exception {
+
+        Thread.sleep(2000);
 
         HttpUriRequest getRequest = new HttpGet(sampleUrl);
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -138,6 +140,7 @@ public class DraftToSubmittedTests {
 
     @AfterClass
     public static void tearDown() throws Exception {
+
         HttpDelete request = new HttpDelete(submissionUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request);
