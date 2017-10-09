@@ -40,7 +40,7 @@ public class PropertiesManager {
     }
 
     public String getApiRoot() {
-        return this.properties.getProperty("apiRoot", "http://submission-dev.ebi.ac.uk/api/");
+        return this.properties.getProperty("apiRoot", "https://submission-dev.ebi.ac.uk/api/");
     }
 
     public String getSubmissionsApiBaseUrl() {

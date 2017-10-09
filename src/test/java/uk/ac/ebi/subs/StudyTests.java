@@ -1,18 +1,15 @@
 package uk.ac.ebi.subs;
 
- import org.apache.http.HttpResponse;
+import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
+import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -104,14 +101,15 @@ public class StudyTests {
 
         Thread.sleep(2000);
 
-        HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        ValidationResultStatusAndLink validationResultStatusAndLink =
+                TestUtils.getValidationResultStatusAndLinkFromStudy(studyValidationResultsUrl, token);
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+        ValidationResult validationResult =
+                TestUtils.getValidationResultFromValidationResultStatus(
+                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
 
         assertThat(
-                resource.getValidationResultsFromCore()[0].getValidationStatus(), equalTo("Pass")
+                validationResult.getValidationResultsFromCore()[0].getValidationStatus(), equalTo("Pass")
         );
     }
 
@@ -120,19 +118,21 @@ public class StudyTests {
 
         Thread.sleep(2000);
 
-        HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        ValidationResultStatusAndLink validationResultStatusAndLink =
+                TestUtils.getValidationResultStatusAndLinkFromStudy(studyValidationResultsUrl, token);
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        ValidationResult resource = TestUtils.retrieveResourceFromResponse(response, ValidationResult.class);
+        ValidationResult validationResult =
+                TestUtils.getValidationResultFromValidationResultStatus(
+                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
 
         assertThat(
-                resource.getValidationResultsFromEna()[0], notNullValue()
+                validationResult.getValidationResultsFromEna()[0], notNullValue()
         );
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
+
         HttpDelete request = new HttpDelete(submissionUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request);
