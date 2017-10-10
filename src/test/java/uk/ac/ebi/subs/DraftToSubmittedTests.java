@@ -111,7 +111,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws Exception {
 
-        Thread.sleep(2000);
+        Thread.sleep(10000);
 
         HttpUriRequest getRequest = new HttpGet(sampleUrl);
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
