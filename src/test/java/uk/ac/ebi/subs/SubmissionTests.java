@@ -13,8 +13,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import uk.ac.ebi.subs.data.objects.ApiError;
 import uk.ac.ebi.subs.data.objects.Submission;
-import uk.ac.ebi.subs.data.structures.ErrorWrapperObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -22,7 +22,9 @@ import java.io.IOException;
 import java.util.UUID;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class SubmissionTests {
 
@@ -139,11 +141,11 @@ public class SubmissionTests {
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        ErrorWrapperObject resource = TestUtils.retrieveResourceFromResponse(response, ErrorWrapperObject.class);
+        ApiError apiError = TestUtils.retrieveResourceFromResponse(response, ApiError.class);
 
-        assertThat(
-                resource.getFirstErrorMessage(), equalTo("resource_locked")
-        );
+        assertEquals(apiError.getStatus(), HttpStatus.SC_BAD_REQUEST);
+        assertTrue(apiError.getErrors().size() == 1);
+        assertTrue(apiError.getErrors().get(0).startsWith("resource_locked"));
     }
 
     @Test
