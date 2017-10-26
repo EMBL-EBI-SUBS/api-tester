@@ -18,12 +18,10 @@
       [ {
         "url" : "http://purl.obolibrary.org/obo/UBERON_0006727"
       } ]
-      }, {
-      "name" : "release",
-      "value" : "{release.date.placeholder}"
       }
     ],
   "taxonId" : 9606,
   "taxon" : "Homo sapiens",
-  "submission" : "{submissionUrl.placeholder}"
+  "submission" : "{submissionUrl.placeholder}",
+  "releaseDate" : "{release.date.placeholder}"
 }
