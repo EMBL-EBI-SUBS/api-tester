@@ -29,7 +29,8 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(SUBMISSION_URL, submissionUrl);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        return json.replace(RELEASE_DATE, LocalDateTime.now().toString());
     }
 
     public static String getUpdateSampleJson(String submissionUrl, String alias) throws IOException {
