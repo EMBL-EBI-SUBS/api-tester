@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class TestJsonUtils {
@@ -30,7 +31,7 @@ public class TestJsonUtils {
 
         String json = template.replace(ALIAS, alias);
         json = json.replace(SUBMISSION_URL, submissionUrl);
-        return json.replace(RELEASE_DATE, LocalDateTime.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 
     public static String getUpdateSampleJson(String submissionUrl, String alias) throws IOException {
@@ -55,7 +56,7 @@ public class TestJsonUtils {
 
         String json = template.replace(ALIAS, alias);
         json = json.replace(SUBMISSION_URL, submissionUrl);
-        return json.replace(RELEASE_DATE, LocalDateTime.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 
     public static String getStudyJson(String submissionUrl, String alias, String releaseDate) throws IOException {
