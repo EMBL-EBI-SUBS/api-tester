@@ -47,7 +47,7 @@ public class StudyTests {
         HttpPost request = new HttpPost(studiesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, TestUtils.getRandomAlias(), "2017-04-17T11:03:08.114+0000"));
+        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, TestUtils.getRandomAlias(), "2017-04-17"));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -63,7 +63,7 @@ public class StudyTests {
         HttpPut request = new HttpPut(studyUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, studyAlias, "2017-04-17T11:03:08.114+0000"));
+        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, studyAlias, "2017-04-17"));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
