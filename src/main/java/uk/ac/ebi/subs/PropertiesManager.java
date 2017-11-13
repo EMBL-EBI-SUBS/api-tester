@@ -32,7 +32,7 @@ public class PropertiesManager {
     }
 
     public String getSubmitterEmail() {
-        return this.properties.getProperty("submitterEmail", "api-tester@ebi.ac.uk");
+        return this.properties.getProperty("submitterEmail", "subs-internal@ebi.ac.uk");
     }
 
     public String getTeamName() {
