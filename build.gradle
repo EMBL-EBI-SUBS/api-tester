@@ -1,7 +1,17 @@
 group 'uk.ac.ebi.subs'
-version '0.3.0'
+version '0.4.0'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'org.hidetake:gradle-ssh-plugin:1.1.3'
+    }
+}
 
 apply plugin: 'java'
+apply plugin: 'org.hidetake.ssh'
 
 repositories {
     mavenCentral()
@@ -16,4 +26,55 @@ dependencies {
 
 test {
     systemProperties=System.properties
+}
+
+ssh.settings {
+    user = 'sub_adm'
+}
+
+if (project.hasProperty('sshKeyFile')) {
+    ssh.settings.identity = new File(sshKeyFile)
+}
+
+if (project.hasProperty('sshPassphrase')) {
+    ssh.settings.passphrase = sshPassphrase
+}
+
+def devDeployHostName = hasProperty(project.name + "DevDeployTarget") ? getProperty(project.name + "DevDeployTarget") : 'localhost'
+def testDeployHostName = hasProperty(project.name + "TestDeployTarget") ? getProperty(project.name + "TestDeployTarget") : 'localhost'
+
+remotes {
+    submission_dev {
+        role('dev')
+        host = devDeployHostName
+    }
+    submission_test {
+        role('test')
+        host = testDeployHostName
+    }
+}
+
+task deployJar(type: SshTask, dependsOn: 'assemble') {
+    doLast {
+        File jarDeployDir = new File("/data/$gradle_env/$project.name/jar")
+        sshRun(jarDeployDir)
+    }
+    ssh.settings {
+        knownHosts = allowAnyHosts
+    }
+}
+
+private Object sshRun(File jarDeployDir) {
+    ssh.run {
+        session(remotes.role(gradle_env)) {
+            execute "/homes/sub_adm/create_dirs.sh $gradle_env $project.name", ignoreError: false
+            println "Uploading jar $jar.archivePath.name to $jarDeployDir area on $remote"
+            put(jar.archivePath.absolutePath, jarDeployDir.absolutePath)
+            println "creating symbolic link to $jar.archiveName"
+            def result = execute "ln -s -f $jarDeployDir/$jar.archiveName $jarDeployDir/$jar.baseName" + ".jar", ignoreError: true
+            println result
+            println "updating permissions of $jarDeployDir/$jar.archiveName"
+            execute "chmod u+x $jarDeployDir/*", ignoreError: false
+        }
+    }
 }
