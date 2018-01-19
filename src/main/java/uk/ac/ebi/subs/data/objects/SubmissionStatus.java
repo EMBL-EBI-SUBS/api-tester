@@ -23,6 +23,10 @@ public class SubmissionStatus {
     public String getStatusUpdateUrl() {
         return _links.getSelf_update().getHref();
     }
+
+    public String getSelfUrl() {
+        return _links.getSelf().getHref();
+    }
 }
 
 @Getter @Setter @ToString
@@ -30,10 +34,18 @@ class _Links {
 
     @JsonProperty("self:update")
     private Self_Update self_update;
+
+    private Self self;
 }
 
 @Getter @Setter @ToString
 class Self_Update {
+
+    private String href;
+}
+
+@Getter @Setter @ToString
+class Self {
 
     private String href;
 }

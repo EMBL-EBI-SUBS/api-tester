@@ -127,7 +127,7 @@ public class TestUtils {
 
     public static String getRandomAlias() {
         Random random = new Random();
-        String digit = String.format("%04d", random.nextInt(10000));
+        String digit = String.format("%06d", random.nextInt(1000000));
         return "alias-" + digit;
     }
 
