@@ -16,4 +16,9 @@ dependencies {
 
 test {
     systemProperties=System.properties
+    useJUnit {
+        if (project.hasProperty('testCategory')) {
+            includeCategories project.property('testCategory')
+        }
+    }
 }

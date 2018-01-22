@@ -11,25 +11,26 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
+import uk.ac.ebi.subs.categories.DevEnv;
+import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
-import uk.ac.ebi.subs.data.structures.WrapperObject;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
-import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertTrue;
 import static uk.ac.ebi.subs.utils.TestUtils.getRandomAlias;
 
+@Category({TestEnv.class, DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING) // The order of test execution matters here
 public class POSTingSampleToMultipleSubmissionsTest {
 
