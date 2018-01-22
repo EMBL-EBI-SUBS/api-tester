@@ -13,6 +13,9 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import uk.ac.ebi.subs.categories.DevEnv;
+import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.ApiError;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
@@ -26,6 +29,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+@Category({TestEnv.class, DevEnv.class})
 public class SubmissionTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();

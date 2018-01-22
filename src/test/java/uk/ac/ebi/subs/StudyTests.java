@@ -8,6 +8,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
@@ -20,6 +22,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
+@Category({DevEnv.class})
 public class StudyTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
