@@ -67,4 +67,13 @@ public class TestJsonUtils {
         json = json.replace(SUBMISSION_URL, submissionUrl);
         return json.replace(RELEASE_DATE, releaseDate);
     }
+
+    public static String createSampleForSubmissionJson(String submissionUrl, String alias) throws IOException{
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("SampleForSubmission.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace(ALIAS, alias);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+    }
 }
