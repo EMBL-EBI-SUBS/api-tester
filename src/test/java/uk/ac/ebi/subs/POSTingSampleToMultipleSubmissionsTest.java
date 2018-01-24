@@ -81,7 +81,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(patchRequest);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
-        Thread.sleep(2000); // Make sure the submission gets completed
+        Thread.sleep(5000); // Make sure the submission gets completed
 
         // Add same sample to submission 1
         HttpPost request = new HttpPost(samplesApiBaseUrl);
