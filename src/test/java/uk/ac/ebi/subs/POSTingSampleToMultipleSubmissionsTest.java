@@ -81,7 +81,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(patchRequest);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
-        Thread.sleep(5000); // Make sure the submission gets completed
+        Thread.sleep(10000); // Make sure the submission gets completed
 
         // Add same sample to submission 1
         HttpPost request = new HttpPost(samplesApiBaseUrl);
@@ -91,6 +91,8 @@ public class POSTingSampleToMultipleSubmissionsTest {
         request.setEntity(payload);
 
         HttpResponse sampleResponse = HttpClientBuilder.create().build().execute(request);
+        //System.out.println(EntityUtils.toString(sampleResponse.getEntity()));
+
         assertThat(sampleResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
     }
 
