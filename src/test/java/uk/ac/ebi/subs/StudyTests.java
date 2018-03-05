@@ -2,7 +2,11 @@ package uk.ac.ebi.subs;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
@@ -28,6 +32,7 @@ public class StudyTests {
     private static PropertiesManager pm = PropertiesManager.getInstance();
 
     private static String studiesApiBaseUrl = pm.getStudiesApiBaseUrl();
+    private static String projectsApiBaseUrl = pm.getProjectsApiBaseUrl();
 
     private static String token;
     private static String submissionUrl;
@@ -35,12 +40,15 @@ public class StudyTests {
     private static String studyValidationResultsUrl;
 
     private static String studyAlias = TestUtils.getRandomAlias();
+    private static String projectAlias = TestUtils.getRandomAlias();
 
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        studyUrl = TestUtils.createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias);
+        TestUtils.createProject(token, projectsApiBaseUrl, submissionUrl, projectAlias);
+
+        studyUrl = TestUtils.createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, projectAlias, pm.getTeamName());
         studyValidationResultsUrl = studyUrl + "/validationResult";
     }
 
@@ -50,7 +58,16 @@ public class StudyTests {
         HttpPost request = new HttpPost(studiesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, TestUtils.getRandomAlias(), "2017-04-17"));
+        StringEntity payload = new StringEntity(
+                TestJsonUtils.getStudyJson(
+                        submissionUrl,
+                        TestUtils.getRandomAlias(),
+                        projectAlias,
+                        "2017-04-17",
+                        pm.getTeamName()
+
+                )
+        );
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -66,7 +83,15 @@ public class StudyTests {
         HttpPut request = new HttpPut(studyUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, studyAlias, "2017-04-17"));
+        StringEntity payload = new StringEntity(
+                TestJsonUtils.getStudyJson(
+                        submissionUrl,
+                        studyAlias,
+                        projectAlias,
+                        "2017-04-17",
+                        pm.getTeamName()
+                )
+        );
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);

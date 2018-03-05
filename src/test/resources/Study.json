@@ -3,26 +3,35 @@
   "title": "Study title",
   "description": "Description",
   "attributes": {
-    "study_type": [ {
-      "value": "Whole Genome Sequencing",
-      "units": null,
-      "terms": []
-    } ],
-    "Project Coordinator": [ {
-      "value": "John Doe",
-      "units": null,
-      "terms": []
-    } ],
-    "study_abstract": [ {
-      "value": "study abstract",
-      "units": null
-    } ]
+    "study_type": [
+      {
+        "value": "Whole Genome Sequencing",
+        "units": null,
+        "terms": []
+      }
+    ],
+    "Project Coordinator": [
+      {
+        "value": "John Doe",
+        "units": null,
+        "terms": []
+      }
+    ],
+    "study_abstract": [
+      {
+        "value": "study abstract",
+        "units": null
+      }
+    ]
   },
   "studyType": "Sequencing",
   "publications": [],
   "contacts": [],
   "protocolRefs": [],
-  "projectRef": null,
+  "projectRef": {
+    "alias": "{projectAlias.placeholder}",
+    "team": "{team.name.placeholder}"
+  },
   "releaseDate": "{release.date.placeholder}",
-  "submission" : "{submissionUrl.placeholder}"
+  "submission": "{submissionUrl.placeholder}"
 }

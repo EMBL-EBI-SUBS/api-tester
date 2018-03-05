@@ -1,0 +1,9 @@
+{
+  "alias": "{alias.placeholder}",
+  "title": "Project title",
+  "description": "Description",
+  "publications": [],
+  "contacts": [],
+  "releaseDate": "{release.date.placeholder}",
+  "submission" : "{submissionUrl.placeholder}"
+}

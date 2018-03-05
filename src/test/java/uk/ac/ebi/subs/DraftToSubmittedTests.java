@@ -40,12 +40,12 @@ public class DraftToSubmittedTests {
 
     private static String sampleUrl;
 
-
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), pm.getTeamName());
         sampleUrl = TestUtils.createSample(token, samplesApiBaseUrl, new StringEntity(TestJsonUtils.getSampleJson(submissionUrl, TestUtils.getRandomAlias())));
+
     }
 
     @Test
@@ -71,8 +71,10 @@ public class DraftToSubmittedTests {
         StringEntity payload = new StringEntity(TestJsonUtils.getSampleJson(submissionUrl, TestUtils.getRandomAlias()));
         request.setEntity(payload);
 
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
         assertThat(
-                HttpClientBuilder.create().build().execute(request).getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
         );
     }
 
@@ -82,11 +84,21 @@ public class DraftToSubmittedTests {
         HttpPost request = new HttpPost(pm.getStudiesApiBaseUrl());
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, TestUtils.getRandomAlias(), LocalDateTime.now().toString()));
+        StringEntity payload = new StringEntity(
+                TestJsonUtils.getStudyJson(
+                        submissionUrl,
+                        TestUtils.getRandomAlias(),
+                        TestUtils.getRandomAlias(),
+                        LocalDateTime.now().toString(),
+                        pm.getTeamName()
+                )
+        );
         request.setEntity(payload);
 
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
         assertThat(
-                HttpClientBuilder.create().build().execute(request).getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
         );
     }
 
@@ -98,7 +110,9 @@ public class DraftToSubmittedTests {
         HttpUriRequest getRequest = new HttpGet(submissionUrl + "/submissionStatus");
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        SubmissionStatus submissionStatus = TestUtils.retrieveResourceFromResponse(HttpClientBuilder.create().build().execute(getRequest), SubmissionStatus.class);
+        HttpResponse getResponse = HttpClientBuilder.create().build().execute(getRequest);
+
+        SubmissionStatus submissionStatus = TestUtils.retrieveResourceFromResponse(getResponse, SubmissionStatus.class);
 
         HttpPatch patchRequest = new HttpPatch(submissionStatus.getStatusUpdateUrl());
         patchRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));

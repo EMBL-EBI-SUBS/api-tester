@@ -2,6 +2,7 @@ package uk.ac.ebi.subs.utils;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -24,18 +25,29 @@ import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Random;
 
 public class TestUtils {
+
+    public static String extractResponseBody(HttpResponse response){
+        String body = null;
+        try {
+            body = IOUtils.toString(response.getEntity().getContent(), StandardCharsets.UTF_8.name());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return body;
+    }
 
     public static <T> T retrieveResourceFromResponse(HttpResponse response, Class<T> clazz) throws IOException {
 
         String jsonFromResponse = EntityUtils.toString(response.getEntity());
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-        return mapper.readValue(jsonFromResponse, clazz);
+        T object = mapper.readValue(jsonFromResponse, clazz);
+        return object;
     }
 
     public static String createSubmission(String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
@@ -73,15 +85,40 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias) throws IOException {
-        return createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, LocalDateTime.now().toString());
+    public static String createProject(String token, String projectsApiBaseUrl, String submissionUrl, String projectAlias) throws IOException {
+        return createProject(token, projectsApiBaseUrl, submissionUrl, projectAlias, LocalDateTime.now().toString());
     }
 
-    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String releaseDate) throws IOException {
+    public static String createProject(String token, String projectsApiBaseUrl, String submissionUrl, String projectAlias, String releaseDate) throws IOException {
+        HttpPost request = new HttpPost(projectsApiBaseUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(TestJsonUtils.getProjectJson(submissionUrl, projectAlias, releaseDate));
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
+
+        return resource.get_links().getSelf().getHref();
+    }
+
+    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+        return createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, projectAlias, LocalDateTime.now().toString(),teamName);
+    }
+
+    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String releaseDate, String teamName) throws IOException {
         HttpPost request = new HttpPost(studiesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getStudyJson(submissionUrl, studyAlias, releaseDate));
+        StringEntity payload = new StringEntity(
+                TestJsonUtils.getStudyJson(
+                        submissionUrl,
+                        studyAlias,
+                        projectAlias,
+                        releaseDate,
+                        teamName
+                )
+        );
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
