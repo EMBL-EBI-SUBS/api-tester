@@ -4,7 +4,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -27,10 +26,6 @@ public class CreateProjectTest {
 
     private static String token;
     private static String submissionUrl;
-    private static String projectUrl;
-    private static String projectValidationResultsUrl;
-
-    private static String projectAlias = TestUtils.getRandomAlias();
 
     @BeforeClass
     public static void setUp() throws Exception {
