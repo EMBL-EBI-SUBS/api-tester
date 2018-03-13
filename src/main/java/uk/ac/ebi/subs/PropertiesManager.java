@@ -64,7 +64,7 @@ public class PropertiesManager {
     }
 
     public String getAuthenticationUrl() {
-        return this.properties.getProperty("authenticationUrl", "https://explore.api.aap.tsi.ebi.ac.uk/auth");
+        return this.properties.getProperty("authenticationUrl", "https://explore.api.aai.ebi.ac.uk/auth");
     }
 
     public String getAapUsername() {
