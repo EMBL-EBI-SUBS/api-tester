@@ -36,7 +36,7 @@ public class PropertiesManager {
     }
 
     public String getTeamName() {
-        return this.properties.getProperty("teamName", "self.usi-user");
+        return this.properties.getProperty("teamName", "subs.api-tester-team-1");
     }
 
     public String getApiRoot() {
