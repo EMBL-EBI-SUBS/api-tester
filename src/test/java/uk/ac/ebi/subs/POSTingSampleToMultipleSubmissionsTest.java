@@ -78,7 +78,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
         patchRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         patchRequest.setEntity(new StringEntity("{\"status\" : \"Submitted\"}"));
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(patchRequest); //TODO this gives a 400 error, submitted is not permitted
+        HttpResponse response = HttpClientBuilder.create().build().execute(patchRequest);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
         Thread.sleep(10000); // Make sure the submission gets completed
