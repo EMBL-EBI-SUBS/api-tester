@@ -79,18 +79,16 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionExists_whenCreatingAStudy_then201IsReceived() throws IOException {
+    public void givenSubmissionExists_whenCreatingAProject_then201IsReceived() throws IOException {
 
-        HttpPost request = new HttpPost(pm.getStudiesApiBaseUrl());
+        HttpPost request = new HttpPost(pm.getProjectsApiBaseUrl());
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(
-                TestJsonUtils.getStudyJson(
+                TestJsonUtils.getProjectJson(
                         submissionUrl,
                         TestUtils.getRandomAlias(),
-                        TestUtils.getRandomAlias(),
-                        LocalDateTime.now().toString(),
-                        pm.getTeamName()
+                        LocalDateTime.now().toString()
                 )
         );
         request.setEntity(payload);
