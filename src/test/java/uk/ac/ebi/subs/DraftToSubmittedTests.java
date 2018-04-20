@@ -103,7 +103,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsOK_whenPatchingSubmissionStatusSubmitted_then200IsReceived() throws IOException, InterruptedException {
 
-        TestUtils.waitForValidationResults(sampleUrl,token);
+        TestUtils.waitForUpdateableSubmission(submissionUrl,token);
 
         HttpUriRequest getRequest = new HttpGet(submissionUrl + "/submissionStatus");
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -126,7 +126,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws Exception {
 
-        Thread.sleep(10000);
+        TestUtils.waitForCompletedSubmittable(sampleUrl,token);
 
         HttpUriRequest getRequest = new HttpGet(sampleUrl);
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));

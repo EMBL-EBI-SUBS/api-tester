@@ -4,12 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@ToString
+@Getter @Setter @ToString
 public class Link {
 
-    private Self self;
-
-    private ValidationResultLink validationResult;
+    private String href;
 }

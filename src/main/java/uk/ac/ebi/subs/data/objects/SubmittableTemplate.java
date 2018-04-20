@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import uk.ac.ebi.subs.data.structures.Embedded;
-import uk.ac.ebi.subs.data.structures.Link;
+import uk.ac.ebi.subs.data.structures.Links;
 
 @Getter @Setter @ToString
 public class SubmittableTemplate {
@@ -21,7 +21,7 @@ public class SubmittableTemplate {
 
     private SampleRelationship[] sampleRelationships;
 
-    private Link _links;
+    private Links _links;
 
     public String getValidationResultsUrl() {
         return _links.getValidationResult().getHref();
