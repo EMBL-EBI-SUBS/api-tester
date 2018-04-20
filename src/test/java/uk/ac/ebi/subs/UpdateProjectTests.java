@@ -32,7 +32,7 @@ public class UpdateProjectTests {
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
-        submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), pm.getTeamName());
+        submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
         projectUrl = TestUtils.createProject(token, projectsApiBaseUrl, submissionUrl, projectAlias);
     }
 

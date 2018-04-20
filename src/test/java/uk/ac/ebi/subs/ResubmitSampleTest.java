@@ -43,7 +43,7 @@ public class ResubmitSampleTest {
         String sampleAlias = TestUtils.getRandomAlias();
 
         // --- First submission --- //
-        String firstSubmissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), teamName);
+        String firstSubmissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), teamName);
         String firstSampleUrl = createSampleForSubmission(token, samplesApiBaseUrl, firstSubmissionUrl, sampleAlias);
         Thread.sleep(2000); // Make sure validation results are all back
 
@@ -61,7 +61,7 @@ public class ResubmitSampleTest {
         Thread.sleep(40000); // Make sure first sample is submitted
 
         // --- Second submission --- //
-        String submissionUrl2 = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), teamName);
+        String submissionUrl2 = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), teamName);
         String secondSampleUrl = createSampleForSubmission(token, samplesApiBaseUrl, submissionUrl2, sampleAlias);
         Thread.sleep(2000); // Make sure validation results are all back
 

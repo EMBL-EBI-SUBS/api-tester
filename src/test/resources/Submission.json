@@ -3,6 +3,9 @@
     "email" : "{submitter.email.placeholder}"
   },
   "team" : {
-    "name" : "{team.name.placeholder}"
+    "name" : "{team.name.placeholder}",
+    "profile": {
+      "centre name": "EMBL-EBI"
+    }
   }
 }

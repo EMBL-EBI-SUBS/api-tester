@@ -43,7 +43,7 @@ public class SampleTests {
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
-        submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), teamName);
+        submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), teamName);
         sampleUrl = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, sampleAlias);
         sampleValidationResultsUrl = sampleUrl + "/validationResult";
     }

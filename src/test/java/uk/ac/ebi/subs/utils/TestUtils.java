@@ -50,8 +50,10 @@ public class TestUtils {
         return object;
     }
 
-    public static String createSubmission(String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
-        HttpPost request = new HttpPost(submissionsApiBaseUrl);
+    public static String createSubmission(String token, String submissionsApiTemplatedUrl, String submitterEmail, String teamName) throws IOException {
+        String submissionApiUrl = submissionsApiTemplatedUrl.replace("{teamName}",teamName);
+
+        HttpPost request = new HttpPost(submissionApiUrl);
         request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getSubmissionJson(submitterEmail, teamName));
@@ -60,7 +62,8 @@ public class TestUtils {
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
         Submission resource = retrieveResourceFromResponse(response, Submission.class);
-        return resource.get_links().getSelf().getHref();
+        String selfHref = resource.get_links().getSelf().getHref();
+        return selfHref.replace("{?projection}","");
     }
 
     public static String createSample(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
