@@ -19,6 +19,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
@@ -198,6 +199,32 @@ public class TestUtils {
         HttpResponse validationResultResponse = HttpClientBuilder.create().build().execute(validationResultRequest);
 
         return TestUtils.retrieveResourceFromResponse(validationResultResponse, ValidationResult.class);
+    }
+
+    public static void waitForValidationResults(String submittableUrl, String token ) throws IOException, InterruptedException {
+
+        long maximumIntervalMillis = 5000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            HttpUriRequest submittableRequest = new HttpGet(submittableUrl);
+            submittableRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+            HttpResponse submittableResponse = HttpClientBuilder.create().build().execute(submittableRequest);
+
+            Assert.assertEquals(200, submittableResponse.getStatusLine().getStatusCode());
+            SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(submittableResponse,SubmittableTemplate.class);
+
+            boolean validationIsNotPending = !resource.get_embedded().getValidationResult()
+                    .getValidationStatus().equalsIgnoreCase("pending");
+
+            if (validationIsNotPending){
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+
+        throw new RuntimeException("Gave up waiting for validation results on "+submittableUrl);
     }
 
 }

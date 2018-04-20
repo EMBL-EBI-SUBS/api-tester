@@ -203,7 +203,7 @@ public class SampleTests {
     @Test
     public void givenSampleExists_whenGettingTaxonomyValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
-        Thread.sleep(2000);
+        TestUtils.waitForValidationResults(sampleUrl,token);
 
         ValidationResultStatusAndLink validationResultStatusAndLink =
                 TestUtils.getValidationResultStatusAndLinkFromStudy(sampleValidationResultsUrl, token);

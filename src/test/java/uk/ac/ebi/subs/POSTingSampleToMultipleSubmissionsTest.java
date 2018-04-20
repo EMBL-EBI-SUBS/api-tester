@@ -40,12 +40,13 @@ public class POSTingSampleToMultipleSubmissionsTest {
     private static String token;
     private static String[] submissionsUrls;
     private static String alias = getRandomAlias();
+    private static String sampleUrl;
 
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionsUrls = TestUtils.createNSubmissions(2, token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        createSampleForSubmission(token, samplesApiBaseUrl, submissionsUrls[0], alias);
+        sampleUrl = createSampleForSubmission(token, samplesApiBaseUrl, submissionsUrls[0], alias);
     }
 
     @Test
@@ -66,7 +67,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
     @Test
     public void B_givenSampleInSubmissionWithStatusCompleted_whenAddingItToOtherSubmission_thenItShouldBeAccepted() throws IOException, InterruptedException {
 
-        Thread.sleep(2000); // Make sure validation results are all back
+        TestUtils.waitForValidationResults(sampleUrl,token);
 
         // Submit submission 0
         HttpUriRequest getRequest = new HttpGet(submissionsUrls[0] + "/submissionStatus");

@@ -3,6 +3,7 @@ package uk.ac.ebi.subs.data.objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import uk.ac.ebi.subs.data.structures.Embedded;
 import uk.ac.ebi.subs.data.structures.Link;
 
 @Getter @Setter @ToString
@@ -25,6 +26,8 @@ public class SubmittableTemplate {
     public String getValidationResultsUrl() {
         return _links.getValidationResult().getHref();
     }
+
+    private Embedded _embedded;
 }
 
 @Getter @Setter @ToString

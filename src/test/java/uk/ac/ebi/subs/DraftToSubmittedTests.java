@@ -103,7 +103,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsOK_whenPatchingSubmissionStatusSubmitted_then200IsReceived() throws IOException, InterruptedException {
 
-        Thread.sleep(2000); // Make sure validation results are all back
+        TestUtils.waitForValidationResults(sampleUrl,token);
 
         HttpUriRequest getRequest = new HttpGet(submissionUrl + "/submissionStatus");
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));

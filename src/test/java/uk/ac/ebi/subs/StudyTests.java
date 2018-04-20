@@ -127,7 +127,7 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingCoreValidationResult_thenValidationResultStatusIsPass() throws IOException, InterruptedException {
 
-        Thread.sleep(2000);
+        TestUtils.waitForValidationResults(studyUrl,token);
 
         ValidationResultStatusAndLink validationResultStatusAndLink =
                 TestUtils.getValidationResultStatusAndLinkFromStudy(studyValidationResultsUrl, token);
@@ -144,7 +144,7 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingEnaValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
-        Thread.sleep(2000);
+        TestUtils.waitForValidationResults(studyUrl,token);
 
         ValidationResultStatusAndLink validationResultStatusAndLink =
                 TestUtils.getValidationResultStatusAndLinkFromStudy(studyValidationResultsUrl, token);
