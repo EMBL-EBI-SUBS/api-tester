@@ -1,8 +1,10 @@
 package uk.ac.ebi.subs;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Properties;
 
 public class PropertiesManager {
@@ -13,6 +15,7 @@ public class PropertiesManager {
     private PropertiesManager() {
         properties = new Properties();
         String path = "../application.properties";
+        File file = new File(path).getAbsoluteFile();
         try (FileInputStream fileInputStream = new FileInputStream(path)) {
             properties.load(fileInputStream);
         } catch (FileNotFoundException e) {
@@ -43,8 +46,8 @@ public class PropertiesManager {
         return this.properties.getProperty("apiRoot", "https://submission-dev.ebi.ac.uk/api/");
     }
 
-    public String getSubmissionsApiBaseUrl() {
-        return this.properties.getProperty("submissionsApiBaseUrl", getApiRoot() + "submissions/");
+    public String getSubmissionsApiTemplatedUrl() {
+        return this.properties.getProperty("submissionsApiBaseUrl", getApiRoot() + "teams/{teamName}/submissions/");
     }
 
     public String getSamplesApiBaseUrl() {

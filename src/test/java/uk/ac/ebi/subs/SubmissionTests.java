@@ -36,7 +36,7 @@ public class SubmissionTests {
 
     private static String submitterEmail = pm.getSubmitterEmail();
     private static String teamName = pm.getTeamName();
-    private static String submissionsApiBaseUrl = pm.getSubmissionsApiBaseUrl();
+    private static String submissionsApiBaseUrl = pm.getSubmissionsApiTemplatedUrl().replace("{teamName}",teamName);
 
     private static String token;
     private static String submissionUrl;
@@ -148,8 +148,9 @@ public class SubmissionTests {
         ApiError apiError = TestUtils.retrieveResourceFromResponse(response, ApiError.class);
 
         assertEquals(apiError.getStatus(), HttpStatus.SC_BAD_REQUEST);
-        assertTrue(apiError.getErrors().size() == 1);
+        assertTrue(apiError.getErrors().size() == 2);
         assertTrue(apiError.getErrors().get(0).startsWith("resource_locked"));
+        assertTrue(apiError.getErrors().get(1).startsWith("resource_locked"));
     }
 
     @Test

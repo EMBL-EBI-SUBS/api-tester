@@ -44,7 +44,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
     @BeforeClass
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
-        submissionsUrls = TestUtils.createNSubmissions(2, token, pm.getSubmissionsApiBaseUrl(), pm.getSubmitterEmail(), pm.getTeamName());
+        submissionsUrls = TestUtils.createNSubmissions(2, token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
         createSampleForSubmission(token, samplesApiBaseUrl, submissionsUrls[0], alias);
     }
 
