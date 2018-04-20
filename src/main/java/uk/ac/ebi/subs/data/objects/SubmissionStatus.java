@@ -21,7 +21,10 @@ public class SubmissionStatus {
     private _Links _links;
 
     public String getStatusUpdateUrl() {
-        return _links.getSelf_update().getHref();
+        if (_links != null && _links.getSelf_update() != null){
+            return _links.getSelf_update().getHref();
+        }
+        return null;
     }
 
     public String getSelfUrl() {

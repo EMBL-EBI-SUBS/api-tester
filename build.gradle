@@ -23,4 +23,7 @@ test {
             includeCategories project.property('testCategory')
         }
     }
+    testLogging {
+        events "failed"
+    }
 }

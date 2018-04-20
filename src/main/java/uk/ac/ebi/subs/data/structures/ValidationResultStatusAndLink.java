@@ -9,5 +9,5 @@ public class ValidationResultStatusAndLink {
 
     private String validationStatus;
 
-    private Link _links;
+    private Links _links;
 }

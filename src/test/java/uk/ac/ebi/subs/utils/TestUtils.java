@@ -19,7 +19,9 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.junit.Assert;
 import uk.ac.ebi.subs.data.objects.Submission;
+import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
@@ -198,6 +200,121 @@ public class TestUtils {
         HttpResponse validationResultResponse = HttpClientBuilder.create().build().execute(validationResultRequest);
 
         return TestUtils.retrieveResourceFromResponse(validationResultResponse, ValidationResult.class);
+    }
+
+    public static void waitForValidationResults(String submittableUrl, String token ) throws IOException, InterruptedException {
+
+        long maximumIntervalMillis = 5000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            SubmittableTemplate resource = getSubmittableTemplate(submittableUrl, token);
+
+            boolean validationIsNotPending = !resource.get_embedded().getValidationResult()
+                    .getValidationStatus().equalsIgnoreCase("pending");
+
+            if (validationIsNotPending){
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+
+        throw new RuntimeException("Gave up waiting for validation results on "+submittableUrl);
+    }
+
+    public static void waitForCompletedSubmittable(String submittableUrl, String token ) throws IOException, InterruptedException {
+
+        long maximumIntervalMillis = 50000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            SubmittableTemplate resource = getSubmittableTemplate(submittableUrl, token);
+
+            boolean submittableIsCompleted = resource.get_embedded().getProcessingStatus().getStatus().equalsIgnoreCase("completed");
+
+            if (submittableIsCompleted){
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+
+        throw new RuntimeException("Gave up waiting for validation results on "+submittableUrl);
+    }
+
+    public static SubmittableTemplate getSubmittableTemplate(String submittableUrl, String token) throws IOException {
+        HttpUriRequest submittableRequest = new HttpGet(submittableUrl);
+        submittableRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse submittableResponse = HttpClientBuilder.create().build().execute(submittableRequest);
+
+        Assert.assertEquals(200, submittableResponse.getStatusLine().getStatusCode());
+        return TestUtils.retrieveResourceFromResponse(submittableResponse,SubmittableTemplate.class);
+    }
+
+    public static void waitForCompletedSubmission(String submissionUrl, String token ) throws IOException, InterruptedException {
+
+        long maximumIntervalMillis = 50000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        String submissionStatusUrl = getStatusUrlForSubmission(submissionUrl, token);
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            HttpUriRequest statusRequest = new HttpGet(submissionStatusUrl);
+            statusRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+            HttpResponse statusResponse = HttpClientBuilder.create().build().execute(statusRequest);
+
+            Assert.assertEquals(200, statusResponse.getStatusLine().getStatusCode());
+            SubmissionStatus resource = TestUtils.retrieveResourceFromResponse(statusResponse,SubmissionStatus.class);
+
+            boolean submissionIsCompleted= resource.getStatus().equalsIgnoreCase("completed");
+
+            if (submissionIsCompleted){
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+
+        throw new RuntimeException("Gave up waiting for submission to be completed "+submissionUrl);
+    }
+
+    public static void waitForUpdateableSubmission(String submissionUrl, String token ) throws IOException, InterruptedException {
+
+        long maximumIntervalMillis = 50000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        String submissionStatusUrl = getStatusUrlForSubmission(submissionUrl, token);
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            HttpUriRequest statusRequest = new HttpGet(submissionStatusUrl);
+            statusRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+            HttpResponse statusResponse = HttpClientBuilder.create().build().execute(statusRequest);
+
+            Assert.assertEquals(200, statusResponse.getStatusLine().getStatusCode());
+            SubmissionStatus resource = TestUtils.retrieveResourceFromResponse(statusResponse,SubmissionStatus.class);
+
+            boolean submissionIsUpdateable = resource.getStatusUpdateUrl() != null;
+
+
+            if (submissionIsUpdateable){
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+
+        throw new RuntimeException("Gave up waiting for submission to be updateable "+submissionUrl);
+    }
+
+    public static String getStatusUrlForSubmission(String submissionUrl, String token) throws IOException {
+        HttpUriRequest submissionRequest = new HttpGet(submissionUrl);
+        submissionRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse submissionResponse = HttpClientBuilder.create().build().execute(submissionRequest);
+
+        Assert.assertEquals(200, submissionResponse.getStatusLine().getStatusCode());
+        Submission submissionResource = TestUtils.retrieveResourceFromResponse(submissionResponse,Submission.class);
+        return submissionResource.get_links().getSubmissionStatus().getHref();
     }
 
 }
