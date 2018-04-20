@@ -10,7 +10,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.hamcrest.CoreMatchers;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -148,9 +150,14 @@ public class SubmissionTests {
         ApiError apiError = TestUtils.retrieveResourceFromResponse(response, ApiError.class);
 
         assertEquals(apiError.getStatus(), HttpStatus.SC_BAD_REQUEST);
-        assertTrue(apiError.getErrors().size() == 2);
-        assertTrue(apiError.getErrors().get(0).startsWith("resource_locked"));
-        assertTrue(apiError.getErrors().get(1).startsWith("resource_locked"));
+
+        for (String errorMessage : apiError.getErrors() ){
+            Assert.assertThat(errorMessage,CoreMatchers.startsWith("resource_locked"));
+        }
+
+        Assert.assertEquals("Errors array should have 2 elements",2,apiError.getErrors().size() );
+
+
     }
 
     @Test
