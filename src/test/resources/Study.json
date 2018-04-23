@@ -32,6 +32,5 @@
     "alias": "{projectAlias.placeholder}",
     "team": "{team.name.placeholder}"
   },
-  "releaseDate": "{release.date.placeholder}",
   "submission": "{submissionUrl.placeholder}"
 }

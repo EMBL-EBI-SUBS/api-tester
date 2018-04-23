@@ -58,9 +58,6 @@ public class UpdateProjectTests {
 
     @AfterClass
     public static void tearDown() throws Exception {
-
-        HttpDelete request = new HttpDelete(submissionUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-        HttpClientBuilder.create().build().execute(request);
+        TestUtils.deleteResource(token, submissionUrl);
     }
 }

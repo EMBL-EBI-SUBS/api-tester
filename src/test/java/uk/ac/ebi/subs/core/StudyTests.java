@@ -2,7 +2,6 @@ package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
@@ -64,7 +63,6 @@ public class StudyTests {
                         submissionUrl,
                         TestUtils.getRandomAlias(),
                         projectAlias,
-                        "2017-04-17",
                         pm.getTeamName()
 
                 )
@@ -89,7 +87,6 @@ public class StudyTests {
                         submissionUrl,
                         studyAlias,
                         projectAlias,
-                        "2017-04-17",
                         pm.getTeamName()
                 )
         );
@@ -161,9 +158,7 @@ public class StudyTests {
 
     @AfterClass
     public static void tearDown() throws Exception {
-
-        HttpDelete request = new HttpDelete(submissionUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-        HttpClientBuilder.create().build().execute(request);
+        TestUtils.deleteResource(token, submissionUrl);
     }
+
 }

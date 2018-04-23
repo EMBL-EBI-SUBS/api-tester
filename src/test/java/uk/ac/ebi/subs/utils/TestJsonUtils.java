@@ -59,7 +59,7 @@ public class TestJsonUtils {
         return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 
-    public static String getStudyJson(String submissionUrl, String alias, String projectAlias, String releaseDate, String teamName) throws IOException {
+    public static String getStudyJson(String submissionUrl, String alias, String projectAlias, String teamName) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("Study.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
@@ -67,7 +67,7 @@ public class TestJsonUtils {
         json = json.replace(SUBMISSION_URL, submissionUrl);
         json = json.replace(PROJECT_ALIAS, projectAlias);
         json = json.replace(TEAM_NAME,teamName);
-        return json.replace(RELEASE_DATE, releaseDate);
+        return json;
     }
 
     public static String getProjectJson(String submissionUrl, String alias, String releaseDate) throws IOException {

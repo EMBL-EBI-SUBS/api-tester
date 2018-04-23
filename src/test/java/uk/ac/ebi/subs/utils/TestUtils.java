@@ -11,6 +11,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -107,11 +108,8 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
-    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
-        return createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, projectAlias, LocalDateTime.now().toString(),teamName);
-    }
 
-    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String releaseDate, String teamName) throws IOException {
+    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
         HttpPost request = new HttpPost(studiesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
@@ -120,7 +118,6 @@ public class TestUtils {
                         submissionUrl,
                         studyAlias,
                         projectAlias,
-                        releaseDate,
                         teamName
                 )
         );
@@ -317,6 +314,11 @@ public class TestUtils {
         return submissionResource.get_links().getSubmissionStatus().getHref();
     }
 
+    public static void deleteResource(String token, String url) throws IOException {
+        HttpDelete request = new HttpDelete(url);
+        request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
+        HttpClientBuilder.create().build().execute(request);
+    }
 }
 
 class CouldNotGetTokenException extends RuntimeException {
