@@ -1,4 +1,4 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -9,7 +9,12 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+import org.junit.runners.MethodSorters;
+import uk.ac.ebi.subs.PropertiesManager;
+import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 

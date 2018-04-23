@@ -1,4 +1,4 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -15,6 +15,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
+import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;

@@ -1,4 +1,4 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -16,6 +16,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.ApiError;
@@ -29,7 +30,6 @@ import java.util.UUID;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @Category({TestEnv.class, DevEnv.class})
 public class SubmissionTests {
@@ -38,7 +38,7 @@ public class SubmissionTests {
 
     private static String submitterEmail = pm.getSubmitterEmail();
     private static String teamName = pm.getTeamName();
-    private static String submissionsApiBaseUrl = pm.getSubmissionsApiTemplatedUrl().replace("{teamName}",teamName);
+    private static String submissionsApiBaseUrl = pm.getSubmissionsApiTemplatedUrl().replace("{teamName}", teamName);
 
     private static String token;
     private static String submissionUrl;
@@ -151,8 +151,8 @@ public class SubmissionTests {
 
         assertEquals(apiError.getStatus(), HttpStatus.SC_BAD_REQUEST);
 
-        for (String errorMessage : apiError.getErrors() ){
-            Assert.assertThat(errorMessage,CoreMatchers.startsWith("resource_locked"));
+        for (String errorMessage : apiError.getErrors()) {
+            Assert.assertThat(errorMessage, CoreMatchers.startsWith("resource_locked"));
         }
 
         Assert.assertTrue(!apiError.getErrors().isEmpty());
