@@ -3,6 +3,7 @@ package uk.ac.ebi.subs.data.objects;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import uk.ac.ebi.subs.data.structures.Links;
 import uk.ac.ebi.subs.data.structures.Result;
 
 import java.util.Map;
@@ -17,6 +18,8 @@ public class ValidationResult {
     private int version;
 
     private String submissionId;
+
+    private Links _links;
 
     private Map<String, Result[]> expectedResults;
 

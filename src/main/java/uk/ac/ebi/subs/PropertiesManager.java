@@ -54,6 +54,10 @@ public class PropertiesManager {
         return this.properties.getProperty("samplesApiBaseUrl", getApiRoot() + "samples/");
     }
 
+    public String getAssaysApiBaseUrl() {
+        return this.properties.getProperty("assaysApiBaseUrl", getApiRoot() + "assays/");
+    }
+
     public String getStudiesApiBaseUrl() {
         return this.properties.getProperty("studiesApiBaseUrl", getApiRoot() + "studies/");
     }

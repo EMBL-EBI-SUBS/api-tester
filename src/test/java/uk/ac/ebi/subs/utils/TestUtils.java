@@ -129,6 +129,26 @@ public class TestUtils {
         return resource.get_links().getSelf().getHref();
     }
 
+    public static String createAssay(String token, String assayApiBaseUrl, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
+        HttpPost request = new HttpPost(assayApiBaseUrl);
+        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(
+                TestJsonUtils.getAssayJson(
+                        submissionUrl,
+                        assayAlias,
+                        sampleAlias,
+                        studyAlias
+                )
+        );
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
+
+        return resource.get_links().getSelf().getHref();
+    }
+
     public static String[] createNSubmissions(int n, String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
         String[] urls = new String[n];
         for (int i = 0; i < n; i++) {
@@ -199,13 +219,13 @@ public class TestUtils {
         return TestUtils.retrieveResourceFromResponse(validationResultResponse, ValidationResult.class);
     }
 
-    public static void waitForValidationResults(String submittableUrl, String token ) throws IOException, InterruptedException {
+    public static void waitForValidationResults(String token, String submittableUrl) throws IOException, InterruptedException {
 
         long maximumIntervalMillis = 5000;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
-            SubmittableTemplate resource = getSubmittableTemplate(submittableUrl, token);
+            SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
 
             boolean validationIsNotPending = !resource.get_embedded().getValidationResult()
                     .getValidationStatus().equalsIgnoreCase("pending");
@@ -220,13 +240,34 @@ public class TestUtils {
         throw new RuntimeException("Gave up waiting for validation results on "+submittableUrl);
     }
 
-    public static void waitForCompletedSubmittable(String submittableUrl, String token ) throws IOException, InterruptedException {
+    public static ValidationResult getValidationResultForSubmittable(String submittableUrl, String token) throws IOException {
+        SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
+        String validationResultUrl = resource.get_links().getValidationResult().getHref();
+
+        HttpUriRequest requestStubResult = new HttpGet(validationResultUrl);
+        requestStubResult.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse stubResultResponse = HttpClientBuilder.create().build().execute(requestStubResult);
+
+        Assert.assertEquals(200, stubResultResponse.getStatusLine().getStatusCode());
+        ValidationResult stubResult = TestUtils.retrieveResourceFromResponse(stubResultResponse,ValidationResult.class);
+
+        HttpUriRequest requestFullResult = new HttpGet(stubResult.get_links().getSelf().getHref());
+        requestFullResult.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse fullResultResponse = HttpClientBuilder.create().build().execute(requestFullResult);
+
+        Assert.assertEquals(200, fullResultResponse.getStatusLine().getStatusCode());
+        ValidationResult fullResult = TestUtils.retrieveResourceFromResponse(fullResultResponse,ValidationResult.class);
+
+        return fullResult;
+    }
+
+    public static void waitForCompletedSubmittable(String token, String submittableUrl) throws IOException, InterruptedException {
 
         long maximumIntervalMillis = 50000;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
-            SubmittableTemplate resource = getSubmittableTemplate(submittableUrl, token);
+            SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
 
             boolean submittableIsCompleted = resource.get_embedded().getProcessingStatus().getStatus().equalsIgnoreCase("completed");
 
@@ -240,7 +281,7 @@ public class TestUtils {
         throw new RuntimeException("Gave up waiting for validation results on "+submittableUrl);
     }
 
-    public static SubmittableTemplate getSubmittableTemplate(String submittableUrl, String token) throws IOException {
+    public static SubmittableTemplate getSubmittableTemplate(String token, String submittableUrl) throws IOException {
         HttpUriRequest submittableRequest = new HttpGet(submittableUrl);
         submittableRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpResponse submittableResponse = HttpClientBuilder.create().build().execute(submittableRequest);
@@ -249,12 +290,12 @@ public class TestUtils {
         return TestUtils.retrieveResourceFromResponse(submittableResponse,SubmittableTemplate.class);
     }
 
-    public static void waitForCompletedSubmission(String submissionUrl, String token ) throws IOException, InterruptedException {
+    public static void waitForCompletedSubmission(String token, String submissionUrl) throws IOException, InterruptedException {
 
         long maximumIntervalMillis = 50000;
         long startingTimeMillis = System.currentTimeMillis();
 
-        String submissionStatusUrl = getStatusUrlForSubmission(submissionUrl, token);
+        String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
             HttpUriRequest statusRequest = new HttpGet(submissionStatusUrl);
@@ -276,12 +317,12 @@ public class TestUtils {
         throw new RuntimeException("Gave up waiting for submission to be completed "+submissionUrl);
     }
 
-    public static void waitForUpdateableSubmission(String submissionUrl, String token ) throws IOException, InterruptedException {
+    public static void waitForUpdateableSubmission(String token, String submissionUrl) throws IOException, InterruptedException {
 
         long maximumIntervalMillis = 50000;
         long startingTimeMillis = System.currentTimeMillis();
 
-        String submissionStatusUrl = getStatusUrlForSubmission(submissionUrl, token);
+        String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
             HttpUriRequest statusRequest = new HttpGet(submissionStatusUrl);
@@ -304,7 +345,7 @@ public class TestUtils {
         throw new RuntimeException("Gave up waiting for submission to be updateable "+submissionUrl);
     }
 
-    public static String getStatusUrlForSubmission(String submissionUrl, String token) throws IOException {
+    public static String getStatusUrlForSubmission(String token, String submissionUrl) throws IOException {
         HttpUriRequest submissionRequest = new HttpGet(submissionUrl);
         submissionRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpResponse submissionResponse = HttpClientBuilder.create().build().execute(submissionRequest);
