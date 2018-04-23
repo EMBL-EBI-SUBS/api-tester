@@ -68,7 +68,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
     @Test
     public void B_givenSampleInSubmissionWithStatusCompleted_whenAddingItToOtherSubmission_thenItShouldBeAccepted() throws IOException, InterruptedException {
 
-        TestUtils.waitForValidationResults(sampleUrl,token);
+        TestUtils.waitForValidationResults(token, sampleUrl);
 
         // Submit submission 0
         HttpUriRequest getRequest = new HttpGet(submissionsUrls[0] + "/submissionStatus");
@@ -83,7 +83,7 @@ public class POSTingSampleToMultipleSubmissionsTest {
         HttpResponse response = HttpClientBuilder.create().build().execute(patchRequest);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
-        TestUtils.waitForCompletedSubmittable(sampleUrl,token);
+        TestUtils.waitForCompletedSubmittable(token, sampleUrl);
 
         // Add same sample to submission 1
         HttpPost request = new HttpPost(samplesApiBaseUrl);

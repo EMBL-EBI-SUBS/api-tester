@@ -204,7 +204,7 @@ public class SampleTests {
     @Test
     public void givenSampleExists_whenGettingTaxonomyValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
-        TestUtils.waitForValidationResults(sampleUrl,token);
+        TestUtils.waitForValidationResults(token, sampleUrl);
 
         ValidationResultStatusAndLink validationResultStatusAndLink =
                 TestUtils.getValidationResultStatusAndLinkFromStudy(sampleValidationResultsUrl, token);

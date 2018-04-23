@@ -2,7 +2,6 @@ package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
@@ -104,7 +103,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsOK_whenPatchingSubmissionStatusSubmitted_then200IsReceived() throws IOException, InterruptedException {
 
-        TestUtils.waitForUpdateableSubmission(submissionUrl,token);
+        TestUtils.waitForUpdateableSubmission(token, submissionUrl);
 
         HttpUriRequest getRequest = new HttpGet(submissionUrl + "/submissionStatus");
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -127,7 +126,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws Exception {
 
-        TestUtils.waitForCompletedSubmittable(sampleUrl,token);
+        TestUtils.waitForCompletedSubmittable(token, sampleUrl);
 
         HttpUriRequest getRequest = new HttpGet(sampleUrl);
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
