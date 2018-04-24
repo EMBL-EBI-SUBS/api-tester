@@ -32,6 +32,16 @@
       {
         "value": "Illumina HiSeq 2000"
       }
+    ],
+    "design_description": [
+      {
+        "value": "a design description"
+      }
+    ],
+    "library_name": [
+      {
+        "value": "a library name"
+      }
     ]
   },
   "studyRef": {
