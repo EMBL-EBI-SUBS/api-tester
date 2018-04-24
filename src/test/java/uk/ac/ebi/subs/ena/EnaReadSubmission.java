@@ -78,7 +78,7 @@ public class EnaReadSubmission {
 
         //FIXME this gets a 301 response
         //TODO needs some submission metadata
-        Uploader.uploadFile(token,apiRoot.get_links().getTusUpload().getHref(),testFile);
+        Uploader.uploadFile(token,apiRoot.get_links().getTusUpload().getHref(),testFile,submissionUrl,fileName);
     }
 
 
@@ -95,15 +95,17 @@ public class EnaReadSubmission {
         );
         TestUtils.waitForValidationResults(token, assayDataUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(assayDataUrl, token);
-        assertNoErrorsInValidationResult(validationResult);
+        assertNoErrorsInValidationResult(validationResult); //FIXME - unexpected errors from the ENA validator, probably need to fix the validator
     }
 
+    @Test
     public void F_submit() {
-        //TODO
+        //TODO - change submission status to submitted and wait for completion
     }
 
+    @Test
     public void G_checkAccessions() {
-        //
+        //TODO - check we have accessions for each entity
     }
 
     @AfterClass

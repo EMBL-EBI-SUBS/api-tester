@@ -10,10 +10,17 @@ import io.tus.java.client.TusUploader;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Uploader {
 
-    public static void uploadFile(String token, String url, File file) throws IOException, ProtocolException {
+    public static void uploadFile(String token, String url, File file, String submissionId, String fileName) throws IOException, ProtocolException {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("jwtToken", token);
+        headers.put("submissionID", submissionId);
+        headers.put("filename", file.getName());
+
         // Create a new TusClient instance
         TusClient client = new TusClient();
 
@@ -28,6 +35,7 @@ public class Uploader {
         // a File object, you can manually construct a TusUpload using an InputStream.
         // See the documentation for more information.
         final TusUpload upload = new TusUpload(file);
+        upload.setMetadata(headers);
 
         System.out.println("Starting upload...");
 
