@@ -16,6 +16,7 @@ import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
+import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -55,21 +56,15 @@ public class StudyTests {
     @Test
     public void givenSubmissionExists_whenAddingStudyToIt_then201IsReceived() throws IOException {
 
-        HttpPost request = new HttpPost(studiesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        StringEntity payload = new StringEntity(
+        String content =
                 TestJsonUtils.getStudyJson(
                         submissionUrl,
                         TestUtils.getRandomAlias(),
                         projectAlias,
                         pm.getTeamName()
 
-                )
-        );
-        request.setEntity(payload);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+                );
+        HttpResponse response = HttpUtils.httpPost(token, studiesApiBaseUrl,content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -80,7 +75,7 @@ public class StudyTests {
     public void givenStudyExists_whenUpdatingIt_then200IsReceived() throws IOException {
 
         HttpPut request = new HttpPut(studyUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(
                 TestJsonUtils.getStudyJson(
@@ -101,11 +96,7 @@ public class StudyTests {
 
     @Test
     public void givenStudyExists_whenGettingValidationResults_then200IsReceived() throws IOException {
-
-        HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpResponse response = HttpUtils.httpGet(token, studyValidationResultsUrl);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -158,7 +149,7 @@ public class StudyTests {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        TestUtils.deleteResource(token, submissionUrl);
+        HttpUtils.deleteResource(token, submissionUrl);
     }
 
 }

@@ -2,7 +2,8 @@ package uk.ac.ebi.subs.samples;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
@@ -16,6 +17,7 @@ import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.PutSampleResponseObject;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
+import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -52,13 +54,9 @@ public class SampleTests {
     @Test
     public void givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
 
-        HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        String content = TestJsonUtils.getCreateSampleJson(submissionUrl, TestUtils.getRandomAlias());
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionUrl, TestUtils.getRandomAlias()));
-        request.setEntity(payload);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpResponse response = HttpUtils.httpPost(token, samplesApiBaseUrl, content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -69,7 +67,7 @@ public class SampleTests {
     public void givenSampleExists_whenUpdatingIt_then200IsReceived() throws IOException {
 
         HttpPut request = new HttpPut(sampleUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
@@ -88,13 +86,13 @@ public class SampleTests {
         String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
 
         HttpPut request = new HttpPut(localSample);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+        PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
 
         assertThat(
                 resource.get_embedded().getProcessingStatus().getStatus(), equalTo("Draft")
@@ -107,14 +105,10 @@ public class SampleTests {
         String localAlias = TestUtils.getRandomAlias();
         String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
 
-        HttpPatch request = new HttpPatch(localSample);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        String content = TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias);
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
-        request.setEntity(payload);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+        HttpResponse response = HttpUtils.httpPatch(token, localSample, content);
+        PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
 
         assertThat(
                 resource.get_embedded().getProcessingStatus().getStatus(), equalTo("Draft")
@@ -128,13 +122,13 @@ public class SampleTests {
         String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
 
         HttpPut request = new HttpPut(localSample);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+        PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
 
         assertThat(
                 resource.getTeam().getName(), equalTo(teamName)
@@ -147,14 +141,10 @@ public class SampleTests {
         String localAlias = TestUtils.getRandomAlias();
         String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
 
-        HttpPatch request = new HttpPatch(localSample);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        String content = TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias);
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
-        request.setEntity(payload);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        PutSampleResponseObject resource = TestUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
+        HttpResponse response = HttpUtils.httpPatch(token, localSample, content);
+        PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
 
         assertThat(
                 resource.getTeam().getName(), equalTo(teamName)
@@ -165,13 +155,13 @@ public class SampleTests {
     public void givenSampleExists_whenDeletingSampleRelationships_thenRetrievedResourceIsCorrect() throws IOException {
 
         HttpPut request = new HttpPut(sampleUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl, sampleAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
-        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
+        SubmittableTemplate resource = HttpUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
 
         assertThat(
                 resource.getSampleRelationships(), equalTo(new String[0])
@@ -181,10 +171,7 @@ public class SampleTests {
     @Test
     public void givenSampleExists_whenGettingValidationResults_then200IsReceived() throws IOException {
 
-        HttpUriRequest request = new HttpGet(sampleValidationResultsUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpResponse response = HttpUtils.httpGet(token, sampleUrl);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -221,7 +208,7 @@ public class SampleTests {
     @AfterClass
     public static void tearDown() throws Exception {
         HttpDelete request = new HttpDelete(submissionUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request);
     }
 }

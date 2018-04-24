@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class TestJsonUtils {
 
@@ -20,6 +19,7 @@ public class TestJsonUtils {
     private static final String STUDY_ALIAS = "{studyAlias.placeholder}";
     private static final String SAMPLE_ALIAS = "{sampleAlias.placeholder}";
     private static final String ASSAY_ALIAS = "{assayAlias.placeholder}";
+    private static final String FILE_NAME = "{fileName.placeholder}";
 
 
     public static String getSubmissionJson(String submitterEmail, String teamName) throws IOException {
@@ -71,7 +71,7 @@ public class TestJsonUtils {
         String json = template.replace(ALIAS, alias);
         json = json.replace(SUBMISSION_URL, submissionUrl);
         json = json.replace(PROJECT_ALIAS, projectAlias);
-        json = json.replace(TEAM_NAME,teamName);
+        json = json.replace(TEAM_NAME, teamName);
         return json;
     }
 
@@ -96,7 +96,19 @@ public class TestJsonUtils {
         return json;
     }
 
-    public static String createSampleForSubmissionJson(String submissionUrl, String alias) throws IOException{
+    public static String getAssayDataJson(String submissionUrl, String alias, String assayAlias, String fileName) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("AssayData.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace(ALIAS, alias);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        json = json.replace(ASSAY_ALIAS, assayAlias);
+        json = json.replace(FILE_NAME, fileName);
+
+        return json;
+    }
+
+    public static String createSampleForSubmissionJson(String submissionUrl, String alias) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("SampleForSubmission.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 

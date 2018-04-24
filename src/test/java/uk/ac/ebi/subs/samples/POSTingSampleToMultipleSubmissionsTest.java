@@ -3,11 +3,6 @@ package uk.ac.ebi.subs.samples;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.AfterClass;
@@ -21,6 +16,7 @@ import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
+import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -52,13 +48,11 @@ public class POSTingSampleToMultipleSubmissionsTest {
 
     @Test
     public void A_givenSampleInSubmissionWithStatusDraft_whenAddingItToOtherSubmission_thenItShouldBeRejected() throws IOException {
-        HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionsUrls[1], alias));
-        request.setEntity(payload);
+        String content = TestJsonUtils.getCreateSampleJson(submissionsUrls[1], alias);
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        HttpResponse response = HttpUtils.httpPost(token, samplesApiBaseUrl, content);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
 
         String jsonFromResponse = EntityUtils.toString(response.getEntity());
@@ -71,28 +65,20 @@ public class POSTingSampleToMultipleSubmissionsTest {
         TestUtils.waitForValidationResults(token, sampleUrl);
 
         // Submit submission 0
-        HttpUriRequest getRequest = new HttpGet(submissionsUrls[0] + "/submissionStatus");
-        getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse statusResponse = HttpUtils.httpGet(token, submissionsUrls[0] + "/submissionStatus");
 
-        SubmissionStatus submissionStatus = TestUtils.retrieveResourceFromResponse(HttpClientBuilder.create().build().execute(getRequest), SubmissionStatus.class);
-
-        HttpPatch patchRequest = new HttpPatch(submissionStatus.getSelfUrl());
-        patchRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-        patchRequest.setEntity(new StringEntity("{\"status\" : \"Submitted\"}"));
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(patchRequest);
+        SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(statusResponse, SubmissionStatus.class);
+        ;
+        HttpResponse response = HttpUtils.httpPatch(token, submissionStatus.getSelfUrl(), "{\"status\" : \"Submitted\"}");
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK));
 
         TestUtils.waitForCompletedSubmittable(token, sampleUrl);
 
         // Add same sample to submission 1
-        HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        String sampleContent = TestJsonUtils.getCreateSampleJson(submissionsUrls[1], alias);
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getCreateSampleJson(submissionsUrls[1], alias));
-        request.setEntity(payload);
 
-        HttpResponse sampleResponse = HttpClientBuilder.create().build().execute(request);
+        HttpResponse sampleResponse = HttpUtils.httpPost(token, samplesApiBaseUrl, sampleContent);
         //System.out.println(EntityUtils.toString(sampleResponse.getEntity()));
 
         assertThat(sampleResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
@@ -101,23 +87,16 @@ public class POSTingSampleToMultipleSubmissionsTest {
     @AfterClass
     public static void tearDown() throws Exception {
         HttpDelete request1 = new HttpDelete(submissionsUrls[0]);
-        request1.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request1.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request1);
 
         HttpDelete request2 = new HttpDelete(submissionsUrls[1]);
-        request2.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request2.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
         HttpClientBuilder.create().build().execute(request2);
     }
 
     private static String createSampleForSubmission(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
-        HttpPost request = new HttpPost(samplesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        StringEntity payload = new StringEntity(TestJsonUtils.createSampleForSubmissionJson(submissionUrl, alias));
-        request.setEntity(payload);
-
-        HttpResponse response =  HttpClientBuilder.create().build().execute(request);
-        SubmittableTemplate resource = TestUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
-        return resource.get_links().getSelf().getHref();
+        String content = TestJsonUtils.createSampleForSubmissionJson(submissionUrl, alias);
+        return TestUtils.createSubmittable(token,samplesApiBaseUrl,content);
     }
 }
