@@ -96,13 +96,14 @@ public class TestUtils {
         return createSubmittable(token, assayApiBaseUrl, content);
     }
 
-    public static String createAssayData(String token, String assayDataApiBaseUrl, String submissionUrl, String assayDataAlias, String assayAlias, String fileName) throws IOException {
+    public static String createAssayData(String token, String assayDataApiBaseUrl, String submissionUrl, String assayDataAlias, String assayAlias, String fileName, String fileType) throws IOException {
         String content =
                 TestJsonUtils.getAssayDataJson(
                         submissionUrl,
                         assayDataAlias,
                         assayAlias,
-                        fileName
+                        fileName,
+                        fileType
                 );
 
         return createSubmittable(token, assayDataApiBaseUrl, content);

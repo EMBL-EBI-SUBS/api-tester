@@ -9,7 +9,8 @@
   ],
   "files": [
     {
-      "name": "{fileName.placeholder}"
+      "name": "{fileName.placeholder}",
+      "type": "{fileType.placeholder}"
     }
   ],
   "submission": "{submissionUrl.placeholder}"
