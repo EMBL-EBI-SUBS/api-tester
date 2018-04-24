@@ -1,5 +1,6 @@
 package uk.ac.ebi.subs.ena;
 
+import org.apache.http.HttpResponse;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -9,12 +10,15 @@ import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
+import uk.ac.ebi.subs.data.objects.ApiRoot;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
+import uk.ac.ebi.subs.utils.Uploader;
 
+import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
 
@@ -66,8 +70,15 @@ public class EnaReadSubmission {
         assertNoErrorsInValidationResult(validationResult);
     }
 
-    public void D_uploadFile() {
+    @Test
+    public void D_uploadFile() throws Exception{
+        File testFile = new File(ClassLoader.getSystemClassLoader().getResource(fileName).getFile());
+        HttpResponse apiRootResponse = HttpUtils.httpGet(token,pm.getApiRoot());
+        ApiRoot apiRoot = HttpUtils.retrieveResourceFromResponse(apiRootResponse,ApiRoot.class);
 
+        //FIXME this gets a 301 response
+        //TODO needs some submission metadata
+        Uploader.uploadFile(token,apiRoot.get_links().getTusUpload().getHref(),testFile);
     }
 
 
@@ -88,11 +99,11 @@ public class EnaReadSubmission {
     }
 
     public void F_submit() {
-
+        //TODO
     }
 
     public void G_checkAccessions() {
-
+        //
     }
 
     @AfterClass
