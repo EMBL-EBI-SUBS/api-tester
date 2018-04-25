@@ -76,9 +76,8 @@ public class EnaReadSubmission {
         HttpResponse apiRootResponse = HttpUtils.httpGet(token,pm.getApiRoot());
         ApiRoot apiRoot = HttpUtils.retrieveResourceFromResponse(apiRootResponse,ApiRoot.class);
 
-        //FIXME this gets a 301 response
-        //TODO needs some submission metadata
-        Uploader.uploadFile(token,apiRoot.get_links().getTusUpload().getHref(),testFile,submissionUrl,fileName);
+        String submissionUUID = submissionUrl.substring(submissionUrl.lastIndexOf('/') + 1);
+        Uploader.uploadFile(token, apiRoot.get_links().getTusUpload().getHref(), testFile, submissionUUID, fileName);
     }
 
 
