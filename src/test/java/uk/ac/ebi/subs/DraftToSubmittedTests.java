@@ -9,6 +9,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.hamcrest.CoreMatchers;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -23,10 +24,13 @@ import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -49,7 +53,7 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionDraftExists_whenSubmissionStatusIsRetrieved_thenSubmissionStatusIsDraft() throws IOException {
+    public void A_givenSubmissionDraftExists_whenSubmissionStatusIsRetrieved_thenSubmissionStatusIsDraft() throws IOException {
 
         HttpUriRequest request = new HttpGet(submissionUrl + "/submissionStatus");
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -63,7 +67,7 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionExists_whenCreatingASample_then201IsReceived() throws IOException {
+    public void C_givenSubmissionExists_whenCreatingASample_then201IsReceived() throws IOException {
 
         HttpPost request = new HttpPost(samplesApiBaseUrl);
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -79,7 +83,7 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionExists_whenCreatingAProject_then201IsReceived() throws IOException {
+    public void B_givenSubmissionExists_whenCreatingAProject_then201IsReceived() throws IOException {
 
         HttpPost request = new HttpPost(pm.getProjectsApiBaseUrl());
         request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -101,9 +105,9 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionIsOK_whenPatchingSubmissionStatusSubmitted_then200IsReceived() throws IOException, InterruptedException {
+    public void D_givenSubmissionIsOK_whenPatchingSubmissionStatusSubmitted_then200IsReceived() throws IOException, InterruptedException {
 
-        TestUtils.waitForUpdateableSubmission(submissionUrl,token);
+        TestUtils.waitForUpdateableSubmission(submissionUrl, token);
 
         HttpUriRequest getRequest = new HttpGet(submissionUrl + "/submissionStatus");
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -124,9 +128,9 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws Exception {
+    public void E_givenSubmissionIsSubmitted_whenGettingSampleAccession_thenAccessionIsRetrieved() throws Exception {
 
-        TestUtils.waitForCompletedSubmittable(sampleUrl,token);
+        TestUtils.waitForCompletedSubmittable(sampleUrl, token);
 
         HttpUriRequest getRequest = new HttpGet(sampleUrl);
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -140,17 +144,12 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionIsSubmitted_whenGettingSubmissionStatus_thenItsCorrect() throws IOException {
+    public void F_givenSubmissionWasSubmittedAndSamplesAccessioned_whenGettingSubmissionStatus_thenItIsCompleted() throws IOException, InterruptedException {
 
         HttpUriRequest getRequest = new HttpGet(submissionUrl + "/submissionStatus");
         getRequest.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        HttpResponse response = HttpClientBuilder.create().build().execute(getRequest);
-        SubmissionStatus submissionStatus = TestUtils.retrieveResourceFromResponse(response, SubmissionStatus.class);
-
-        assertThat(
-                submissionStatus.getStatus(), equalTo("Submitted")
-        );
+        TestUtils.waitForCompletedSubmission(submissionUrl, token);
     }
 
     @AfterClass
