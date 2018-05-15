@@ -1,6 +1,7 @@
 package uk.ac.ebi.subs.ena;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -11,6 +12,8 @@ import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ApiRoot;
+import uk.ac.ebi.subs.data.objects.SubmissionStatus;
+import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.utils.HttpUtils;
@@ -21,6 +24,10 @@ import uk.ac.ebi.subs.utils.Uploader;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.Map;
+
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -98,13 +105,42 @@ public class EnaReadSubmission {
     }
 
     @Test
-    public void F_submit() {
-        //TODO - change submission status to submitted and wait for completion
+    public void F_submit() throws Exception {
+        TestUtils.waitForUpdateableSubmission(token, submissionUrl);
+
+        HttpResponse getResponse = HttpUtils.httpGet(token, submissionUrl + "/submissionStatus");
+
+        SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(getResponse, SubmissionStatus.class);
+
+        HttpResponse response = HttpUtils.httpPatch(token,submissionStatus.getStatusUpdateUrl(),"{\"status\" : \"Submitted\"}");
+
+        assertThat(
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
+        );
+
+        TestUtils.waitForCompletedSubmission(token, submissionUrl);
     }
 
     @Test
-    public void G_checkAccessions() {
-        //TODO - check we have accessions for each entity
+    public void G_checkAccessions() throws Exception {
+
+        String[] submittableUrls = new String[]{
+            projectAlias,
+            sampleAlias,
+            studyAlias,
+            assayAlias,
+            assayDataAlias
+        };
+
+        for (String submittableUrl : submittableUrls) {
+            TestUtils.waitForCompletedSubmittable(token,submittableUrl);
+            SubmittableTemplate submittable = TestUtils.getSubmittableTemplate(token,submittableUrl);
+            assertNotNull(submittable.getAccession());
+        }
+
+
+
+
     }
 
     @AfterClass
