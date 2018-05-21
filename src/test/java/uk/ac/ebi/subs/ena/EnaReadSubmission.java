@@ -138,15 +138,6 @@ public class EnaReadSubmission {
             assertNotNull(submittable.getAccession());
         }
 
-
-
-
-    }
-
-    @AfterClass
-    public static void tearDown() throws Exception {
-        //FIXME, this won't work once the submission is submitted
-        HttpUtils.deleteResource(token,submissionUrl);
     }
 
     private void assertNoErrorsInValidationResult(ValidationResult validationResult) {
