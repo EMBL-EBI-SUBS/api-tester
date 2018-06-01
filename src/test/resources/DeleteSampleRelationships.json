@@ -13,5 +13,6 @@
   "sampleRelationships" : [],
   "taxonId" : 9606,
   "taxon" : "Homo sapiens",
-  "submission" : "{submissionUrl.placeholder}"
+  "submission" : "{submissionUrl.placeholder}",
+  "releaseDate" : "{release.date.placeholder}"
 }
