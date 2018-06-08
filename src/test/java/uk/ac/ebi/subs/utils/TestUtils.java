@@ -13,6 +13,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
+import uk.ac.ebi.subs.data.objects.ProcessingStatus;
+import uk.ac.ebi.subs.data.objects.ProcessingStatuses;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
@@ -21,7 +23,13 @@ import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Random;
+
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
@@ -215,6 +223,15 @@ public class TestUtils {
         throw new RuntimeException("Gave up waiting for validation results on " + submittableUrl);
     }
 
+    public static Submission getSubmission(String token, String submissionUrl) throws IOException {
+        HttpUriRequest request = new HttpGet(submissionUrl);
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+
+        Assert.assertEquals(200, response.getStatusLine().getStatusCode());
+        return HttpUtils.retrieveResourceFromResponse(response, Submission.class);
+    }
+
     public static SubmittableTemplate getSubmittableTemplate(String token, String submittableUrl) throws IOException {
         HttpUriRequest submittableRequest = new HttpGet(submittableUrl);
         submittableRequest.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
@@ -248,6 +265,47 @@ public class TestUtils {
         }
 
         throw new RuntimeException("Gave up waiting for submission to be completed " + submissionUrl);
+    }
+
+    public static void changeSubmissionStatusToSubmitted(String token, String submissionUrl) throws IOException {
+        HttpResponse getResponse = HttpUtils.httpGet(token, submissionUrl + "/submissionStatus");
+
+        SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(getResponse, SubmissionStatus.class);
+
+        HttpResponse response = HttpUtils.httpPatch(token,submissionStatus.getStatusUpdateUrl(),"{\"status\" : \"Submitted\"}");
+
+        assertThat(
+                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
+        );
+    }
+
+    public static Collection<ProcessingStatus> fetchProcessingStatuses(String token, String submissionUrl) throws IOException {
+        Submission submission = TestUtils.getSubmission(token, submissionUrl);
+
+        String processingStatusesUrl = submission.get_links().getProcessingStatuses().getHref();
+
+        List<ProcessingStatus> processingStatusList = new ArrayList<>();
+
+        while (processingStatusesUrl != null) {
+            HttpResponse response = HttpUtils.httpGet(token, processingStatusesUrl);
+            ProcessingStatuses processingStatusesResource = HttpUtils.retrieveResourceFromResponse(
+                    response,
+                    ProcessingStatuses.class
+            );
+
+            processingStatusList.addAll(processingStatusesResource.getContent().getProcessingStatuses());
+
+            if (processingStatusesResource.getLinks().getNext() != null) {
+                processingStatusesUrl = processingStatusesResource.getLinks().getNext().getHref();
+            }
+            else {
+                processingStatusesUrl = null;
+            }
+        }
+
+
+
+        return processingStatusList;
     }
 
     public static void waitForUpdateableSubmission(String token, String submissionUrl) throws IOException, InterruptedException {

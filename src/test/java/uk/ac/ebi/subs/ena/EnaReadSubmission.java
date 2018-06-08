@@ -1,6 +1,7 @@
 package uk.ac.ebi.subs.ena;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -11,6 +12,8 @@ import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ApiRoot;
+import uk.ac.ebi.subs.data.objects.ProcessingStatus;
+import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.utils.HttpUtils;
@@ -19,8 +22,15 @@ import uk.ac.ebi.subs.utils.TestUtils;
 import uk.ac.ebi.subs.utils.Uploader;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.Collection;
 import java.util.Map;
+
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -98,20 +108,31 @@ public class EnaReadSubmission {
     }
 
     @Test
-    public void F_submit() {
-        //TODO - change submission status to submitted and wait for completion
+    public void F_submit() throws IOException, InterruptedException {
+        TestUtils.waitForUpdateableSubmission(token, submissionUrl);
+        TestUtils.changeSubmissionStatusToSubmitted(token,submissionUrl);
     }
 
     @Test
-    public void G_checkAccessions() {
-        //TODO - check we have accessions for each entity
+    public void G_waitForCompleteSubmission() throws IOException, InterruptedException {
+        TestUtils.waitForCompletedSubmission(token,submissionUrl);
     }
 
-    @AfterClass
-    public static void tearDown() throws Exception {
-        //FIXME, this won't work once the submission is submitted
-        HttpUtils.deleteResource(token,submissionUrl);
+    @Test
+    public void H_checkAccessions() throws IOException, InterruptedException {
+        Collection<ProcessingStatus> processingStatuses = TestUtils.fetchProcessingStatuses(token,submissionUrl);
+
+        for (ProcessingStatus processingStatus : processingStatuses) {
+            System.out.println(processingStatus);
+            assertNotNull(processingStatus.getSubmittableType());
+            assertNotNull(processingStatus.getAlias());
+            assertNotNull(processingStatus.getStatus());
+            assertNotNull(processingStatus.getArchive());
+            assertNotNull(processingStatus.getAccession());
+        }
     }
+
+
 
     private void assertNoErrorsInValidationResult(ValidationResult validationResult) {
         logMessages(validationResult);

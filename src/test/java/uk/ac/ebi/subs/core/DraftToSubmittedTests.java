@@ -91,15 +91,7 @@ public class DraftToSubmittedTests {
 
         TestUtils.waitForUpdateableSubmission(token, submissionUrl);
 
-        HttpResponse getResponse = HttpUtils.httpGet(token, submissionUrl + "/submissionStatus");
-
-        SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(getResponse, SubmissionStatus.class);
-
-        HttpResponse response = HttpUtils.httpPatch(token,submissionStatus.getStatusUpdateUrl(),"{\"status\" : \"Submitted\"}");
-
-        assertThat(
-                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
-        );
+        TestUtils.changeSubmissionStatusToSubmitted(token,submissionUrl);
     }
 
     @Test
