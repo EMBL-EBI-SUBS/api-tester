@@ -45,7 +45,8 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(SUBMISSION_URL, submissionUrl);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 
     public static String getDeleteSampleRelationshipsJson(String submissionUrl, String alias) throws IOException {
@@ -53,7 +54,8 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(SUBMISSION_URL, submissionUrl);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 
     public static String getSampleJson(String submissionUrl, String alias) throws IOException {

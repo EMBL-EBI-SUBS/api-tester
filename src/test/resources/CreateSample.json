@@ -12,7 +12,7 @@
   },
   "sampleRelationships" : [ {
     "accession" : "SAME123392",
-    "relationshipNature" : "Derived from"
+    "relationshipNature" : "derived from"
   } ],
   "taxonId" : 9606,
   "taxon" : "Homo sapiens",
