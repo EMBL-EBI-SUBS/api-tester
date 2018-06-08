@@ -169,7 +169,7 @@ public class TestUtils {
 
     public static void waitForValidationResults(String token, String submittableUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 5000;
+        long maximumIntervalMillis = 30000;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
