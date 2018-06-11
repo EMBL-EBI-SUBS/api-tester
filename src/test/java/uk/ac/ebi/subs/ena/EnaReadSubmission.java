@@ -1,21 +1,17 @@
 package uk.ac.ebi.subs.ena;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
-import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ApiRoot;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
-import uk.ac.ebi.subs.data.objects.SubmissionStatus;
-import uk.ac.ebi.subs.data.objects.SubmissionStatus;
-import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.utils.HttpUtils;
@@ -29,14 +25,7 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.Map;
 
-import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)

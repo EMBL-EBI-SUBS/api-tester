@@ -191,7 +191,7 @@ public class TestUtils {
     public static ValidationResult getValidationResultForSubmittable(String submittableUrl, String token) throws IOException {
         SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
         String validationResultUrl = resource.get_links().getValidationResult().getHref();
-;
+
         HttpResponse stubResultResponse = HttpUtils.httpGet(token,validationResultUrl);
         Assert.assertEquals(200, stubResultResponse.getStatusLine().getStatusCode());
         ValidationResult stubResult = HttpUtils.retrieveResourceFromResponse(stubResultResponse, ValidationResult.class);
