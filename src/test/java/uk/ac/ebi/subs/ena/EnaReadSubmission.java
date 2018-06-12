@@ -10,7 +10,12 @@ import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ApiRoot;
+import uk.ac.ebi.subs.data.objects.FileList;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
+import uk.ac.ebi.subs.data.objects.Submission;
+import uk.ac.ebi.subs.data.objects.SubmissionContents;
+import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
+import uk.ac.ebi.subs.data.objects.SubsFile;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.utils.HttpUtils;
@@ -22,9 +27,12 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collection;
+import java.util.List;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -82,6 +90,37 @@ public class EnaReadSubmission {
 
         String submissionUUID = submissionUrl.substring(submissionUrl.lastIndexOf('/') + 1);
         Uploader.uploadFile(token, apiRoot.getLinks().getTusUpload().getHref(), testFile, submissionUUID, fileName);
+
+        Submission submission = TestUtils.getSubmission(token,submissionUrl);
+        HttpResponse submissionContentsResponse = HttpUtils.httpGet(token, submission.getLinks().getContents().getHref());
+        SubmissionContents submissionContents = HttpUtils.retrieveResourceFromResponse(submissionContentsResponse,SubmissionContents.class);
+
+        long maximumIntervalMillis = 30000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        String fileListUrl = submissionContents.getLinks().getFiles().getHref();
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            HttpResponse fileListResponse = HttpUtils.httpGet(token, fileListUrl);
+            FileList fileListResource = HttpUtils.retrieveResourceFromResponse(fileListResponse, FileList.class);
+
+            List<SubsFile> files = fileListResource.getContents().getFiles();
+
+            assertEquals(1,files.size());
+
+            SubsFile file = files.get(0);
+            ValidationResult vr = file.getEmbedded().getValidationResult();
+            
+            boolean validationIsNotPending = !vr.getValidationStatus().equalsIgnoreCase("pending");
+
+            if (validationIsNotPending) {
+                assertEquals("Complete",vr.getValidationStatus());
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+        throw new RuntimeException("Gave up waiting for file validation results on " + fileListUrl);
     }
 
 

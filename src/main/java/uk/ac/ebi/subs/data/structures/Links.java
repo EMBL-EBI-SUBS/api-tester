@@ -16,4 +16,6 @@ public class Links {
     private Link submissionStatus;
 
     private Link processingStatuses;
+
+    private Link contents;
 }
