@@ -1,14 +1,15 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import uk.ac.ebi.subs.PropertiesManager;
+import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -40,14 +41,14 @@ public class UpdateProjectTests {
     public void givenProjectExists_whenUpdatingIt_then200IsReceived() throws IOException {
 
         HttpPut request = new HttpPut(projectUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(TestJsonUtils.getProjectJson(submissionUrl, projectAlias, "2017-04-17"));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
 
-        System.out.println(TestUtils.extractResponseBody(response));
+        System.out.println(HttpUtils.extractResponseBody(response));
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -57,9 +58,6 @@ public class UpdateProjectTests {
 
     @AfterClass
     public static void tearDown() throws Exception {
-
-        HttpDelete request = new HttpDelete(submissionUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-        HttpClientBuilder.create().build().execute(request);
+        HttpUtils.deleteResource(token, submissionUrl);
     }
 }

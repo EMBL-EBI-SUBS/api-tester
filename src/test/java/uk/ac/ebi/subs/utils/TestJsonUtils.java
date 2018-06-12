@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class TestJsonUtils {
 
@@ -16,6 +15,13 @@ public class TestJsonUtils {
     private static final String SUBMISSION_URL = "{submissionUrl.placeholder}";
     private static final String PROJECT_ALIAS = "{projectAlias.placeholder}";
     private static final String RELEASE_DATE = "{release.date.placeholder}";
+
+    private static final String STUDY_ALIAS = "{studyAlias.placeholder}";
+    private static final String SAMPLE_ALIAS = "{sampleAlias.placeholder}";
+    private static final String ASSAY_ALIAS = "{assayAlias.placeholder}";
+    private static final String FILE_NAME = "{fileName.placeholder}";
+    private static final String FILE_TYPE = "{fileType.placeholder}";
+
 
     public static String getSubmissionJson(String submitterEmail, String teamName) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("Submission.json").getFile());
@@ -61,15 +67,15 @@ public class TestJsonUtils {
         return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 
-    public static String getStudyJson(String submissionUrl, String alias, String projectAlias, String releaseDate, String teamName) throws IOException {
+    public static String getStudyJson(String submissionUrl, String alias, String projectAlias, String teamName) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("Study.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
         json = json.replace(SUBMISSION_URL, submissionUrl);
         json = json.replace(PROJECT_ALIAS, projectAlias);
-        json = json.replace(TEAM_NAME,teamName);
-        return json.replace(RELEASE_DATE, releaseDate);
+        json = json.replace(TEAM_NAME, teamName);
+        return json;
     }
 
     public static String getProjectJson(String submissionUrl, String alias, String releaseDate) throws IOException {
@@ -81,7 +87,32 @@ public class TestJsonUtils {
         return json.replace(RELEASE_DATE, releaseDate);
     }
 
-    public static String createSampleForSubmissionJson(String submissionUrl, String alias) throws IOException{
+    public static String getAssayJson(String submissionUrl, String alias, String sampleAlias, String studyAlias) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("Assay.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace(ALIAS, alias);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+
+        json = json.replace(SAMPLE_ALIAS, sampleAlias);
+        json = json.replace(STUDY_ALIAS, studyAlias);
+        return json;
+    }
+
+    public static String getAssayDataJson(String submissionUrl, String alias, String assayAlias, String fileName, String filetype) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("AssayData.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace(ALIAS, alias);
+        json = json.replace(SUBMISSION_URL, submissionUrl);
+        json = json.replace(ASSAY_ALIAS, assayAlias);
+        json = json.replace(FILE_NAME, fileName);
+        json = json.replace(FILE_TYPE,filetype);
+
+        return json;
+    }
+
+    public static String createSampleForSubmissionJson(String submissionUrl, String alias) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("SampleForSubmission.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 

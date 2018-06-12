@@ -1,21 +1,19 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
+import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
+import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -55,22 +53,15 @@ public class StudyTests {
     @Test
     public void givenSubmissionExists_whenAddingStudyToIt_then201IsReceived() throws IOException {
 
-        HttpPost request = new HttpPost(studiesApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        StringEntity payload = new StringEntity(
+        String content =
                 TestJsonUtils.getStudyJson(
                         submissionUrl,
                         TestUtils.getRandomAlias(),
                         projectAlias,
-                        "2017-04-17",
                         pm.getTeamName()
 
-                )
-        );
-        request.setEntity(payload);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+                );
+        HttpResponse response = HttpUtils.httpPost(token, studiesApiBaseUrl,content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -81,14 +72,13 @@ public class StudyTests {
     public void givenStudyExists_whenUpdatingIt_then200IsReceived() throws IOException {
 
         HttpPut request = new HttpPut(studyUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(
                 TestJsonUtils.getStudyJson(
                         submissionUrl,
                         studyAlias,
                         projectAlias,
-                        "2017-04-17",
                         pm.getTeamName()
                 )
         );
@@ -103,11 +93,7 @@ public class StudyTests {
 
     @Test
     public void givenStudyExists_whenGettingValidationResults_then200IsReceived() throws IOException {
-
-        HttpUriRequest request = new HttpGet(studyValidationResultsUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        HttpResponse response = HttpUtils.httpGet(token, studyValidationResultsUrl);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -127,14 +113,14 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingCoreValidationResult_thenValidationResultStatusIsPass() throws IOException, InterruptedException {
 
-        TestUtils.waitForValidationResults(studyUrl,token);
+        TestUtils.waitForValidationResults(token, studyUrl);
 
         ValidationResultStatusAndLink validationResultStatusAndLink =
                 TestUtils.getValidationResultStatusAndLinkFromStudy(studyValidationResultsUrl, token);
 
         ValidationResult validationResult =
                 TestUtils.getValidationResultFromValidationResultStatus(
-                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
+                        validationResultStatusAndLink.getLinks().getSelf().getHref(), token);
 
         assertThat(
                 validationResult.getValidationResultsFromCore()[0].getValidationStatus(), equalTo("Pass")
@@ -144,14 +130,14 @@ public class StudyTests {
     @Test
     public void givenStudyExists_whenGettingEnaValidationResult_thenValidationResultIsAvailable() throws IOException, InterruptedException {
 
-        TestUtils.waitForValidationResults(studyUrl,token);
+        TestUtils.waitForValidationResults(token, studyUrl);
 
         ValidationResultStatusAndLink validationResultStatusAndLink =
                 TestUtils.getValidationResultStatusAndLinkFromStudy(studyValidationResultsUrl, token);
 
         ValidationResult validationResult =
                 TestUtils.getValidationResultFromValidationResultStatus(
-                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
+                        validationResultStatusAndLink.getLinks().getSelf().getHref(), token);
 
         assertThat(
                 validationResult.getValidationResultsFromEna()[0], notNullValue()
@@ -160,9 +146,7 @@ public class StudyTests {
 
     @AfterClass
     public static void tearDown() throws Exception {
-
-        HttpDelete request = new HttpDelete(submissionUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-        HttpClientBuilder.create().build().execute(request);
+        HttpUtils.deleteResource(token, submissionUrl);
     }
+
 }

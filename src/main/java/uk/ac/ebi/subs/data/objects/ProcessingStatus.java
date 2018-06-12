@@ -12,4 +12,8 @@ public class ProcessingStatus {
     private String alias;
 
     private String status;
+
+    private String archive;
+
+    private String accession;
 }

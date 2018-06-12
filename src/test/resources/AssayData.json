@@ -1,0 +1,17 @@
+{
+  "alias": "{alias.placeholder}",
+  "title": "Sequencing run",
+  "description": "Sequencing run",
+  "assayRefs": [
+    {
+      "alias": "{assayAlias.placeholder}"
+    }
+  ],
+  "files": [
+    {
+      "name": "{fileName.placeholder}",
+      "type": "{fileType.placeholder}"
+    }
+  ],
+  "submission": "{submissionUrl.placeholder}"
+}

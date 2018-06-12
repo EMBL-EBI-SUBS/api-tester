@@ -1,8 +1,7 @@
-package uk.ac.ebi.subs;
+package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
@@ -10,6 +9,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import uk.ac.ebi.subs.PropertiesManager;
+import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
 
@@ -36,16 +37,11 @@ public class CreateProjectTest {
 
     @Test
     public void givenSubmissionExists_whenAddingProjectToIt_then201IsReceived() throws IOException {
+        String content = TestJsonUtils.getProjectJson(submissionUrl, TestUtils.getRandomAlias(), "2017-04-17");
 
-        HttpPost request = new HttpPost(projectsApiBaseUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
+        HttpResponse response = HttpUtils.httpPost(token, projectsApiBaseUrl,content);
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getProjectJson(submissionUrl, TestUtils.getRandomAlias(), "2017-04-17"), ContentType.APPLICATION_JSON);
-        request.setEntity(payload);
-
-        HttpResponse response = HttpClientBuilder.create().build().execute(request);
-
-        System.out.println(TestUtils.extractResponseBody(response));
+        System.out.println(HttpUtils.extractResponseBody(response));
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -54,9 +50,6 @@ public class CreateProjectTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-
-        HttpDelete request = new HttpDelete(submissionUrl);
-        request.setHeaders(TestUtils.getContentTypeAcceptAndTokenHeaders(token));
-        HttpClientBuilder.create().build().execute(request);
+        HttpUtils.deleteResource(token, submissionUrl);
     }
 }

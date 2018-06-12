@@ -18,31 +18,32 @@ public class SubmissionStatus {
 
     private String lastModifiedBy;
 
-    private _Links _links;
+    @JsonProperty("_links")
+    private Links links;
 
     public String getStatusUpdateUrl() {
-        if (_links != null && _links.getSelf_update() != null){
-            return _links.getSelf_update().getHref();
+        if (links != null && links.getSelfUpdate() != null){
+            return links.getSelfUpdate().getHref();
         }
         return null;
     }
 
     public String getSelfUrl() {
-        return _links.getSelf().getHref();
+        return links.getSelf().getHref();
     }
 }
 
 @Getter @Setter @ToString
-class _Links {
+class Links {
 
     @JsonProperty("self:update")
-    private Self_Update self_update;
+    private SelfUpdate selfUpdate;
 
     private Self self;
 }
 
 @Getter @Setter @ToString
-class Self_Update {
+class SelfUpdate {
 
     private String href;
 }

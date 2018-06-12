@@ -1,5 +1,6 @@
 package uk.ac.ebi.subs.data.structures;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,5 +13,6 @@ public class PutSampleResponseObject {
 
     private Team team;
 
-    private Embedded _embedded;
+    @JsonProperty("_embedded")
+    private Embedded embedded;
 }
