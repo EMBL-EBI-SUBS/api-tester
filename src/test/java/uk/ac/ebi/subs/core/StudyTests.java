@@ -2,10 +2,7 @@ package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.AfterClass;
@@ -123,7 +120,7 @@ public class StudyTests {
 
         ValidationResult validationResult =
                 TestUtils.getValidationResultFromValidationResultStatus(
-                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
+                        validationResultStatusAndLink.getLinks().getSelf().getHref(), token);
 
         assertThat(
                 validationResult.getValidationResultsFromCore()[0].getValidationStatus(), equalTo("Pass")
@@ -140,7 +137,7 @@ public class StudyTests {
 
         ValidationResult validationResult =
                 TestUtils.getValidationResultFromValidationResultStatus(
-                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
+                        validationResultStatusAndLink.getLinks().getSelf().getHref(), token);
 
         assertThat(
                 validationResult.getValidationResultsFromEna()[0], notNullValue()

@@ -1,5 +1,6 @@
 package uk.ac.ebi.subs.data.objects;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,13 +22,15 @@ public class SubmittableTemplate {
 
     private SampleRelationship[] sampleRelationships;
 
-    private Links _links;
+    @JsonProperty("_links")
+    private Links links;
 
     public String getValidationResultsUrl() {
-        return _links.getValidationResult().getHref();
+        return links.getValidationResult().getHref();
     }
 
-    private Embedded _embedded;
+    @JsonProperty("_embedded")
+    private Embedded embedded;
 }
 
 @Getter @Setter @ToString

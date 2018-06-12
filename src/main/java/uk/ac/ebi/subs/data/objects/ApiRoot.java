@@ -7,7 +7,9 @@ import uk.ac.ebi.subs.data.structures.Link;
 @Data
 public class ApiRoot {
 
-    private ApiRootLinks _links;
+    @JsonProperty("_links")
+    private ApiRootLinks links;
+
 
     @Data
     public static class ApiRootLinks {

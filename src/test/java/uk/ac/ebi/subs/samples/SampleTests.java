@@ -95,7 +95,7 @@ public class SampleTests {
         PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
 
         assertThat(
-                resource.get_embedded().getProcessingStatus().getStatus(), equalTo("Draft")
+                resource.getEmbedded().getProcessingStatus().getStatus(), equalTo("Draft")
         );
     }
 
@@ -111,7 +111,7 @@ public class SampleTests {
         PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
 
         assertThat(
-                resource.get_embedded().getProcessingStatus().getStatus(), equalTo("Draft")
+                resource.getEmbedded().getProcessingStatus().getStatus(), equalTo("Draft")
         );
     }
 
@@ -198,7 +198,7 @@ public class SampleTests {
 
         ValidationResult validationResult =
                 TestUtils.getValidationResultFromValidationResultStatus(
-                        validationResultStatusAndLink.get_links().getSelf().getHref(), token);
+                        validationResultStatusAndLink.getLinks().getSelf().getHref(), token);
 
         assertThat(
                 validationResult.getValidationResultsFromTaxonomy()[0], notNullValue()

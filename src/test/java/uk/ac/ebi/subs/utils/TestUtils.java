@@ -7,7 +7,6 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -41,7 +40,7 @@ public class TestUtils {
         HttpResponse response = HttpUtils.httpPost(token, submissionApiUrl, content);
 
         Submission resource = HttpUtils.retrieveResourceFromResponse(response, Submission.class);
-        String selfHref = resource.get_links().getSelf().getHref();
+        String selfHref = resource.getLinks().getSelf().getHref();
         return selfHref.replace("{?projection}", "");
     }
 
@@ -64,7 +63,7 @@ public class TestUtils {
 
         SubmittableTemplate resource = HttpUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
 
-        return resource.get_links().getSelf().getHref();
+        return resource.getLinks().getSelf().getHref();
     }
 
     public static String createProject(String token, String projectsApiBaseUrl, String submissionUrl, String projectAlias) throws IOException {
@@ -175,7 +174,7 @@ public class TestUtils {
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
             SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
 
-            boolean validationIsNotPending = !resource.get_embedded().getValidationResult()
+            boolean validationIsNotPending = !resource.getEmbedded().getValidationResult()
                     .getValidationStatus().equalsIgnoreCase("pending");
 
             if (validationIsNotPending) {
@@ -190,13 +189,13 @@ public class TestUtils {
 
     public static ValidationResult getValidationResultForSubmittable(String submittableUrl, String token) throws IOException {
         SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
-        String validationResultUrl = resource.get_links().getValidationResult().getHref();
+        String validationResultUrl = resource.getLinks().getValidationResult().getHref();
 
         HttpResponse stubResultResponse = HttpUtils.httpGet(token,validationResultUrl);
         Assert.assertEquals(200, stubResultResponse.getStatusLine().getStatusCode());
         ValidationResult stubResult = HttpUtils.retrieveResourceFromResponse(stubResultResponse, ValidationResult.class);
 
-        HttpResponse fullResultResponse = HttpUtils.httpGet(token,stubResult.get_links().getSelf().getHref());
+        HttpResponse fullResultResponse = HttpUtils.httpGet(token,stubResult.getLinks().getSelf().getHref());
         Assert.assertEquals(200, fullResultResponse.getStatusLine().getStatusCode());
         ValidationResult fullResult = HttpUtils.retrieveResourceFromResponse(fullResultResponse, ValidationResult.class);
 
@@ -211,7 +210,7 @@ public class TestUtils {
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
             SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
 
-            boolean submittableIsCompleted = resource.get_embedded().getProcessingStatus().getStatus().equalsIgnoreCase("completed");
+            boolean submittableIsCompleted = resource.getEmbedded().getProcessingStatus().getStatus().equalsIgnoreCase("completed");
 
             if (submittableIsCompleted) {
 
@@ -282,7 +281,7 @@ public class TestUtils {
     public static Collection<ProcessingStatus> fetchProcessingStatuses(String token, String submissionUrl) throws IOException {
         Submission submission = TestUtils.getSubmission(token, submissionUrl);
 
-        String processingStatusesUrl = submission.get_links().getProcessingStatuses().getHref();
+        String processingStatusesUrl = submission.getLinks().getProcessingStatuses().getHref();
 
         List<ProcessingStatus> processingStatusList = new ArrayList<>();
 
@@ -337,7 +336,7 @@ public class TestUtils {
 
         Assert.assertEquals(200, submissionResponse.getStatusLine().getStatusCode());
         Submission submissionResource = HttpUtils.retrieveResourceFromResponse(submissionResponse, Submission.class);
-        return submissionResource.get_links().getSubmissionStatus().getHref();
+        return submissionResource.getLinks().getSubmissionStatus().getHref();
     }
 
 }

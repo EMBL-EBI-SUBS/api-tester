@@ -6,7 +6,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
-import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
@@ -82,7 +81,7 @@ public class EnaReadSubmission {
         ApiRoot apiRoot = HttpUtils.retrieveResourceFromResponse(apiRootResponse,ApiRoot.class);
 
         String submissionUUID = submissionUrl.substring(submissionUrl.lastIndexOf('/') + 1);
-        Uploader.uploadFile(token, apiRoot.get_links().getTusUpload().getHref(), testFile, submissionUUID, fileName);
+        Uploader.uploadFile(token, apiRoot.getLinks().getTusUpload().getHref(), testFile, submissionUUID, fileName);
     }
 
 

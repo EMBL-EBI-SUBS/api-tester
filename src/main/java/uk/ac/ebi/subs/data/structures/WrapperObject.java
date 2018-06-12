@@ -1,5 +1,6 @@
 package uk.ac.ebi.subs.data.structures;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -7,13 +8,14 @@ import lombok.ToString;
 @Getter @Setter @ToString
 public class WrapperObject {
 
-    private Embedded _embedded;
+    @JsonProperty("_embedded")
+    private Embedded embedded;
 
     public int getSamplesLength() {
-        return _embedded.getSamples().length;
+        return embedded.getSamples().length;
     }
 
     public String getNthSampleAlias(int n) {
-        return _embedded.getSamples()[n].getAlias();
+        return embedded.getSamples()[n].getAlias();
     }
 }

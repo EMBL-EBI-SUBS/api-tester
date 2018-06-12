@@ -1,9 +1,6 @@
 package uk.ac.ebi.subs.samples;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -95,6 +92,6 @@ public class ResubmitSampleTest {
 
         HttpResponse response =  HttpUtils.httpPost(token, samplesApiBaseUrl,content);
         SubmittableTemplate resource = HttpUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
-        return resource.get_links().getSelf().getHref();
+        return resource.getLinks().getSelf().getHref();
     }
 }
