@@ -110,7 +110,7 @@ public class EnaReadSubmission {
 
             SubsFile file = files.get(0);
             ValidationResult vr = file.getEmbedded().getValidationResult();
-            
+
             boolean validationIsNotPending = !vr.getValidationStatus().equalsIgnoreCase("pending");
 
             if (validationIsNotPending) {
@@ -137,7 +137,7 @@ public class EnaReadSubmission {
         );
         TestUtils.waitForValidationResults(token, assayDataUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(assayDataUrl, token);
-        assertNoErrorsInValidationResult(validationResult); //FIXME - unexpected errors from the ENA validator, probably need to fix the validator
+        assertNoErrorsInValidationResult(validationResult);
     }
 
     @Test
