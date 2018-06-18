@@ -9,6 +9,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
+import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.ApiRoot;
 import uk.ac.ebi.subs.data.objects.FileList;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
@@ -34,7 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-@Category({DevEnv.class})
+@Category({TestEnv.class, DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class EnaReadSubmission {
 

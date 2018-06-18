@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
+import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 import uk.ac.ebi.subs.utils.HttpUtils;
@@ -24,7 +25,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 
-@Category({DevEnv.class})
+@Category({TestEnv.class, DevEnv.class})
 public class StudyTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
