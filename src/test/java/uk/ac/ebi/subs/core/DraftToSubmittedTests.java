@@ -2,6 +2,7 @@ package uk.ac.ebi.subs.core;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
+import org.hamcrest.core.AnyOf;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -107,7 +108,7 @@ public class DraftToSubmittedTests {
         SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(response, SubmissionStatus.class);
 
         assertThat(
-                submissionStatus.getStatus(), equalTo("Submitted")
+                submissionStatus.getStatus(), AnyOf.anyOf(equalTo("Submitted"),equalTo("Completed"))
         );
     }
 
