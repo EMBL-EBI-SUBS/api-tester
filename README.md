@@ -8,7 +8,7 @@ A series of black box tests will be run focusing on:
 - other HTTP headers in the response
 - the payload (JSON)
 
-Each test will only be focused on a **single responsability**.
+Each test will only be focused on a **single responsibility**.
 Another important aspect of the integration tests is adherence to the *Single Level of Abstraction Principle* – the logic within a test should be written at a high level.
 
 ## Running the tests
