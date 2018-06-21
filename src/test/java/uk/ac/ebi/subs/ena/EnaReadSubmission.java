@@ -15,7 +15,6 @@ import uk.ac.ebi.subs.data.objects.FileList;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmissionContents;
-import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.SubsFile;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.data.structures.Result;
@@ -143,7 +142,7 @@ public class EnaReadSubmission {
 
     @Test
     public void F_submit() throws IOException, InterruptedException {
-        TestUtils.waitForUpdateableSubmission(token, submissionUrl);
+        TestUtils.waitForUpdateableSubmissionStatus(token, submissionUrl);
         TestUtils.changeSubmissionStatusToSubmitted(token,submissionUrl);
     }
 
