@@ -85,7 +85,7 @@ public class DraftToSubmittedTests {
     @Test
     public void givenSubmissionIsOK_whenPatchingSubmissionStatusSubmitted_then200IsReceived() throws IOException, InterruptedException {
 
-        TestUtils.waitForUpdateableSubmission(token, submissionUrl);
+        TestUtils.waitForUpdateableSubmissionStatus(token, submissionUrl);
 
         TestUtils.changeSubmissionStatusToSubmitted(token,submissionUrl);
     }

@@ -10,6 +10,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPatch;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -34,6 +35,17 @@ public class HttpUtils {
 
     public static HttpResponse httpPatch(String token, String url, String content) throws IOException {
         HttpPatch request = new HttpPatch(url);
+        request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
+
+        StringEntity payload = new StringEntity(content);
+        request.setEntity(payload);
+
+        HttpResponse response = HttpClientBuilder.create().build().execute(request);
+        return response;
+    }
+
+    public static HttpResponse httpPut(String token, String url, String content) throws IOException {
+        HttpPut request = new HttpPut(url);
         request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
 
         StringEntity payload = new StringEntity(content);

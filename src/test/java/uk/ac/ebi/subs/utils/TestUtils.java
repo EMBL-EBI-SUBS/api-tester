@@ -267,11 +267,11 @@ public class TestUtils {
     }
 
     public static void changeSubmissionStatusToSubmitted(String token, String submissionUrl) throws IOException {
-        HttpResponse getResponse = HttpUtils.httpGet(token, submissionUrl + "/submissionStatus");
+        HttpResponse getResponse = HttpUtils.httpGet(token, submissionUrl);
 
-        SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(getResponse, SubmissionStatus.class);
+        Submission submission = HttpUtils.retrieveResourceFromResponse(getResponse, Submission.class);
 
-        HttpResponse response = HttpUtils.httpPatch(token,submissionStatus.getStatusUpdateUrl(),"{\"status\" : \"Submitted\"}");
+        HttpResponse response = HttpUtils.httpPut(token,submission.getLinks().getSubmissionStatusUpdate().getHref(),"{\"status\" : \"Submitted\"}");
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -307,20 +307,18 @@ public class TestUtils {
         return processingStatusList;
     }
 
-    public static void waitForUpdateableSubmission(String token, String submissionUrl) throws IOException, InterruptedException {
+    public static void waitForUpdateableSubmissionStatus(String token, String submissionUrl) throws IOException, InterruptedException {
 
         long maximumIntervalMillis = 50000;
         long startingTimeMillis = System.currentTimeMillis();
 
-        String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
-
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
-            HttpResponse statusResponse = HttpUtils.httpGet(token,submissionStatusUrl);
+            HttpResponse statusResponse = HttpUtils.httpGet(token,submissionUrl);
 
             Assert.assertEquals(200, statusResponse.getStatusLine().getStatusCode());
-            SubmissionStatus resource = HttpUtils.retrieveResourceFromResponse(statusResponse, SubmissionStatus.class);
+            Submission resource = HttpUtils.retrieveResourceFromResponse(statusResponse, Submission.class);
 
-            boolean submissionIsUpdateable = resource.getStatusUpdateUrl() != null;
+            boolean submissionIsUpdateable = resource.getLinks().getSubmissionStatusUpdate() != null;
 
             if (submissionIsUpdateable) {
                 return;
