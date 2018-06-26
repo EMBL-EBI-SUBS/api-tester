@@ -19,7 +19,7 @@ public class Uploader {
         Map<String, String> headers = new HashMap<>();
         headers.put("jwtToken", token);
         headers.put("submissionID", submissionId);
-        headers.put("filename", file.getName());
+        headers.put("name", file.getName());
 
         // Create a new TusClient instance
         TusClient client = new TusClient();
