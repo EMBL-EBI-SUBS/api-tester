@@ -109,14 +109,15 @@ public class EnaReadSubmission {
             assertEquals(1,files.size());
 
             SubsFile file = files.get(0);
-            ValidationResult vr = file.getEmbedded().getValidationResult();
+            if (file.getEmbedded() != null && file.getEmbedded().getValidationResult() != null) {
+                ValidationResult vr = file.getEmbedded().getValidationResult();
 
-            boolean validationIsNotPending = !vr.getValidationStatus().equalsIgnoreCase("pending");
+                boolean validationIsNotPending = !vr.getValidationStatus().equalsIgnoreCase("pending");
 
-            if (validationIsNotPending) {
-                assertEquals("Complete",vr.getValidationStatus());
-
-                return;
+                if (validationIsNotPending) {
+                    assertEquals("Complete", vr.getValidationStatus());
+                    return;
+                }
             }
             Thread.sleep(500);
         }
