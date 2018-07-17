@@ -1,6 +1,7 @@
 package uk.ac.ebi.subs.ena;
 
 import org.apache.http.HttpResponse;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -27,7 +28,6 @@ public class FileContentValidationTest {
     private static String token;
     private static String submissionUrl;
     private static final String FILE_WITH_CONTENT_ERROR = "test_e1.fastq.gz";
-
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -69,6 +69,11 @@ public class FileContentValidationTest {
             Thread.sleep(500);
         }
         throw new RuntimeException("Gave up waiting for file validation results on " + fileListUrl);
+    }
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        HttpUtils.deleteResource(token, submissionUrl);
     }
 
 }
