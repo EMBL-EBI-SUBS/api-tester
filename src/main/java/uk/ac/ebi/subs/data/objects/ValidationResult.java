@@ -7,6 +7,7 @@ import lombok.ToString;
 import uk.ac.ebi.subs.data.structures.Links;
 import uk.ac.ebi.subs.data.structures.Result;
 
+import java.util.List;
 import java.util.Map;
 
 @Getter @Setter @ToString
@@ -19,6 +20,10 @@ public class ValidationResult {
     private int version;
 
     private String submissionId;
+
+    private Map<String, List<String>> errorMessages;
+
+    private Map<String, String> overallValidationOutcomeByAuthor;
 
     @JsonProperty("_links")
     private Links links;
