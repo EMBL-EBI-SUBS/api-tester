@@ -15,6 +15,7 @@ import org.junit.Assert;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
 import uk.ac.ebi.subs.data.objects.ProcessingStatuses;
 import uk.ac.ebi.subs.data.objects.Submission;
+import uk.ac.ebi.subs.data.objects.SubmissionContents;
 import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
@@ -123,6 +124,13 @@ public class TestUtils {
         }
         return urls;
     }
+
+    public static SubmissionContents getSubmissionContent(String token, String submissionUrl) throws Exception {
+        Submission submission = TestUtils.getSubmission(token, submissionUrl);
+        HttpResponse submissionContentsResponse = HttpUtils.httpGet(token, submission.getLinks().getContents().getHref());
+        return HttpUtils.retrieveResourceFromResponse(submissionContentsResponse, SubmissionContents.class);
+    }
+
 
     public static String getJWTToken(String authUrl, String username, String password) throws IOException {
         CredentialsProvider provider = new BasicCredentialsProvider();

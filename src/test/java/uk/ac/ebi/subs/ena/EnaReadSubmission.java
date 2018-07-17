@@ -10,10 +10,8 @@ import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.categories.TestEnv;
-import uk.ac.ebi.subs.data.objects.ApiRoot;
 import uk.ac.ebi.subs.data.objects.FileList;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
-import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmissionContents;
 import uk.ac.ebi.subs.data.objects.SubsFile;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
@@ -21,9 +19,8 @@ import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.utils.HttpUtils;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
 import uk.ac.ebi.subs.utils.TestUtils;
-import uk.ac.ebi.subs.utils.Uploader;
+import uk.ac.ebi.subs.utils.UploadUtils;
 
-import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -32,7 +29,6 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 @Category({TestEnv.class, DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -84,16 +80,9 @@ public class EnaReadSubmission {
 
     @Test
     public void D_uploadFile() throws Exception{
-        File testFile = new File(ClassLoader.getSystemClassLoader().getResource(fileName).getFile());
-        HttpResponse apiRootResponse = HttpUtils.httpGet(token,pm.getApiRoot());
-        ApiRoot apiRoot = HttpUtils.retrieveResourceFromResponse(apiRootResponse,ApiRoot.class);
+        UploadUtils.uploadFile(token, submissionUrl, fileName);
 
-        String submissionUUID = submissionUrl.substring(submissionUrl.lastIndexOf('/') + 1);
-        Uploader.uploadFile(token, apiRoot.getLinks().getTusUpload().getHref(), testFile, submissionUUID, fileName);
-
-        Submission submission = TestUtils.getSubmission(token,submissionUrl);
-        HttpResponse submissionContentsResponse = HttpUtils.httpGet(token, submission.getLinks().getContents().getHref());
-        SubmissionContents submissionContents = HttpUtils.retrieveResourceFromResponse(submissionContentsResponse,SubmissionContents.class);
+        SubmissionContents submissionContents = TestUtils.getSubmissionContent(token, submissionUrl);
 
         long maximumIntervalMillis = 30000;
         long startingTimeMillis = System.currentTimeMillis();
