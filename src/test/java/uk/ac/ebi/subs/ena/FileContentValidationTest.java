@@ -73,6 +73,8 @@ public class FileContentValidationTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
+        // wait 3 seconds while validation-service can handle the above request
+        Thread.sleep(3000);
         HttpUtils.deleteResource(token, submissionUrl);
     }
 
