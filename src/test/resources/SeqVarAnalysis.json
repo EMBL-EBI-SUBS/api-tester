@@ -1,0 +1,34 @@
+{
+  "alias": "{alias.placeholder}",
+  "analysisType": "sequence variation",
+  "title": "Variant calling of my favourite population",
+  "description": "This set of variant calls were generated using some data and some software",
+  "studyRefs": [
+    {"alias": "{studyAlias.placeholder}"}
+  ],
+  "sampleRefs": [
+    {"alias": "{sampleAlias.placeholder}"}
+  ],
+  "files" : [ {
+    "name": "{fileName.placeholder}",
+    "type": "{fileType.placeholder}"
+  } ],
+  "attributes" : {
+    "assembly name" : [ {
+      "value" : "GRCh38"
+    } ],
+    "experiment type" : [ {
+      "value" : "Genotyping by sequencing"
+    } ],
+    "program" : [ {
+      "value" : "GATK"
+    } ],
+    "platform" : [ {
+      "value" : "Illumina"
+    } ],
+    "imputation": [ {
+      "value" : "false"
+    } ]
+  },
+  "submission": "{submissionUrl.placeholder}"
+}

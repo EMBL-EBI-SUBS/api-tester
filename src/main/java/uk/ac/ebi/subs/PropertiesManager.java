@@ -70,6 +70,10 @@ public class PropertiesManager {
         return this.properties.getProperty("projectsApiBaseUrl", getApiRoot() + "projects/");
     }
 
+    public String getAnalysisApiBaseUrl() {
+        return this.properties.getProperty("analysesApiBaseUrl", getApiRoot() + "analyses/");
+    }
+
     public String getSamplesInSubmissionByIdUrl() {
         return this.properties.getProperty("samplesInSubmissionByIdUrl", getApiRoot() + "samples/search/by-submission?submissionId=");
     }

@@ -12,23 +12,29 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
+import uk.ac.ebi.subs.data.objects.FileList;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
 import uk.ac.ebi.subs.data.objects.ProcessingStatuses;
 import uk.ac.ebi.subs.data.objects.Submission;
 import uk.ac.ebi.subs.data.objects.SubmissionContents;
 import uk.ac.ebi.subs.data.objects.SubmissionStatus;
 import uk.ac.ebi.subs.data.objects.SubmittableTemplate;
+import uk.ac.ebi.subs.data.objects.SubsFile;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
+import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 public class TestUtils {
@@ -343,6 +349,62 @@ public class TestUtils {
         Assert.assertEquals(200, submissionResponse.getStatusLine().getStatusCode());
         Submission submissionResource = HttpUtils.retrieveResourceFromResponse(submissionResponse, Submission.class);
         return submissionResource.getLinks().getSubmissionStatus().getHref();
+    }
+
+
+    public static void assertNoErrorsInValidationResult(ValidationResult validationResult) {
+        logMessages(validationResult);
+        for (Result[] results : validationResult.getExpectedResults().values()) {
+            for (Result result : results) {
+                Assert.assertNotEquals("Error", result.getValidationStatus());
+            }
+        }
+    }
+
+    public static void logMessages(ValidationResult validationResult){
+        for (Map.Entry<String,Result[]> entry : validationResult.getExpectedResults().entrySet()){
+            String author = entry.getKey();
+            Result[] results = entry.getValue();
+
+            for (Result result : results){
+                if (result.getMessage() != null){
+                    String message = MessageFormat.format("Author:{0} Status:{1} Message:{2}",author,result.getValidationStatus(),result.getMessage());
+                    System.out.println(message);
+                }
+            }
+        }
+    }
+
+    public static void waitForFileValidationCompletion(String token, String submissionUrl) throws Exception{
+        SubmissionContents submissionContents = TestUtils.getSubmissionContent(token, submissionUrl);
+
+        long maximumIntervalMillis = 30000;
+        long startingTimeMillis = System.currentTimeMillis();
+
+        String fileListUrl = submissionContents.getLinks().getFiles().getHref();
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+            HttpResponse fileListResponse = HttpUtils.httpGet(token, fileListUrl);
+            FileList fileListResource = HttpUtils.retrieveResourceFromResponse(fileListResponse, FileList.class);
+
+            List<SubsFile> files = fileListResource.getContents().getFiles();
+
+            assertEquals(1, files.size());
+
+            SubsFile file = files.get(0);
+            if (file.getEmbedded() != null && file.getEmbedded().getValidationResult() != null) {
+                ValidationResult vr = file.getEmbedded().getValidationResult();
+
+                boolean validationIsNotPending = !vr.getValidationStatus().equalsIgnoreCase("pending");
+
+                if (validationIsNotPending) {
+                    assertEquals("Complete", vr.getValidationStatus());
+                    return;
+                }
+            }
+            Thread.sleep(500);
+        }
+        throw new RuntimeException("Gave up waiting for file validation results on " + fileListUrl);
     }
 
 }
