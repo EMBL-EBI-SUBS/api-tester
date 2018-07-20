@@ -24,7 +24,7 @@
       "value" : "GATK"
     } ],
     "platform" : [ {
-      "value" : "Illumina"
+      "value" : "Illumina HiSeq 2500"
     } ],
     "imputation": [ {
       "value" : "false"
