@@ -1,4 +1,4 @@
-package uk.ac.ebi.subs.ena;
+package uk.ac.ebi.subs.eva;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
@@ -6,8 +6,6 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
-import uk.ac.ebi.subs.categories.DevEnv;
-import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.utils.TestJsonUtils;
@@ -20,9 +18,9 @@ import java.util.Collection;
 import static org.junit.Assert.assertNotNull;
 import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 
-@Category({TestEnv.class, DevEnv.class})
+@Category({})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class EnaReadSubmission {
+public class EvaVcfSubmission {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
     private static String token;
@@ -31,10 +29,9 @@ public class EnaReadSubmission {
     private static final String projectAlias = TestUtils.getRandomAlias();
     private static final String studyAlias = TestUtils.getRandomAlias();
     private static final String sampleAlias = TestUtils.getRandomAlias();
-    private static final String assayAlias = TestUtils.getRandomAlias();
-    private static final String assayDataAlias = TestUtils.getRandomAlias();
-    private static final String fileName = "testFile.fastq.gz";
-    private static final String fileType = "fastq";
+    private static final String analysisAlias = TestUtils.getRandomAlias();
+    private static final String fileName = "testFile.vcf.gz";
+    private static final String fileType = "vcf";
 
     @BeforeClass
     public static void setUp() throws Exception {
@@ -61,34 +58,17 @@ public class EnaReadSubmission {
     }
 
     @Test
-    public void C_addAssay() throws Exception {
-        String assayUrl = TestUtils.createAssay(token, pm.getAssaysApiBaseUrl(), submissionUrl, assayAlias, studyAlias, sampleAlias);
-        TestUtils.waitForValidationResults(token, assayUrl);
-        ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(assayUrl, token);
-        assertNoErrorsInValidationResult(validationResult);
-    }
-
-    @Test
-    public void D_uploadFile() throws Exception {
+    public void C_uploadFile() throws Exception {
         UploadUtils.uploadFile(token, submissionUrl, fileName);
-
         TestUtils.waitForFileValidationCompletion(token, submissionUrl);
     }
 
-
     @Test
-    public void E_addAssayData() throws Exception {
-        String assayDataUrl = TestUtils.createAssayData(
-                token,
-                pm.getAssayDataApiBaseUrl(),
-                submissionUrl,
-                assayDataAlias,
-                assayAlias,
-                fileName,
-                fileType
-        );
-        TestUtils.waitForValidationResults(token, assayDataUrl);
-        ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(assayDataUrl, token);
+    public void D_addAnalysis() throws Exception {
+        String analysisJson = TestJsonUtils.getSeqVarAnalysisJson(submissionUrl, analysisAlias, studyAlias, sampleAlias, fileName, fileType);
+        String analysisUrl = TestUtils.createSubmittable(token, pm.getAnalysisApiBaseUrl(), analysisJson);
+        TestUtils.waitForValidationResults(token, analysisUrl);
+        ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(analysisUrl, token);
         assertNoErrorsInValidationResult(validationResult);
     }
 
@@ -116,6 +96,5 @@ public class EnaReadSubmission {
             assertNotNull(processingStatus.getAccession());
         }
     }
-
 
 }
