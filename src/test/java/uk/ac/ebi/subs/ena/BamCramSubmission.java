@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
+import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.utils.TestUtils;
 import uk.ac.ebi.subs.utils.UploadUtils;
@@ -16,7 +17,7 @@ import static uk.ac.ebi.subs.utils.SubmissionOperations.addSample;
 import static uk.ac.ebi.subs.utils.SubmissionOperations.checkAccessions;
 import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 
-@Category({})
+@Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BamCramSubmission {
 
