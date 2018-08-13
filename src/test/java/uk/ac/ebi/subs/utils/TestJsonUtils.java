@@ -80,23 +80,41 @@ public class TestJsonUtils {
 
         String json = template.replace(ALIAS, alias);
         json = json.replace(SUBMISSION_URL, submissionUrl);
-        json = json.replace(STUDY_ALIAS,studyAlias);
-        json = json.replace(SAMPLE_ALIAS,sampleAlias);
-        json = json.replace(FILE_NAME,fileName);
-        json = json.replace(FILE_TYPE,fileType);
+        json = json.replace(STUDY_ALIAS, studyAlias);
+        json = json.replace(SAMPLE_ALIAS, sampleAlias);
+        json = json.replace(FILE_NAME, fileName);
+        json = json.replace(FILE_TYPE, fileType);
 
         return json;
     }
 
     public static String getStudyJson(String submissionUrl, String alias, String projectAlias, String teamName) throws IOException {
+        String templateWith = loadStudyJson();
+        return amendStudy(templateWith, submissionUrl, alias, projectAlias, teamName);
+    }
+
+    public static String loadStudyJson() throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("Study.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+        return template;
+    }
 
+    public static String amendStudy(String template, String submissionUrl, String alias, String projectAlias, String teamName) {
         String json = template.replace(ALIAS, alias);
         json = json.replace(SUBMISSION_URL, submissionUrl);
         json = json.replace(PROJECT_ALIAS, projectAlias);
         json = json.replace(TEAM_NAME, teamName);
         return json;
+    }
+
+    public static String getMLStudyJson(String submissionUrl, String alias, String projectAlias, String teamName) throws IOException {
+        String templateWith = loadMLStudyJson();
+        return amendStudy(templateWith, submissionUrl, alias, projectAlias, teamName);
+    }
+
+    public static String loadMLStudyJson() throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("MLStudy.json").getFile());
+        return new String(Files.readAllBytes(Paths.get(file.getPath())));
     }
 
     public static String getProjectJson(String submissionUrl, String alias, String releaseDate) throws IOException {
@@ -128,7 +146,7 @@ public class TestJsonUtils {
         json = json.replace(SUBMISSION_URL, submissionUrl);
         json = json.replace(ASSAY_ALIAS, assayAlias);
         json = json.replace(FILE_NAME, fileName);
-        json = json.replace(FILE_TYPE,filetype);
+        json = json.replace(FILE_TYPE, filetype);
 
         return json;
     }

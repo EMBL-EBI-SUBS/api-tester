@@ -98,6 +98,19 @@ public class TestUtils {
         return createSubmittable(token, studiesApiBaseUrl, content);
     }
 
+    public static String createMLStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+        String content =
+                TestJsonUtils.getMLStudyJson(
+                        submissionUrl,
+                        studyAlias,
+                        projectAlias,
+                        teamName
+                );
+
+
+        return createSubmittable(token, studiesApiBaseUrl, content);
+    }
+
     public static String createAssay(String token, String assayApiBaseUrl, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
         String content =
                 TestJsonUtils.getAssayJson(
