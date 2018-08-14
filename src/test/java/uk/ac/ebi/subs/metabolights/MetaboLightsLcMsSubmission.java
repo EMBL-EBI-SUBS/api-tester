@@ -6,6 +6,7 @@ import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
 import uk.ac.ebi.subs.utils.TestUtils;
 
+import static uk.ac.ebi.subs.utils.SubmissionOperations.addSample;
 import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 
 public class MetaboLightsLcMsSubmission {
@@ -27,11 +28,16 @@ public class MetaboLightsLcMsSubmission {
     }
 
     @Test
-    public void addStudy() throws Exception {
+    public void A_addStudy() throws Exception {
         String studyUrl = TestUtils.createMLStudy(token, pm.getStudiesApiBaseUrl(), submissionUrl, studyAlias, projectAlias, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
+    }
+
+    @Test
+    public void B_addSample() throws Exception {
+        addSample(submissionUrl, sampleAlias, token, pm);
     }
 
 }
