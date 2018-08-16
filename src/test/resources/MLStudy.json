@@ -65,7 +65,6 @@
   ],
   "projectRef": {
     "alias": "{projectAlias.placeholder}",
-    "accession": "MTBLS2",
     "team": "{team.name.placeholder}"
   },
   "studyType": "Metabolomics_LCMS",
