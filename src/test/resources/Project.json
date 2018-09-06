@@ -4,6 +4,5 @@
   "description": "Description must also be at least 50 characters long, so that we get reasonable project descriptions",
   "publications": [],
   "contacts": [],
-  "releaseDate": "{release.date.placeholder}",
-  "submission" : "{submissionUrl.placeholder}"
+  "releaseDate": "{release.date.placeholder}"
 }

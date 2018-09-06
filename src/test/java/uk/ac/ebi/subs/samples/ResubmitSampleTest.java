@@ -20,7 +20,6 @@ import static org.junit.Assert.assertThat;
 public class ResubmitSampleTest {
     private static PropertiesManager pm = PropertiesManager.getInstance();
     private static String teamName = pm.getTeamName();
-    private static String samplesApiBaseUrl = pm.getSamplesApiBaseUrl();
     private static String token;
 
     @Before
@@ -88,8 +87,9 @@ public class ResubmitSampleTest {
     }
 
     private static String createSampleForSubmission(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
-        String content = TestJsonUtils.createSampleForSubmissionJson(submissionUrl, alias);
+        String content = TestJsonUtils.createSampleForSubmissionJson(alias);
 
+        String sampleUrl = TestUtils.submittableCreationUrl("samples",submissionUrl);
         HttpResponse response =  HttpUtils.httpPost(token, samplesApiBaseUrl,content);
         SubmittableTemplate resource = HttpUtils.retrieveResourceFromResponse(response, SubmittableTemplate.class);
         return resource.getLinks().getSelf().getHref();

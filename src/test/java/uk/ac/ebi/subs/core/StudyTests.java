@@ -30,9 +30,6 @@ public class StudyTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
 
-    private static String studiesApiBaseUrl = pm.getStudiesApiBaseUrl();
-    private static String projectsApiBaseUrl = pm.getProjectsApiBaseUrl();
-
     private static String token;
     private static String submissionUrl;
     private static String studyUrl;
@@ -45,9 +42,9 @@ public class StudyTests {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        TestUtils.createProject(token, projectsApiBaseUrl, submissionUrl, projectAlias);
+        TestUtils.createProject(token, submissionUrl, projectAlias);
 
-        studyUrl = TestUtils.createStudy(token, studiesApiBaseUrl, submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        studyUrl = TestUtils.createStudy(token, "enaStudies", submissionUrl, studyAlias, projectAlias, pm.getTeamName());
         studyValidationResultsUrl = studyUrl + "/validationResult";
     }
 
@@ -56,13 +53,15 @@ public class StudyTests {
 
         String content =
                 TestJsonUtils.getStudyJson(
-                        submissionUrl,
                         TestUtils.getRandomAlias(),
                         projectAlias,
                         pm.getTeamName()
 
                 );
-        HttpResponse response = HttpUtils.httpPost(token, studiesApiBaseUrl,content);
+
+        String studyUrl = TestUtils.submittableCreationUrl("enaStudies",submissionUrl);
+
+        HttpResponse response = HttpUtils.httpPost(token, studyUrl,content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -77,7 +76,6 @@ public class StudyTests {
 
         StringEntity payload = new StringEntity(
                 TestJsonUtils.getStudyJson(
-                        submissionUrl,
                         studyAlias,
                         projectAlias,
                         pm.getTeamName()

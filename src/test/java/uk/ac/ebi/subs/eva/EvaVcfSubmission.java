@@ -37,12 +37,12 @@ public class EvaVcfSubmission {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        TestUtils.createProject(token, pm.getProjectsApiBaseUrl(), submissionUrl, projectAlias);
+        TestUtils.createProject(token, submissionUrl, projectAlias);
     }
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createStudy(token, pm.getStudiesApiBaseUrl(), submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        String studyUrl = TestUtils.createStudy(token, "enaStudies", submissionUrl, studyAlias, projectAlias, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
@@ -61,8 +61,8 @@ public class EvaVcfSubmission {
 
     @Test
     public void D_addAnalysis() throws Exception {
-        String analysisJson = TestJsonUtils.getSeqVarAnalysisJson(submissionUrl, analysisAlias, studyAlias, sampleAlias, fileName, fileType);
-        String analysisUrl = TestUtils.createSubmittable(token, pm.getAnalysisApiBaseUrl(), analysisJson);
+        String analysisJson = TestJsonUtils.getSeqVarAnalysisJson(analysisAlias, studyAlias, sampleAlias, fileName, fileType);
+        String analysisUrl = TestUtils.createSubmittable(token, "variantCalls", submissionUrl, analysisJson);
         TestUtils.waitForValidationResults(token, analysisUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(analysisUrl, token);
         assertNoErrorsInValidationResult(validationResult);

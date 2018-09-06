@@ -26,8 +26,6 @@ public class UpdateProjectTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
 
-    private static String projectsApiBaseUrl = pm.getProjectsApiBaseUrl();
-
     private static String token;
     private static String submissionUrl;
     private static String projectUrl;
@@ -38,7 +36,7 @@ public class UpdateProjectTests {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        projectUrl = TestUtils.createProject(token, projectsApiBaseUrl, submissionUrl, projectAlias);
+        projectUrl = TestUtils.createProject(token, submissionUrl, projectAlias);
     }
 
     @Test
@@ -47,7 +45,7 @@ public class UpdateProjectTests {
         HttpPut request = new HttpPut(projectUrl);
         request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getProjectJson(submissionUrl, projectAlias, "2017-04-17"));
+        StringEntity payload = new StringEntity(TestJsonUtils.getProjectJson(projectAlias, "2017-04-17"));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);

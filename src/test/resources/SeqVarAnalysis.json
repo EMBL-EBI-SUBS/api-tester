@@ -29,6 +29,5 @@
     "imputation": [ {
       "value" : "false"
     } ]
-  },
-  "submission": "{submissionUrl.placeholder}"
+  }
 }
