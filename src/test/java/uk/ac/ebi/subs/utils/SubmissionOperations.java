@@ -13,8 +13,8 @@ import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 public class SubmissionOperations {
 
     public static void addSample(String submissionUrl, String sampleAlias, String token, PropertiesManager pm) throws Exception {
-        String sampleJson = TestJsonUtils.getSampleJson(submissionUrl, sampleAlias);
-        String sampleUrl = TestUtils.createSubmittable(token, pm.getSamplesApiBaseUrl(), sampleJson);
+        String sampleJson = TestJsonUtils.getSampleJson(sampleAlias);
+        String sampleUrl = TestUtils.createSubmittable(token, "samples", submissionUrl, sampleJson);
         TestUtils.waitForValidationResults(token, sampleUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(sampleUrl, token);
         assertNoErrorsInValidationResult(validationResult);
