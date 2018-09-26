@@ -106,7 +106,7 @@ public class TestUtils {
     }
 
 
-    public static String createMLStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+    public static String createMLStudy(String token, String dataType, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
         String content =
                 TestJsonUtils.getMLStudyJson(
                         submissionUrl,
@@ -116,7 +116,7 @@ public class TestUtils {
                 );
 
 
-        return createSubmittable(token, "metabolomicsStudies" , studiesApiBaseUrl, content);
+        return createSubmittable(token , dataType, studiesApiBaseUrl, content);
     }
 
   
