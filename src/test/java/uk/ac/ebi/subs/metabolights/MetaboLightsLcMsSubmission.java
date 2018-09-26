@@ -29,7 +29,7 @@ public class MetaboLightsLcMsSubmission {
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createMLStudy(token, pm.getStudiesApiBaseUrl(), submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        String studyUrl = TestUtils.createMLStudy(token, "metabolomicsStudies" ,pm.getStudiesApiBaseUrl(), submissionUrl, studyAlias, projectAlias, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
