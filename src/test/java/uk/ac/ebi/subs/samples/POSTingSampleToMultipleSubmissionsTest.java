@@ -32,7 +32,6 @@ import static uk.ac.ebi.subs.utils.TestUtils.getRandomAlias;
 public class POSTingSampleToMultipleSubmissionsTest {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
-    private static String samplesApiBaseUrl = pm.getSamplesApiBaseUrl();
 
     private static String token;
     private static String[] submissionsUrls;
@@ -43,16 +42,17 @@ public class POSTingSampleToMultipleSubmissionsTest {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionsUrls = TestUtils.createNSubmissions(2, token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        sampleUrl = createSampleForSubmission(token, samplesApiBaseUrl, submissionsUrls[0], alias);
+        sampleUrl = createSampleForSubmission(token, submissionsUrls[0], alias);
     }
 
     @Test
     public void A_givenSampleInSubmissionWithStatusDraft_whenAddingItToOtherSubmission_thenItShouldBeRejected() throws IOException {
 
-        String content = TestJsonUtils.getCreateSampleJson(submissionsUrls[1], alias);
+        String content = TestJsonUtils.getCreateSampleJson(alias);
 
+        String sampleUrl = TestUtils.submittableCreationUrl("samples",submissionsUrls[1]);
 
-        HttpResponse response = HttpUtils.httpPost(token, samplesApiBaseUrl, content);
+        HttpResponse response = HttpUtils.httpPost(token, sampleUrl, content);
         assertThat(response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_BAD_REQUEST));
 
         String jsonFromResponse = EntityUtils.toString(response.getEntity());
@@ -75,10 +75,11 @@ public class POSTingSampleToMultipleSubmissionsTest {
         TestUtils.waitForCompletedSubmittable(token, sampleUrl);
 
         // Add same sample to submission 1
-        String sampleContent = TestJsonUtils.getCreateSampleJson(submissionsUrls[1], alias);
+        String sampleContent = TestJsonUtils.getCreateSampleJson(alias);
 
+        String sampleUrl = TestUtils.submittableCreationUrl("samples",submissionsUrls[1]);
 
-        HttpResponse sampleResponse = HttpUtils.httpPost(token, samplesApiBaseUrl, sampleContent);
+        HttpResponse sampleResponse = HttpUtils.httpPost(token, sampleUrl, sampleContent);
         //System.out.println(EntityUtils.toString(sampleResponse.getEntity()));
 
         assertThat(sampleResponse.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED));
@@ -95,8 +96,8 @@ public class POSTingSampleToMultipleSubmissionsTest {
         HttpClientBuilder.create().build().execute(request2);
     }
 
-    private static String createSampleForSubmission(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
-        String content = TestJsonUtils.createSampleForSubmissionJson(submissionUrl, alias);
-        return TestUtils.createSubmittable(token,samplesApiBaseUrl,content);
+    private static String createSampleForSubmission(String token, String submissionUrl, String alias) throws IOException {
+        String content = TestJsonUtils.createSampleForSubmissionJson(alias);
+        return TestUtils.createSubmittable(token,"samples",submissionUrl,content);
     }
 }

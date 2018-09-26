@@ -31,6 +31,5 @@
   "projectRef": {
     "alias": "{projectAlias.placeholder}",
     "team": "{team.name.placeholder}"
-  },
-  "submission": "{submissionUrl.placeholder}"
+  }
 }

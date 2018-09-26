@@ -27,8 +27,6 @@ public class CreateProjectTest {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
 
-    private static String projectsApiBaseUrl = pm.getProjectsApiBaseUrl();
-
     private static String token;
     private static String submissionUrl;
 
@@ -41,9 +39,11 @@ public class CreateProjectTest {
 
     @Test
     public void givenSubmissionExists_whenAddingProjectToIt_then201IsReceived() throws IOException {
-        String content = TestJsonUtils.getProjectJson(submissionUrl, TestUtils.getRandomAlias(), "2017-04-17");
+        String content = TestJsonUtils.getProjectJson(TestUtils.getRandomAlias(), "2017-04-17");
 
-        HttpResponse response = HttpUtils.httpPost(token, projectsApiBaseUrl,content);
+        String projectsUrl = TestUtils.submittableCreationUrl("projects",submissionUrl);
+
+        HttpResponse response = HttpUtils.httpPost(token, projectsUrl,content);
 
         System.out.println(HttpUtils.extractResponseBody(response));
 

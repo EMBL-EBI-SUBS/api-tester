@@ -30,7 +30,6 @@ import static org.junit.Assert.assertThat;
 public class DraftToSubmittedTests {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
-    private static String samplesApiBaseUrl = pm.getSamplesApiBaseUrl();
 
     private static String token;
     private static String submissionUrl;
@@ -41,7 +40,7 @@ public class DraftToSubmittedTests {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        sampleUrl = TestUtils.createSubmittable(token, samplesApiBaseUrl, TestJsonUtils.getSampleJson(submissionUrl, TestUtils.getRandomAlias()));
+        sampleUrl = TestUtils.createSubmittable(token, "samples", submissionUrl, TestJsonUtils.getSampleJson(TestUtils.getRandomAlias()));
 
     }
 
@@ -57,9 +56,11 @@ public class DraftToSubmittedTests {
 
     @Test
     public void givenSubmissionExists_whenCreatingASample_then201IsReceived() throws IOException {
-        String content =  TestJsonUtils.getSampleJson(submissionUrl, TestUtils.getRandomAlias());
+        String content =  TestJsonUtils.getSampleJson(TestUtils.getRandomAlias());
+        String samplesUrl = TestUtils.submittableCreationUrl("samples",submissionUrl);
 
-        HttpResponse response = HttpUtils.httpPost(token, samplesApiBaseUrl,content);
+
+        HttpResponse response = HttpUtils.httpPost(token, samplesUrl,content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -70,12 +71,11 @@ public class DraftToSubmittedTests {
     public void givenSubmissionExists_whenCreatingAProject_then201IsReceived() throws IOException {
         String content =  
                 TestJsonUtils.getProjectJson(
-                        submissionUrl,
                         TestUtils.getRandomAlias(),
                         LocalDateTime.now().toString()
         );
-
-        HttpResponse response = HttpUtils.httpPost(token, pm.getProjectsApiBaseUrl(),content);
+        String projectsUrl = TestUtils.submittableCreationUrl("projects",submissionUrl);
+        HttpResponse response = HttpUtils.httpPost(token, projectsUrl,content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)

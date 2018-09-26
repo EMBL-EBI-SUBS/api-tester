@@ -39,6 +39,11 @@ import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
+    public static String submittableCreationUrl(String dataType, String submissionUrl) {
+        String creationUrl = submissionUrl + "/contents/" + dataType;
+        return creationUrl;
+    }
+
     public static String createSubmission(String token, String submissionsApiTemplatedUrl, String submitterEmail, String teamName) throws IOException {
         String submissionApiUrl = submissionsApiTemplatedUrl.replace("{teamName}", teamName);
 
@@ -52,19 +57,22 @@ public class TestUtils {
     }
 
 
-    public static String createSample(String token, String samplesApiBaseUrl, String submissionUrl, String alias) throws IOException {
-        return createSubmittable(token, samplesApiBaseUrl, TestJsonUtils.getCreateSampleJson(submissionUrl, alias));
+    public static String createSample(String token, String submissionUrl, String alias) throws IOException {
+        return createSubmittable(token, "samples", submissionUrl, TestJsonUtils.getCreateSampleJson(alias));
     }
 
     /**
      * @param token
-     * @param samplesApiBaseUrl
+     * @param dataType
+     * @param submissionUrl
      * @param submittableContent
      * @return URL of new resource
      * @throws IOException
      */
-    public static String createSubmittable(String token, String samplesApiBaseUrl, String submittableContent) throws IOException {
-        HttpResponse response = HttpUtils.httpPost(token, samplesApiBaseUrl, submittableContent);
+    public static String createSubmittable(String token, String dataType, String submissionUrl, String submittableContent) throws IOException {
+        String postUrl = submittableCreationUrl(dataType, submissionUrl);
+
+        HttpResponse response = HttpUtils.httpPost(token, postUrl, submittableContent);
 
         Assert.assertEquals(201, response.getStatusLine().getStatusCode());
 
@@ -73,30 +81,30 @@ public class TestUtils {
         return resource.getLinks().getSelf().getHref();
     }
 
-    public static String createProject(String token, String projectsApiBaseUrl, String submissionUrl, String projectAlias) throws IOException {
-        return createProject(token, projectsApiBaseUrl, submissionUrl, projectAlias, LocalDateTime.now().toString());
+    public static String createProject(String token, String submissionUrl, String projectAlias) throws IOException {
+        return createProject(token, submissionUrl, projectAlias, LocalDateTime.now().toString());
     }
 
-    public static String createProject(String token, String projectsApiBaseUrl, String submissionUrl, String projectAlias, String releaseDate) throws IOException {
+    public static String createProject(String token, String submissionUrl, String projectAlias, String releaseDate) throws IOException {
 
-        String content = TestJsonUtils.getProjectJson(submissionUrl, projectAlias, releaseDate);
+        String content = TestJsonUtils.getProjectJson(projectAlias, releaseDate);
 
-        return createSubmittable(token, projectsApiBaseUrl, content);
+        return createSubmittable(token, "projects", submissionUrl, content);
     }
 
 
-    public static String createStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+    public static String createStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
         String content =
                 TestJsonUtils.getStudyJson(
-                        submissionUrl,
                         studyAlias,
                         projectAlias,
                         teamName
                 );
 
 
-        return createSubmittable(token, studiesApiBaseUrl, content);
+        return createSubmittable(token, dataType, submissionUrl, content);
     }
+
 
     public static String createMLStudy(String token, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
         String content =
@@ -108,32 +116,31 @@ public class TestUtils {
                 );
 
 
-        return createSubmittable(token, studiesApiBaseUrl, content);
+        return createSubmittable(token, "metabolomicsStudies" , studiesApiBaseUrl, content);
     }
 
-    public static String createAssay(String token, String assayApiBaseUrl, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
+  
+    public static String createAssay(String token, String dataType, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
         String content =
                 TestJsonUtils.getAssayJson(
-                        submissionUrl,
                         assayAlias,
                         sampleAlias,
                         studyAlias
                 );
 
-        return createSubmittable(token, assayApiBaseUrl, content);
+        return createSubmittable(token, dataType, submissionUrl, content);
     }
 
-    public static String createAssayData(String token, String assayDataApiBaseUrl, String submissionUrl, String assayDataAlias, String assayAlias, String fileName, String fileType) throws IOException {
+    public static String createAssayData(String token, String dataType, String submissionUrl, String assayDataAlias, String assayAlias, String fileName, String fileType) throws IOException {
         String content =
                 TestJsonUtils.getAssayDataJson(
-                        submissionUrl,
                         assayDataAlias,
                         assayAlias,
                         fileName,
                         fileType
                 );
 
-        return createSubmittable(token, assayDataApiBaseUrl, content);
+        return createSubmittable(token, dataType, submissionUrl, content);
     }
 
     public static String[] createNSubmissions(int n, String token, String submissionsApiBaseUrl, String submitterEmail, String teamName) throws IOException {
@@ -172,7 +179,7 @@ public class TestUtils {
     }
 
     public static String getValidationStatus(String validationResultsUrl, String token) throws IOException {
-        HttpResponse response = HttpUtils.httpGet(token,validationResultsUrl);
+        HttpResponse response = HttpUtils.httpGet(token, validationResultsUrl);
         ValidationResult resource = HttpUtils.retrieveResourceFromResponse(response, ValidationResult.class);
 
         return resource.getValidationStatus();
@@ -181,14 +188,14 @@ public class TestUtils {
     public static ValidationResultStatusAndLink getValidationResultStatusAndLinkFromStudy(
             String studyValidationResultsUrl, String token) throws IOException {
 
-        HttpResponse response = HttpUtils.httpGet(token,studyValidationResultsUrl);
+        HttpResponse response = HttpUtils.httpGet(token, studyValidationResultsUrl);
 
         return HttpUtils.retrieveResourceFromResponse(response, ValidationResultStatusAndLink.class);
     }
 
     public static ValidationResult getValidationResultFromValidationResultStatus(String validationResultURI, String token)
             throws IOException {
-        HttpResponse validationResultResponse = HttpUtils.httpGet(token,validationResultURI);
+        HttpResponse validationResultResponse = HttpUtils.httpGet(token, validationResultURI);
 
         return HttpUtils.retrieveResourceFromResponse(validationResultResponse, ValidationResult.class);
     }
@@ -218,11 +225,11 @@ public class TestUtils {
         SubmittableTemplate resource = getSubmittableTemplate(token, submittableUrl);
         String validationResultUrl = resource.getLinks().getValidationResult().getHref();
 
-        HttpResponse stubResultResponse = HttpUtils.httpGet(token,validationResultUrl);
+        HttpResponse stubResultResponse = HttpUtils.httpGet(token, validationResultUrl);
         Assert.assertEquals(200, stubResultResponse.getStatusLine().getStatusCode());
         ValidationResult stubResult = HttpUtils.retrieveResourceFromResponse(stubResultResponse, ValidationResult.class);
 
-        HttpResponse fullResultResponse = HttpUtils.httpGet(token,stubResult.getLinks().getSelf().getHref());
+        HttpResponse fullResultResponse = HttpUtils.httpGet(token, stubResult.getLinks().getSelf().getHref());
         Assert.assertEquals(200, fullResultResponse.getStatusLine().getStatusCode());
         ValidationResult fullResult = HttpUtils.retrieveResourceFromResponse(fullResultResponse, ValidationResult.class);
 
@@ -276,7 +283,7 @@ public class TestUtils {
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
 
-            HttpResponse statusResponse = HttpUtils.httpGet(token,submissionStatusUrl);
+            HttpResponse statusResponse = HttpUtils.httpGet(token, submissionStatusUrl);
             Assert.assertEquals(200, statusResponse.getStatusLine().getStatusCode());
 
             SubmissionStatus resource = HttpUtils.retrieveResourceFromResponse(statusResponse, SubmissionStatus.class);
@@ -298,7 +305,7 @@ public class TestUtils {
 
         Submission submission = HttpUtils.retrieveResourceFromResponse(getResponse, Submission.class);
 
-        HttpResponse response = HttpUtils.httpPut(token,submission.getLinks().getSubmissionStatusUpdate().getHref(),"{\"status\" : \"Submitted\"}");
+        HttpResponse response = HttpUtils.httpPut(token, submission.getLinks().getSubmissionStatusUpdate().getHref(), "{\"status\" : \"Submitted\"}");
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -323,12 +330,10 @@ public class TestUtils {
 
             if (processingStatusesResource.getLinks().getNext() != null) {
                 processingStatusesUrl = processingStatusesResource.getLinks().getNext().getHref();
-            }
-            else {
+            } else {
                 processingStatusesUrl = null;
             }
         }
-
 
 
         return processingStatusList;
@@ -340,7 +345,7 @@ public class TestUtils {
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
-            HttpResponse statusResponse = HttpUtils.httpGet(token,submissionUrl);
+            HttpResponse statusResponse = HttpUtils.httpGet(token, submissionUrl);
 
             Assert.assertEquals(200, statusResponse.getStatusLine().getStatusCode());
             Submission resource = HttpUtils.retrieveResourceFromResponse(statusResponse, Submission.class);
@@ -357,7 +362,7 @@ public class TestUtils {
     }
 
     public static String getStatusUrlForSubmission(String token, String submissionUrl) throws IOException {
-        HttpResponse submissionResponse = HttpUtils.httpGet(token,submissionUrl);
+        HttpResponse submissionResponse = HttpUtils.httpGet(token, submissionUrl);
 
         Assert.assertEquals(200, submissionResponse.getStatusLine().getStatusCode());
         Submission submissionResource = HttpUtils.retrieveResourceFromResponse(submissionResponse, Submission.class);
@@ -374,21 +379,21 @@ public class TestUtils {
         }
     }
 
-    public static void logMessages(ValidationResult validationResult){
-        for (Map.Entry<String,Result[]> entry : validationResult.getExpectedResults().entrySet()){
+    public static void logMessages(ValidationResult validationResult) {
+        for (Map.Entry<String, Result[]> entry : validationResult.getExpectedResults().entrySet()) {
             String author = entry.getKey();
             Result[] results = entry.getValue();
 
-            for (Result result : results){
-                if (result.getMessage() != null){
-                    String message = MessageFormat.format("Author:{0} Status:{1} Message:{2}",author,result.getValidationStatus(),result.getMessage());
+            for (Result result : results) {
+                if (result.getMessage() != null) {
+                    String message = MessageFormat.format("Author:{0} Status:{1} Message:{2}", author, result.getValidationStatus(), result.getMessage());
                     System.out.println(message);
                 }
             }
         }
     }
 
-    public static void waitForFileValidationCompletion(String token, String submissionUrl) throws Exception{
+    public static void waitForFileValidationCompletion(String token, String submissionUrl) throws Exception {
         SubmissionContents submissionContents = TestUtils.getSubmissionContent(token, submissionUrl);
 
         long maximumIntervalMillis = 30000;

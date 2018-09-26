@@ -34,7 +34,6 @@ public class SampleTests {
     private static PropertiesManager pm = PropertiesManager.getInstance();
 
     private static String teamName = pm.getTeamName();
-    private static String samplesApiBaseUrl = pm.getSamplesApiBaseUrl();
 
     private static String token;
     private static String submissionUrl;
@@ -47,16 +46,18 @@ public class SampleTests {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), teamName);
-        sampleUrl = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, sampleAlias);
+        sampleUrl = TestUtils.createSample(token, submissionUrl, sampleAlias);
         sampleValidationResultsUrl = sampleUrl + "/validationResult";
     }
 
     @Test
     public void givenSubmissionExists_whenAddingSampleToIt_then201IsReceived() throws IOException {
 
-        String content = TestJsonUtils.getCreateSampleJson(submissionUrl, TestUtils.getRandomAlias());
+        String content = TestJsonUtils.getCreateSampleJson(TestUtils.getRandomAlias());
 
-        HttpResponse response = HttpUtils.httpPost(token, samplesApiBaseUrl, content);
+        String sampleUrl = TestUtils.submittableCreationUrl("samples",submissionUrl);
+
+        HttpResponse response = HttpUtils.httpPost(token, sampleUrl, content);
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
@@ -69,7 +70,7 @@ public class SampleTests {
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, sampleAlias));
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(sampleAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -83,12 +84,12 @@ public class SampleTests {
     public void givenSampleExists_whenUpdatingItsContentsWithPUT_thenStatusShouldRemainTheSame() throws IOException {
 
         String localAlias = TestUtils.getRandomAlias();
-        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+        String localSample = TestUtils.createSample(token, submissionUrl, localAlias);
 
         HttpPut request = new HttpPut(localSample);
         request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(localAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -103,9 +104,9 @@ public class SampleTests {
     public void givenSampleExists_whenUpdatingItsContentsWithPATCH_thenStatusShouldRemainTheSame() throws IOException {
 
         String localAlias = TestUtils.getRandomAlias();
-        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+        String localSample = TestUtils.createSample(token, submissionUrl, localAlias);
 
-        String content = TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias);
+        String content = TestJsonUtils.getUpdateSampleJson(localAlias);
 
         HttpResponse response = HttpUtils.httpPatch(token, localSample, content);
         PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
@@ -119,12 +120,12 @@ public class SampleTests {
     public void givenSampleExists_whenUpdatingItsContentsWithPUT_thenTeamShouldRemainTheSame() throws IOException {
 
         String localAlias = TestUtils.getRandomAlias();
-        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+        String localSample = TestUtils.createSample(token, submissionUrl, localAlias);
 
         HttpPut request = new HttpPut(localSample);
         request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias));
+        StringEntity payload = new StringEntity(TestJsonUtils.getUpdateSampleJson(localAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
@@ -139,9 +140,9 @@ public class SampleTests {
     public void givenSampleExists_whenUpdatingItsContentsWithPATCH_thenTeamShouldRemainTheSame() throws IOException {
 
         String localAlias = TestUtils.getRandomAlias();
-        String localSample = TestUtils.createSample(token, samplesApiBaseUrl, submissionUrl, localAlias);
+        String localSample = TestUtils.createSample(token, submissionUrl, localAlias);
 
-        String content = TestJsonUtils.getUpdateSampleJson(submissionUrl, localAlias);
+        String content = TestJsonUtils.getUpdateSampleJson(localAlias);
 
         HttpResponse response = HttpUtils.httpPatch(token, localSample, content);
         PutSampleResponseObject resource = HttpUtils.retrieveResourceFromResponse(response, PutSampleResponseObject.class);
@@ -157,7 +158,7 @@ public class SampleTests {
         HttpPut request = new HttpPut(sampleUrl);
         request.setHeaders(HttpUtils.getContentTypeAcceptAndTokenHeaders(token));
 
-        StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(submissionUrl, sampleAlias));
+        StringEntity payload = new StringEntity(TestJsonUtils.getDeleteSampleRelationshipsJson(sampleAlias));
         request.setEntity(payload);
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);

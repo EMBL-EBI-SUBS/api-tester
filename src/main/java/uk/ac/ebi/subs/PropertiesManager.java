@@ -50,30 +50,6 @@ public class PropertiesManager {
         return this.properties.getProperty("submissionsApiBaseUrl", getApiRoot() + "teams/{teamName}/submissions/");
     }
 
-    public String getSamplesApiBaseUrl() {
-        return this.properties.getProperty("samplesApiBaseUrl", getApiRoot() + "samples/");
-    }
-
-    public String getAssaysApiBaseUrl() {
-        return this.properties.getProperty("assaysApiBaseUrl", getApiRoot() + "assays/");
-    }
-
-    public String getAssayDataApiBaseUrl() {
-        return this.properties.getProperty("assayDataApiBaseUrl", getApiRoot() + "assayData/");
-    }
-
-    public String getStudiesApiBaseUrl() {
-        return this.properties.getProperty("studiesApiBaseUrl", getApiRoot() + "studies/");
-    }
-
-    public String getProjectsApiBaseUrl() {
-        return this.properties.getProperty("projectsApiBaseUrl", getApiRoot() + "projects/");
-    }
-
-    public String getAnalysisApiBaseUrl() {
-        return this.properties.getProperty("analysesApiBaseUrl", getApiRoot() + "analyses/");
-    }
-
     public String getSamplesInSubmissionByIdUrl() {
         return this.properties.getProperty("samplesInSubmissionByIdUrl", getApiRoot() + "samples/search/by-submission?submissionId=");
     }
