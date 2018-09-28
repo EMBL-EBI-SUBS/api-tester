@@ -5,29 +5,20 @@
   "attributes": {
     "study_type": [
       {
-        "value": "Whole Genome Sequencing",
-        "units": null,
-        "terms": []
+        "value": "Whole Genome Sequencing"
       }
     ],
     "Project Coordinator": [
       {
-        "value": "John Doe",
-        "units": null,
-        "terms": []
+        "value": "John Doe"
       }
     ],
     "study_abstract": [
       {
-        "value": "study abstract",
-        "units": null
+        "value": "study abstract"
       }
     ]
   },
-  "studyType": "Sequencing",
-  "publications": [],
-  "contacts": [],
-  "protocolRefs": [],
   "projectRef": {
     "alias": "{projectAlias.placeholder}",
     "team": "{team.name.placeholder}"
