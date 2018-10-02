@@ -20,6 +20,7 @@ public class TestJsonUtils {
     private static final String ASSAY_ALIAS = "{assayAlias.placeholder}";
     private static final String FILE_NAME = "{fileName.placeholder}";
     private static final String FILE_TYPE = "{fileType.placeholder}";
+    private static final String PROTOCOL_ALIAS = "{protocolAlias.placeholder}";
 
 
     public static String getSubmissionJson(String submitterEmail, String teamName) throws IOException {
@@ -92,16 +93,29 @@ public class TestJsonUtils {
         return json;
     }
 
-    public static String getMLStudyJson(String submissionUrl, String alias, String projectAlias, String teamName) throws IOException {
+    public static String getMLStudyJson(String alias, String projectAlias, String protocolAlias, String teamName) throws IOException {
         String template = loadMLStudyJson();
         String json = template.replace(ALIAS, alias);
         json = json.replace(PROJECT_ALIAS, projectAlias);
         json = json.replace(TEAM_NAME, teamName);
+        json = json.replace(PROTOCOL_ALIAS, protocolAlias);
         return json;
     }
 
     public static String loadMLStudyJson() throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("MLStudy.json").getFile());
+        return new String(Files.readAllBytes(Paths.get(file.getPath())));
+    }
+
+    public static String getMLProtocolsJson(String alias, String teamName) throws IOException {
+        String template = loadMLProtocolsJson();
+        String json = template.replace(ALIAS, alias);
+        json = json.replace(TEAM_NAME, teamName);
+        return json;
+    }
+
+    public static String loadMLProtocolsJson() throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("MLProtocol.json").getFile());
         return new String(Files.readAllBytes(Paths.get(file.getPath())));
     }
 
