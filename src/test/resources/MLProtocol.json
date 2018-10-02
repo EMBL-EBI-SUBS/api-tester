@@ -1,0 +1,15 @@
+{
+  "alias": "{alias.placeholder}",
+  "team" : {
+    "name" : "{team.name.placeholder}"
+  },
+  "title": "Sample collection",
+  "description": "Arabidopsis thaliana Col-0 and cyp79B2 cyp79B3 lines were grown for about six weeks after cold stratification (3 days, 4 °C) in parallel on a soil/vermiculite mixture (3/2) in a growth cabinet with 8 h light (~150 µE/m2/s) at 22 °C and 16 h dark at 20 °C to developmental stage 3.5. Plants were sprayed with an aqueous solution of silver nitrate (5 mM) in order to stimulate accumulation of indolic secondary metabolites and incubated for 48 h in a growth cabinet under the same conditions as described above. Rosette leaves of six individual plants per genotype were harvested, immediately frozen in liquid nitrogen, pooled and stored at –80 °C until analysis. Two independent experiments (biological replicates) were performed on independent sets of plants grown at different times.",
+  "attributes": {
+    "protocolType": [
+      {
+        "value": "Sample collection"
+      }
+    ]
+  }
+}
