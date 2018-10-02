@@ -62,11 +62,14 @@
     ]
   },
   "protocolRefs": [
+    {
+      "alias": "{protocolAlias.placeholder}",
+      "team": "{team.name.placeholder}"
+    }
   ],
   "projectRef": {
     "alias": "{projectAlias.placeholder}",
     "team": "{team.name.placeholder}"
   },
-  "studyType": "Metabolomics_LCMS",
-  "submission": "{submissionUrl.placeholder}"
+  "studyType": "Metabolomics_LCMS"
 }
