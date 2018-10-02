@@ -46,11 +46,12 @@ public class TestUtils {
 
     public static String createSubmission(String token, String submissionsApiTemplatedUrl, String submitterEmail, String teamName) throws IOException {
         String submissionApiUrl = submissionsApiTemplatedUrl.replace("{teamName}", teamName);
-
         String content = TestJsonUtils.getSubmissionJson(submitterEmail, teamName);
+        return submitAndGetResponse(token,submissionApiUrl,content);
+    }
 
+    public static String submitAndGetResponse(String token, String submissionApiUrl, String content) throws IOException {
         HttpResponse response = HttpUtils.httpPost(token, submissionApiUrl, content);
-
         Submission resource = HttpUtils.retrieveResourceFromResponse(response, Submission.class);
         String selfHref = resource.getLinks().getSelf().getHref();
         return selfHref.replace("{?projection}", "");
@@ -106,7 +107,7 @@ public class TestUtils {
     }
 
 
-    public static String createMLStudy(String token, String dataType, String studiesApiBaseUrl, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+    public static String createMLStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
         String content =
                 TestJsonUtils.getMLStudyJson(
                         submissionUrl,
@@ -116,7 +117,7 @@ public class TestUtils {
                 );
 
 
-        return createSubmittable(token , dataType, studiesApiBaseUrl, content);
+        return createSubmittable(token , dataType, submissionUrl, content);
     }
 
   

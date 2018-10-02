@@ -24,12 +24,13 @@ public class MetaboLightsLcMsSubmission {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        TestUtils.createProject(token, pm.getProjectsApiBaseUrl(), submissionUrl, projectAlias);
+        //TestUtils.createProject(token, pm.getProjectsApiBaseUrl(), submissionUrl, projectAlias);
+        TestUtils.createProject(token, submissionUrl, projectAlias);
     }
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createMLStudy(token, "metabolomicsStudies" ,pm.getStudiesApiBaseUrl(), submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        String studyUrl = TestUtils.createMLStudy(token, "metabolomicsStudies" , submissionUrl, studyAlias, projectAlias, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
