@@ -1,5 +1,6 @@
 package uk.ac.ebi.subs.utils;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
@@ -25,6 +26,7 @@ import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -47,7 +49,7 @@ public class TestUtils {
     public static String createSubmission(String token, String submissionsApiTemplatedUrl, String submitterEmail, String teamName) throws IOException {
         String submissionApiUrl = submissionsApiTemplatedUrl.replace("{teamName}", teamName);
         String content = TestJsonUtils.getSubmissionJson(submitterEmail, teamName);
-        return submitAndGetResponse(token,submissionApiUrl,content);
+        return submitAndGetResponse(token, submissionApiUrl, content);
     }
 
     public static String submitAndGetResponse(String token, String submissionApiUrl, String content) throws IOException {
@@ -107,20 +109,29 @@ public class TestUtils {
     }
 
 
-    public static String createMLStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+    public static String createMLStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String protocolAlias, String teamName) throws IOException {
         String content =
                 TestJsonUtils.getMLStudyJson(
-                        submissionUrl,
                         studyAlias,
                         projectAlias,
+                        protocolAlias,
                         teamName
                 );
 
 
-        return createSubmittable(token , dataType, submissionUrl, content);
+        return createSubmittable(token, dataType, submissionUrl, content);
     }
 
-  
+    public static String createMLProtocols(String token, String dataType, String submissionUrl, String alias, String teamName) throws IOException {
+        String content =
+                TestJsonUtils.getMLProtocolsJson(
+                        alias,
+                        teamName
+                );
+        return createSubmittable(token, dataType, submissionUrl, content);
+    }
+
+
     public static String createAssay(String token, String dataType, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
         String content =
                 TestJsonUtils.getAssayJson(
