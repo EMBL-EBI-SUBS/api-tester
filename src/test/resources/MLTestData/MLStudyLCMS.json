@@ -1,0 +1,98 @@
+{
+  "accession": "",
+  "alias": "{alias.placeholder}",
+  "title": "Comparative LC/MS-based profiling of silver nitrate-treated Arabidopsis thaliana leaves of wild-type and cyp79B2 cyp79B3 double knockout plants",
+  "description": "Indole-3-acetaldoxime (IAOx) represents an early intermediate of the biosynthesis of a variety of indolic secondary metabolites including the phytoanticipin indol-3-ylmethyl glucosinolate and the phytoalexin camalexin (3-thiazol-2′-yl-indole). Arabidopsis thaliana cyp79B2 cyp79B3 double knockout plants are completely impaired in the conversion of tryptophan to indole-3-acetaldoxime and do not accumulate IAOx-derived metabolites any longer. Consequently, comparative analysis of wild-type and cyp79B2 cyp79B3 plant lines has the potential to explore the complete range of IAOx-derived indolic secondary metabolites.",
+  "attributes": {
+    "studyDesignDescriptors": [
+      {
+        "value": "Plant Metabolomics",
+        "units": null,
+        "terms": []
+      },
+      {
+        "value": "Comparative LC/MS-based profiling",
+        "units": null,
+        "terms": []
+      },
+      {
+        "value": "Pathway Elucidation",
+        "units": null,
+        "terms": []
+      },
+      {
+        "value": "ultra-performance liquid chromatography-mass spectrometry",
+        "units": null,
+        "terms": [
+          {
+            "url": "http://purl.obolibrary.org/obo/CHMO_0000715"
+          }
+        ]
+      },
+      {
+        "value": "untargeted metabolites",
+        "units": null,
+        "terms": []
+      },
+      {
+        "value": "Plant genomics",
+        "units": null,
+        "terms": []
+      }
+    ],
+    "factors": [
+      {
+        "value": "genotype",
+        "units": null,
+        "terms": [
+          {
+            "url": "http://www.ebi.ac.uk/efo/EFO_0000513"
+          }
+        ]
+      },
+      {
+        "value": "technical replicate",
+        "units": null,
+        "terms": [
+          {
+            "url": "http://www.ebi.ac.uk/efo/EFO_0002090"
+          }
+        ]
+      }
+    ],
+    "studyType":[
+      {
+        "value": "Metabolomics_LCMS"
+      }]
+  },
+  "protocolRefs": [
+    {
+      "alias": "{protocolAlias1.placeholder}",
+      "team": "{team.name.placeholder}"
+    },
+    {
+      "alias": "{protocolAlias2.placeholder}",
+      "team": "{team.name.placeholder}"
+    },
+    {
+      "alias": "{protocolAlias3.placeholder}",
+      "team": "{team.name.placeholder}"
+    },
+    {
+      "alias": "{protocolAlias4.placeholder}",
+      "team": "{team.name.placeholder}"
+    },
+    {
+      "alias": "{protocolAlias5.placeholder}",
+      "team": "{team.name.placeholder}"
+    },
+    {
+      "alias": "{protocolAlias6.placeholder}",
+      "team": "{team.name.placeholder}"
+    }
+  ],
+  "projectRef": {
+    "alias": "{projectAlias.placeholder}",
+    "team": "{team.name.placeholder}"
+  }
+}
