@@ -1,0 +1,15 @@
+{
+  "alias": "{alias.placeholder}",
+  "team" : {
+    "name" : "{team.name.placeholder}"
+  },
+  "title": "Sample collection",
+  "description": "This is test description",
+  "attributes": {
+    "protocolType": [
+      {
+        "value": "Sample collection"
+      }
+    ]
+  }
+}
