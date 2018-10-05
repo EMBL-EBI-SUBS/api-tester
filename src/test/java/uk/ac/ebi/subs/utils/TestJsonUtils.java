@@ -20,6 +20,7 @@ public class TestJsonUtils {
     private static final String ASSAY_ALIAS = "{assayAlias.placeholder}";
     private static final String FILE_NAME = "{fileName.placeholder}";
     private static final String FILE_TYPE = "{fileType.placeholder}";
+    private static final String PROTOCOL_ALIAS = "{protocolAlias.placeholder}";
 
 
     public static String getSubmissionJson(String submitterEmail, String teamName) throws IOException {

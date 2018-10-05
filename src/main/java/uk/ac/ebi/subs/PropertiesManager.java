@@ -50,6 +50,14 @@ public class PropertiesManager {
         return this.properties.getProperty("submissionsApiBaseUrl", getApiRoot() + "teams/{teamName}/submissions/");
     }
 
+    public String getProjectsApiBaseUrl() {
+        return this.properties.getProperty("projectsApiBaseUrl", getApiRoot() + "projects/");
+    }
+
+    public String getStudiesApiBaseUrl() {
+        return this.properties.getProperty("studiesApiBaseUrl", getApiRoot() + "studies/");
+    }
+
     public String getSamplesInSubmissionByIdUrl() {
         return this.properties.getProperty("samplesInSubmissionByIdUrl", getApiRoot() + "samples/search/by-submission?submissionId=");
     }

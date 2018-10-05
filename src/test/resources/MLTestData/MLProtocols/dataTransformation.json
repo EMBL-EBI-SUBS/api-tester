@@ -1,0 +1,15 @@
+{
+  "alias": "{alias.placeholder}",
+  "team" : {
+    "name" : "{team.name.placeholder}"
+  },
+  "title": "Data transformation",
+  "description": "This is test description",
+  "attributes": {
+    "protocolType": [
+      {
+        "value": "Data transformation"
+      }
+    ]
+  }
+}

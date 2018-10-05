@@ -1,5 +1,8 @@
 package uk.ac.ebi.subs.utils;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
@@ -25,13 +28,10 @@ import uk.ac.ebi.subs.data.structures.Result;
 import uk.ac.ebi.subs.data.structures.ValidationResultStatusAndLink;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertEquals;
@@ -46,11 +46,12 @@ public class TestUtils {
 
     public static String createSubmission(String token, String submissionsApiTemplatedUrl, String submitterEmail, String teamName) throws IOException {
         String submissionApiUrl = submissionsApiTemplatedUrl.replace("{teamName}", teamName);
-
         String content = TestJsonUtils.getSubmissionJson(submitterEmail, teamName);
+        return submitAndGetResponse(token, submissionApiUrl, content);
+    }
 
+    public static String submitAndGetResponse(String token, String submissionApiUrl, String content) throws IOException {
         HttpResponse response = HttpUtils.httpPost(token, submissionApiUrl, content);
-
         Submission resource = HttpUtils.retrieveResourceFromResponse(response, Submission.class);
         String selfHref = resource.getLinks().getSelf().getHref();
         return selfHref.replace("{?projection}", "");
@@ -104,6 +105,58 @@ public class TestUtils {
 
         return createSubmittable(token, dataType, submissionUrl, content);
     }
+
+
+    public static String createMLStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, Map<String,
+            String> metabolightsProtocolsRefs, String teamName) throws IOException {
+        String content =
+                MLTestJsonUtils.getMLStudyJson(
+                        studyAlias,
+                        projectAlias,
+                        metabolightsProtocolsRefs,
+                        teamName
+                );
+
+
+        return createSubmittable(token, dataType, submissionUrl, content);
+    }
+
+    public static Map<String, String> createMLProtocols(String token, String dataType, String submissionUrl,
+                                                        String teamName) throws IOException {
+        Map protocolPlaceholders = new HashMap();
+        String protocolAliasUUID = TestUtils.getRandomAlias();
+        protocolPlaceholders.put("{protocolAlias1.placeholder}", protocolAliasUUID);
+        String content =  MLTestJsonUtils.getChromatographyProtocol(protocolAliasUUID, teamName);
+        createSubmittable(token, dataType, submissionUrl, content);
+
+        protocolAliasUUID = TestUtils.getRandomAlias();
+        protocolPlaceholders.put("{protocolAlias2.placeholder}", protocolAliasUUID);
+        content =  MLTestJsonUtils.getdataTransformationProtocol(protocolAliasUUID, teamName);
+        createSubmittable(token, dataType, submissionUrl, content);
+
+        protocolAliasUUID = TestUtils.getRandomAlias();
+        protocolPlaceholders.put("{protocolAlias3.placeholder}", protocolAliasUUID);
+        content =  MLTestJsonUtils.getExtractionProtocol(protocolAliasUUID, teamName);
+        createSubmittable(token, dataType, submissionUrl, content);
+
+        protocolAliasUUID = TestUtils.getRandomAlias();
+        protocolPlaceholders.put("{protocolAlias4.placeholder}", protocolAliasUUID);
+        content =  MLTestJsonUtils.getMassSpectrometryProtocol(protocolAliasUUID, teamName);
+        createSubmittable(token, dataType, submissionUrl, content);
+
+        protocolAliasUUID = TestUtils.getRandomAlias();
+        protocolPlaceholders.put("{protocolAlias5.placeholder}", protocolAliasUUID);
+        content =  MLTestJsonUtils.getMetaboliteIdentificationProtocol(protocolAliasUUID, teamName);
+        createSubmittable(token, dataType, submissionUrl, content);
+
+        protocolAliasUUID = TestUtils.getRandomAlias();
+        protocolPlaceholders.put("{protocolAlias6.placeholder}", protocolAliasUUID);
+        content =  MLTestJsonUtils.getSampleCollectionProtocol(protocolAliasUUID, teamName);
+        createSubmittable(token, dataType, submissionUrl, content);
+
+        return protocolPlaceholders;
+    }
+
 
     public static String createAssay(String token, String dataType, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
         String content =
