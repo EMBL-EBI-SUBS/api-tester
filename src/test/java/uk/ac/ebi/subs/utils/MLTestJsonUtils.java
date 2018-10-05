@@ -61,15 +61,4 @@ public class MLTestJsonUtils {
         json = json.replace(TEAM_NAME, teamName);
         return json;
     }
-
-    public static Map<String, String> getLcmsProtocolsAliaskeys() {
-        Map map = new HashMap();
-        map.put("protocolAlias1.placeholder", null);
-        map.put("protocolAlias2.placeholder", null);
-        map.put("protocolAlias3.placeholder", null);
-        map.put("protocolAlias4.placeholder", null);
-        map.put("protocolAlias5.placeholder", null);
-        map.put("protocolAlias6.placeholder", null);
-        return map;
-    }
 }
