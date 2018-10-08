@@ -124,7 +124,7 @@ public class TestUtils {
 
     public static Map<String, String> createMLProtocols(String token, String dataType, String submissionUrl,
                                                         String teamName) throws IOException {
-        Map<String, String> protocolPlaceholders = new HashMap();
+        Map<String, String> protocolPlaceholders = new HashMap<>();
         String protocolAliasUUID = TestUtils.getRandomAlias();
         protocolPlaceholders.put("{protocolAlias1.placeholder}", protocolAliasUUID);
         String content = MLTestJsonUtils.getChromatographyProtocol(protocolAliasUUID, teamName);
