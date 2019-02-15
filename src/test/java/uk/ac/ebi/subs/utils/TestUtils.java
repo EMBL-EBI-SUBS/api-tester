@@ -277,7 +277,7 @@ public class TestUtils {
 
     public static void waitForCompletedSubmittable(String token, String submittableUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 50000;
+        long maximumIntervalMillis = 120000;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
@@ -315,7 +315,7 @@ public class TestUtils {
 
     public static void waitForCompletedSubmission(String token, String submissionUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 50000;
+        long maximumIntervalMillis = 120000;
         long startingTimeMillis = System.currentTimeMillis();
 
         String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
@@ -380,7 +380,7 @@ public class TestUtils {
 
     public static void waitForUpdateableSubmissionStatus(String token, String submissionUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 50000;
+        long maximumIntervalMillis = 120000;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
@@ -435,7 +435,7 @@ public class TestUtils {
     public static void waitForFileValidationCompletion(String token, String submissionUrl) throws Exception {
         SubmissionContents submissionContents = TestUtils.getSubmissionContent(token, submissionUrl);
 
-        long maximumIntervalMillis = 30000;
+        long maximumIntervalMillis = 120000;
         long startingTimeMillis = System.currentTimeMillis();
 
         String fileListUrl = submissionContents.getLinks().getFiles().getHref();

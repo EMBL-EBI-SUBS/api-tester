@@ -41,7 +41,7 @@ public class FileContentValidationTest {
 
         SubmissionContents submissionContents = TestUtils.getSubmissionContent(token, submissionUrl);
 
-        long maximumIntervalMillis = 30000;
+        long maximumIntervalMillis = 120000;
         long startingTimeMillis = System.currentTimeMillis();
 
         String fileListUrl = submissionContents.getLinks().getFiles().getHref();
