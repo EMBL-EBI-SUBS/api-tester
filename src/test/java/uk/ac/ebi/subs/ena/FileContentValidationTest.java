@@ -27,7 +27,7 @@ public class FileContentValidationTest {
     private static PropertiesManager pm = PropertiesManager.getInstance();
     private static String token;
     private static String submissionUrl;
-    private static final String FILE_WITH_CONTENT_ERROR = "test_e1.fastq.gz";
+    private static final String FILE_WITH_CONTENT_ERROR = "integ_test_on_file_upload_server_test_e1.fastq.gz";
 
     @BeforeClass
     public static void setUp() throws Exception {

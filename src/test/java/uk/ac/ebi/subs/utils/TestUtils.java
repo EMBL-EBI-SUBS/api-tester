@@ -40,6 +40,8 @@ import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
+    private static final int MAXIMUM_INTERVAL_MILLIS = 120000;
+
     public static String submittableCreationUrl(String dataType, String submissionUrl) {
         String creationUrl = submissionUrl + "/contents/" + dataType;
         return creationUrl;
@@ -241,7 +243,7 @@ public class TestUtils {
 
     public static void waitForValidationResults(String token, String submittableUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 30000;
+        long maximumIntervalMillis = MAXIMUM_INTERVAL_MILLIS;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
@@ -277,7 +279,7 @@ public class TestUtils {
 
     public static void waitForCompletedSubmittable(String token, String submittableUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 120000;
+        long maximumIntervalMillis = MAXIMUM_INTERVAL_MILLIS;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
@@ -315,7 +317,7 @@ public class TestUtils {
 
     public static void waitForCompletedSubmission(String token, String submissionUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 120000;
+        long maximumIntervalMillis = MAXIMUM_INTERVAL_MILLIS;
         long startingTimeMillis = System.currentTimeMillis();
 
         String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
@@ -345,6 +347,8 @@ public class TestUtils {
         Submission submission = HttpUtils.retrieveResourceFromResponse(getResponse, Submission.class);
 
         HttpResponse response = HttpUtils.httpPut(token, submission.getLinks().getSubmissionStatusUpdate().getHref(), "{\"status\" : \"Submitted\"}");
+
+        System.out.println(HttpUtils.extractResponseBody(response));
 
         assertThat(
                 response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_OK)
@@ -380,7 +384,7 @@ public class TestUtils {
 
     public static void waitForUpdateableSubmissionStatus(String token, String submissionUrl) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = 120000;
+        long maximumIntervalMillis = MAXIMUM_INTERVAL_MILLIS;
         long startingTimeMillis = System.currentTimeMillis();
 
         while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
@@ -435,7 +439,7 @@ public class TestUtils {
     public static void waitForFileValidationCompletion(String token, String submissionUrl) throws Exception {
         SubmissionContents submissionContents = TestUtils.getSubmissionContent(token, submissionUrl);
 
-        long maximumIntervalMillis = 120000;
+        long maximumIntervalMillis = MAXIMUM_INTERVAL_MILLIS;
         long startingTimeMillis = System.currentTimeMillis();
 
         String fileListUrl = submissionContents.getLinks().getFiles().getHref();
