@@ -31,7 +31,7 @@ public class BamCramSubmission {
     private static final String assayAlias = TestUtils.getRandomAlias();
     private static final String assayDataAlias = TestUtils.getRandomAlias();
 
-    private static final String fileName = "testFile_ok.bam";
+    private static final String fileName = "integ_test_on_file_upload_server_testFile_ok.bam";
     private static final String fileType = "bam";
 
 

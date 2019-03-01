@@ -30,7 +30,7 @@ public class EvaVcfSubmission {
     private static final String studyAlias = TestUtils.getRandomAlias();
     private static final String sampleAlias = TestUtils.getRandomAlias();
     private static final String analysisAlias = TestUtils.getRandomAlias();
-    private static final String fileName = "testFile.vcf.gz";
+    private static final String fileName = "integ_test_on_file_upload_server_testFile.vcf.gz";
     private static final String fileType = "vcf";
 
     @BeforeClass

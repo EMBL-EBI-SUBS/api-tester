@@ -31,7 +31,7 @@ public class EnaReadSubmission {
     private static final String sampleAlias = TestUtils.getRandomAlias();
     private static final String assayAlias = TestUtils.getRandomAlias();
     private static final String assayDataAlias = TestUtils.getRandomAlias();
-    private static final String fileName = "testFile.fastq.gz";
+    private static final String fileName = "integ_test_on_file_upload_server_testFile.fastq.gz";
     private static final String fileType = "fastq";
 
     @BeforeClass
