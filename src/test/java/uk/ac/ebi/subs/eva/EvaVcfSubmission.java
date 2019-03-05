@@ -2,6 +2,7 @@ package uk.ac.ebi.subs.eva;
 
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runners.MethodSorters;
@@ -20,6 +21,7 @@ import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Ignore
 public class EvaVcfSubmission {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
