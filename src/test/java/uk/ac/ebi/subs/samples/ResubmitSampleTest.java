@@ -14,8 +14,6 @@ import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertThat;
-
 @Category({TestEnv.class, DevEnv.class})
 public class ResubmitSampleTest {
     private static PropertiesManager pm = PropertiesManager.getInstance();
