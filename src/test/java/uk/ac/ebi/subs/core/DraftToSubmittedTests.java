@@ -21,9 +21,11 @@ import uk.ac.ebi.subs.utils.TestUtils;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
+
 
 @Category({TestEnv.class, DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -78,7 +80,7 @@ public class DraftToSubmittedTests {
         HttpResponse response = HttpUtils.httpPost(token, projectsUrl,content);
 
         assertThat(
-                response.getStatusLine().getStatusCode(), equalTo(HttpStatus.SC_CREATED)
+                response.getStatusLine().getStatusCode(), is(equalTo(HttpStatus.SC_CREATED))
         );
     }
 

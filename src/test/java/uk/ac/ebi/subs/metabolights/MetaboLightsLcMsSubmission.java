@@ -8,7 +8,6 @@ import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.util.Map;
 
-import static uk.ac.ebi.subs.utils.SubmissionOperations.addSample;
 import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 
 public class MetaboLightsLcMsSubmission {
