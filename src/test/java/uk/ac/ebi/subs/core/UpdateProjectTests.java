@@ -18,8 +18,8 @@ import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
 @Category({TestEnv.class, DevEnv.class})
 public class UpdateProjectTests {
