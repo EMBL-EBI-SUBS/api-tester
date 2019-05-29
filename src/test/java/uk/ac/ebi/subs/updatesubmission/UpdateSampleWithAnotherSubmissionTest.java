@@ -4,10 +4,13 @@ package uk.ac.ebi.subs.updatesubmission;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
+import uk.ac.ebi.subs.categories.DevEnv;
+import uk.ac.ebi.subs.categories.TestEnv;
 import uk.ac.ebi.subs.utils.TestUtils;
 
 import java.io.IOException;
@@ -19,6 +22,7 @@ import static uk.ac.ebi.subs.utils.SubmissionOperations.getAccessionIdsBySubmitt
 
 @RunWith(JUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Category({TestEnv.class, DevEnv.class})
 public class UpdateSampleWithAnotherSubmissionTest {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
