@@ -12,6 +12,7 @@ public class TestJsonUtils {
     private static final String TEAM_NAME = "{team.name.placeholder}";
 
     private static final String ALIAS = "{alias.placeholder}";
+    private static final String ACCESSION = "{accession.placeholder}";
     private static final String PROJECT_ALIAS = "{projectAlias.placeholder}";
     private static final String RELEASE_DATE = "{release.date.placeholder}";
 
@@ -60,6 +61,15 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
+        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+    }
+
+    public static String getSampleJsonWithAccessionId(String alias, String accession) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource("SampleWithAccessionId.json").getFile());
+        String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
+
+        String json = template.replace(ACCESSION, accession).replace(ALIAS, alias);
+
         return json.replace(RELEASE_DATE, LocalDate.now().toString());
     }
 

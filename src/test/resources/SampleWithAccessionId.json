@@ -1,0 +1,27 @@
+{
+  "accession": "{accession.placeholder}",
+  "alias" : "{alias.placeholder}",
+  "title" : "The liver sample.",
+  "description" : "Material derived from sample unknown, maybe alien?",
+  "attributes" : {
+    "Organ": [ {
+      "value" : "liver",
+      "terms" : [ {
+        "url" : "http://purl.obolibrary.org/obo/UBERON_0002107"
+      } ]
+    } ],
+    "liver section": [ {
+      "value" : "liver left lateral lobe",
+      "terms" : [ {
+        "url" : "http://purl.obolibrary.org/obo/UBERON_0006727"
+      } ]
+    } ],
+    "Birth date": [ {
+      "value": "2019-05-09",
+      "units": "YYYY-MM-DD"
+    } ]
+  },
+  "taxonId" : 9606,
+  "taxon" : "Homo sapiens",
+  "releaseDate" : "{release.date.placeholder}"
+}
