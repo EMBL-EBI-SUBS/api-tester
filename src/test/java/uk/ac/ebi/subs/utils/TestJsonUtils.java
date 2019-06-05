@@ -37,7 +37,7 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 
     public static String getUpdateSampleJson(String alias) throws IOException {
@@ -45,7 +45,7 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 
     public static String getDeleteSampleRelationshipsJson(String alias) throws IOException {
@@ -53,7 +53,7 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 
     public static String getSampleJson(String alias) throws IOException {
@@ -61,7 +61,7 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 
     public static String getSampleJsonWithAccessionId(String alias, String accession) throws IOException {
@@ -70,7 +70,7 @@ public class TestJsonUtils {
 
         String json = template.replace(ACCESSION, accession).replace(ALIAS, alias);
 
-        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 
     public static String getSeqVarAnalysisJson(
@@ -139,6 +139,6 @@ public class TestJsonUtils {
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        return json.replace(RELEASE_DATE, LocalDate.now().toString());
+        return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 }
