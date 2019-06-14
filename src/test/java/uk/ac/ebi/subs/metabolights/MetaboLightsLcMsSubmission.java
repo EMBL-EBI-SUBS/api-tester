@@ -1,6 +1,7 @@
 package uk.ac.ebi.subs.metabolights;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.data.objects.ValidationResult;
@@ -28,6 +29,7 @@ public class MetaboLightsLcMsSubmission {
     }
 
     @Test
+    @Ignore
     public void A_addStudy() throws Exception {
         Map<String, String> metabolightsProtocolsRefs = TestUtils.createMLProtocols(token, "metabolightsProtocols", submissionUrl, pm.getTeamName());
         String studyUrl = TestUtils.createMLStudy(token, "metabolomicsStudies" , submissionUrl, studyAlias, projectAlias, metabolightsProtocolsRefs, pm.getTeamName());
