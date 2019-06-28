@@ -40,7 +40,9 @@ public class SubmissionOperations {
             assertNotNull(processingStatus.getAlias());
             assertNotNull(processingStatus.getStatus());
             assertNotNull(processingStatus.getArchive());
-            assertNotNull(processingStatus.getAccession());
+            if (!processingStatus.getStatus().equals("ArchiveDisabled")) {
+                assertNotNull(processingStatus.getAccession());
+            }
         }
     }
 
