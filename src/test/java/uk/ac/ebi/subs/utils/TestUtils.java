@@ -40,7 +40,7 @@ import static org.junit.Assert.assertEquals;
 
 public class TestUtils {
 
-    private static final int MAXIMUM_INTERVAL_MILLIS = 120000;
+    public static final int MAXIMUM_INTERVAL_MILLIS = 120000;
 
     public static String submittableCreationUrl(String dataType, String submissionUrl) {
         String creationUrl = submissionUrl + "/contents/" + dataType;
