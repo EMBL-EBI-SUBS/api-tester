@@ -54,7 +54,7 @@ public class UpdateSampleWithAnotherSubmissionTest {
 
     @Test
     public void C_waitForCompleteSubmission() throws IOException, InterruptedException {
-        TestUtils.waitForCompletedSubmission(token, submissionUrl);
+        TestUtils.waitForCompletedSubmission(token, submissionUrl, TestUtils.MAXIMUM_INTERVAL_MILLIS);
     }
 
     @Test
@@ -82,7 +82,7 @@ public class UpdateSampleWithAnotherSubmissionTest {
 
     @Test
     public void H_waitForCompletionOfSubmissionForSampleUpdate() throws IOException, InterruptedException {
-        TestUtils.waitForCompletedSubmission(token, submissionUrlForUpdate);
+        TestUtils.waitForCompletedSubmission(token, submissionUrlForUpdate, TestUtils.MAXIMUM_INTERVAL_MILLIS);
     }
 
     @Test

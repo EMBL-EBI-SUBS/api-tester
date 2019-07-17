@@ -1,5 +1,8 @@
 package uk.ac.ebi.subs.utils;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
@@ -12,6 +15,7 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.junit.Assert;
+import uk.ac.ebi.subs.PropertiesManager;
 import uk.ac.ebi.subs.data.objects.FileList;
 import uk.ac.ebi.subs.data.objects.ProcessingStatus;
 import uk.ac.ebi.subs.data.objects.ProcessingStatuses;
@@ -29,9 +33,11 @@ import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,6 +47,7 @@ import static org.junit.Assert.assertEquals;
 public class TestUtils {
 
     public static final int MAXIMUM_INTERVAL_MILLIS = 120000;
+    private static final long FIVE_MINS_IN_MILLIS = 5 * 60 * 1000;
 
     public static String submittableCreationUrl(String dataType, String submissionUrl) {
         String creationUrl = submissionUrl + "/contents/" + dataType;
@@ -315,9 +322,8 @@ public class TestUtils {
         return HttpUtils.retrieveResourceFromResponse(submittableResponse, SubmittableTemplate.class);
     }
 
-    public static void waitForCompletedSubmission(String token, String submissionUrl) throws IOException, InterruptedException {
+    public static void waitForCompletedSubmission(String token, String submissionUrl, long maximumIntervalMillis) throws IOException, InterruptedException {
 
-        long maximumIntervalMillis = MAXIMUM_INTERVAL_MILLIS;
         long startingTimeMillis = System.currentTimeMillis();
 
         String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
@@ -339,6 +345,62 @@ public class TestUtils {
         }
 
         throw new RuntimeException("Gave up waiting for submission to be completed " + submissionUrl);
+    }
+
+    public static void waitForLongCompletedSubmission(String token, String submissionUrl, long maximumIntervalMillis,
+                                                      PropertiesManager pm)
+            throws IOException, InterruptedException {
+
+        long startingTimeMillis = System.currentTimeMillis();
+
+        String submissionStatusUrl = getStatusUrlForSubmission(token, submissionUrl);
+
+        while (System.currentTimeMillis() < startingTimeMillis + maximumIntervalMillis) {
+
+            token = isFreshTokenRequired(token, pm);
+            HttpResponse statusResponse = HttpUtils.httpGet(token,  submissionStatusUrl);
+            Assert.assertEquals(200, statusResponse.getStatusLine().getStatusCode());
+
+            SubmissionStatus resource = HttpUtils.retrieveResourceFromResponse(statusResponse, SubmissionStatus.class);
+
+            boolean submissionIsCompleted = resource.getStatus().equalsIgnoreCase("completed");
+
+            if (submissionIsCompleted) {
+
+                return;
+            }
+            Thread.sleep(500);
+        }
+
+        throw new RuntimeException("Gave up waiting for submission to be completed " + submissionUrl);
+    }
+
+    private static String isFreshTokenRequired(String jwtToken, PropertiesManager pm) throws IOException {
+        try {
+            DecodedJWT decodedJwt = JWT.decode(jwtToken);
+            Date tokenExpiry = decodedJwt.getExpiresAt();
+
+            tokenExpiry = shortenTokenLifetime(tokenExpiry);
+
+            if (isFreshTokenRequired(tokenExpiry)) {
+                return TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
+            }
+
+            return jwtToken;
+
+        } catch (JWTDecodeException e) {
+            //Invalid token
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static Date shortenTokenLifetime(Date tokenExpiry) {
+        return new Date(tokenExpiry.getTime() - FIVE_MINS_IN_MILLIS);
+    }
+
+    private static boolean isFreshTokenRequired(Date tokenExpiry) {
+        Date now = new Date();
+        return tokenExpiry.before(now);
     }
 
     public static void changeSubmissionStatusToSubmitted(String token, String submissionUrl) throws IOException {
