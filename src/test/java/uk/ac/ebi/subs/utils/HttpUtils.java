@@ -78,7 +78,7 @@ public class HttpUtils {
 
     public static HttpResponse httpGet(String token, String url) throws IOException{
         HttpUriRequest request = new HttpGet(url);
-        request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
+        if (token != null)  request.setHeaders(getContentTypeAcceptAndTokenHeaders(token));
 
         HttpResponse response = HttpClientBuilder.create().build().execute(request);
         return response;
