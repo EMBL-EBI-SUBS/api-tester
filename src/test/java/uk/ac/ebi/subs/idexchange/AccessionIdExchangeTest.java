@@ -5,10 +5,12 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.junit.runners.MethodSorters;
 import uk.ac.ebi.subs.PropertiesManager;
+import uk.ac.ebi.subs.categories.DevEnv;
 import uk.ac.ebi.subs.data.objects.Sample;
 import uk.ac.ebi.subs.data.objects.Study;
 import uk.ac.ebi.subs.utils.HttpUtils;
@@ -23,6 +25,7 @@ import static uk.ac.ebi.subs.utils.SubmissionOperations.getAccessionIdsBySubmitt
 import static uk.ac.ebi.subs.utils.TestUtils.MAXIMUM_INTERVAL_MILLIS;
 
 @RunWith(JUnit4.class)
+@Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AccessionIdExchangeTest {
 
@@ -78,7 +81,7 @@ public class AccessionIdExchangeTest {
     public void F_checkAccessionIDExchangeInBioStudies() throws IOException, InterruptedException {
         Study studyResource = getStudyResource();
 
-        final String bioSampleAccessionId = studyResource.getLinks()[0].getUrl();
+        final String bioSampleAccessionId = studyResource.getSection().getLinks()[0].getUrl();
 
         assertFalse(bioSampleAccessionId.isEmpty());
 
@@ -91,15 +94,11 @@ public class AccessionIdExchangeTest {
         long startingTimeMillis = System.currentTimeMillis();
         String archivedProjectAccessionId = getAccessionIdsBySubmittable("Project", submissionUrl, token).get(0);
         final String bioStudiesResourceUrl = String.join("/", pm.getBioStudiesJsonUrl(), archivedProjectAccessionId, archivedProjectAccessionId + ".json");
-        //final String bioStudiesResourceUrl = String.join("/", "http://ribs:8080/biostudies/files", archivedProjectAccessionId, archivedProjectAccessionId + ".json");
 
-        while (System.currentTimeMillis() < startingTimeMillis + MAXIMUM_INTERVAL_MILLIS) {
-            HttpResponse projectJson = HttpUtils.httpGet(token, bioStudiesResourceUrl);
+        while (System.currentTimeMillis() < startingTimeMillis + MAXIMUM_INTERVAL_MILLIS * 5) {
+            Study studyResource = (Study) retrieveResource(bioStudiesResourceUrl, Study.class);
 
-            Assert.assertEquals(200, projectJson.getStatusLine().getStatusCode());
-            Study studyResource = HttpUtils.retrieveResourceFromResponse(projectJson, Study.class);
-
-            if (studyResource.getLinks() == null) {
+            if (studyResource == null || studyResource.getSection().getLinks() == null) {
                 Thread.sleep(500);
             } else {
                 return studyResource;
@@ -112,17 +111,12 @@ public class AccessionIdExchangeTest {
     private Sample getSampleResource() throws IOException, InterruptedException {
         long startingTimeMillis = System.currentTimeMillis();
         String archivedSampleAccessionId = getAccessionIdsBySubmittable("Sample", submissionUrl, token).get(0);
-        final String sampleResourceUrl = pm.getBioSampleJsonUrl() + archivedSampleAccessionId + ".json";
-        Sample sampleResource;
+        final String sampleResourceUrl = String.join("/", pm.getBioSampleJsonUrl(), archivedSampleAccessionId + ".json");
 
         while (System.currentTimeMillis() < startingTimeMillis + MAXIMUM_INTERVAL_MILLIS) {
+            Sample sampleResource = (Sample) retrieveResource(sampleResourceUrl, Sample.class);
 
-            HttpResponse sampleJson = HttpUtils.httpGet(token, sampleResourceUrl);
-
-            Assert.assertEquals(200, sampleJson.getStatusLine().getStatusCode());
-            sampleResource = HttpUtils.retrieveResourceFromResponse(sampleJson, Sample.class);
-
-            if (sampleResource.getExternalReferences() == null) {
+            if (sampleResource == null || sampleResource.getExternalReferences() == null) {
                 Thread.sleep(500);
             } else {
                 return sampleResource;
@@ -130,5 +124,16 @@ public class AccessionIdExchangeTest {
         }
 
         throw new RuntimeException("Gave up waiting for sample resource: " + sampleResourceUrl);
+    }
+
+    private Object retrieveResource(String resourceUrl, Class resourceClazz) throws IOException, InterruptedException {
+        HttpResponse resourceJson = HttpUtils.httpGet(token, resourceUrl);
+
+        if (resourceJson.getStatusLine().getStatusCode() == 404) {
+            Thread.sleep(500);
+            return null;
+        }
+        Assert.assertEquals(200, resourceJson.getStatusLine().getStatusCode());
+        return HttpUtils.retrieveResourceFromResponse(resourceJson, resourceClazz);
     }
 }

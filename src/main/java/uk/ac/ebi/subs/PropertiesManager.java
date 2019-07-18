@@ -66,7 +66,7 @@ public class PropertiesManager {
     }
 
     public String getBioSampleJsonUrl() {
-        return this.properties.getProperty("biosampleJsonUrl", "https://wwwdev.ebi.ac.uk/biosamples/samples/");
+        return this.properties.getProperty("biosampleJsonUrl", "https://wwwdev.ebi.ac.uk/biosamples/samples");
     }
 
     public String getBioStudiesJsonUrl() {
