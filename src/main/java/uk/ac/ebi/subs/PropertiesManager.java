@@ -65,6 +65,14 @@ public class PropertiesManager {
         return this.properties.getProperty("authenticationUrl", "https://explore.api.aai.ebi.ac.uk/auth");
     }
 
+    public String getBioSampleJsonUrl() {
+        return this.properties.getProperty("biosampleJsonUrl", "https://wwwdev.ebi.ac.uk/biosamples/samples");
+    }
+
+    public String getBioStudiesJsonUrl() {
+        return this.properties.getProperty("biostudiesJsonUrl", "https://wwwdev.ebi.ac.uk/biostudies/files");
+    }
+
     public String getAapUsername() {
         return this.properties.getProperty("aapUsername", System.getProperty("aapUsername"));
     }

@@ -92,7 +92,7 @@ public class BamCramSubmission {
 
     @Test
     public void G_waitForCompleteSubmission() throws IOException, InterruptedException {
-        TestUtils.waitForCompletedSubmission(token, submissionUrl);
+        TestUtils.waitForCompletedSubmission(token, submissionUrl, TestUtils.MAXIMUM_INTERVAL_MILLIS);
     }
 
     @Test

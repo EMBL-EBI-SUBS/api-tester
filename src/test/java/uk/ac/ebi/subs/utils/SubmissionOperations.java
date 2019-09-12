@@ -22,6 +22,10 @@ public class SubmissionOperations {
         assertNoErrorsInValidationResult(validationResult);
     }
 
+    public static void addSampleWithoutValidationCheck(String submissionUrl, String sampleJson, String token) throws Exception {
+        String sampleUrl = TestUtils.createSubmittable(token, "samples", submissionUrl, sampleJson);
+    }
+
     public static void addSampleWithAccessionId(
         String submissionUrl, String sampleAlias, String accessionId, String token, PropertiesManager pm) throws Exception {
         String sampleJson = TestJsonUtils.getSampleJsonWithAccessionId(sampleAlias, accessionId);
