@@ -106,7 +106,10 @@ public class DraftToSubmittedTests {
     }
 
     @Test
-    public void givenSubmissionIsSubmitted_whenGettingSubmissionStatus_thenItsCorrect() throws IOException {
+    public void givenSubmissionIsSubmitted_whenGettingSubmissionStatus_thenItsCorrect()
+            throws IOException, InterruptedException {
+        TestUtils.waitForCompletedSubmission(token, submissionUrl, TestUtils.MAXIMUM_INTERVAL_MILLIS);
+
         HttpResponse response = HttpUtils.httpGet(token, submissionUrl + "/submissionStatus");
         SubmissionStatus submissionStatus = HttpUtils.retrieveResourceFromResponse(response, SubmissionStatus.class);
 
