@@ -107,6 +107,7 @@ public class TestUtils {
     public static String createStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
         String content =
                 TestJsonUtils.getStudyJson(
+                        "Study.json",
                         studyAlias,
                         projectAlias,
                         teamName
@@ -116,6 +117,19 @@ public class TestUtils {
         return createSubmittable(token, dataType, submissionUrl, content);
     }
 
+
+    public static String createEVAStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+        String content =
+                TestJsonUtils.getStudyJson(
+                        "EVA_Study.json",
+                        studyAlias,
+                        projectAlias,
+                        teamName
+                );
+
+
+        return createSubmittable(token, dataType, submissionUrl, content);
+    }
 
     public static String createMLStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, Map<String,
             String> metabolightsProtocolsRefs, String teamName) throws IOException {

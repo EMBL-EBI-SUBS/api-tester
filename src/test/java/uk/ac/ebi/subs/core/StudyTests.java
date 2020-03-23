@@ -53,6 +53,7 @@ public class StudyTests {
 
         String content =
                 TestJsonUtils.getStudyJson(
+                        "Study.json",
                         TestUtils.getRandomAlias(),
                         projectAlias,
                         pm.getTeamName()
@@ -76,6 +77,7 @@ public class StudyTests {
 
         StringEntity payload = new StringEntity(
                 TestJsonUtils.getStudyJson(
+                        "Study.json",
                         studyAlias,
                         projectAlias,
                         pm.getTeamName()

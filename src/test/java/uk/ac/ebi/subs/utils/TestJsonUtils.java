@@ -93,8 +93,8 @@ public class TestJsonUtils {
         return json;
     }
 
-    public static String getStudyJson(String alias, String projectAlias, String teamName) throws IOException {
-        File file = new File(ClassLoader.getSystemClassLoader().getResource("Study.json").getFile());
+    public static String getStudyJson(String studyResourceName, String alias, String projectAlias, String teamName) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource(studyResourceName).getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
