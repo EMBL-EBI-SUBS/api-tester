@@ -27,7 +27,6 @@ public class EvaVcfSubmission {
     private static String token;
     private static String submissionUrl;
 
-    private static final String projectAlias = TestUtils.getRandomAlias();
     private static final String studyAlias = TestUtils.getRandomAlias();
     private static final String sampleAlias = TestUtils.getRandomAlias();
     private static final String analysisAlias = TestUtils.getRandomAlias();
@@ -42,7 +41,7 @@ public class EvaVcfSubmission {
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createEVAStudy(token, "evaStudies", submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        String studyUrl = TestUtils.createEVAStudy(token, "evaStudies", submissionUrl, studyAlias, null, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
@@ -52,6 +51,8 @@ public class EvaVcfSubmission {
     public void B_addSample() throws Exception {
         addSample(submissionUrl, sampleAlias, token, pm);
     }
+
+// TODO: These following 2 methods are commented out while we are waiting for the DC move + VCF file content validation
 
 //    @Test
 //    public void C_uploadFile() throws Exception {
