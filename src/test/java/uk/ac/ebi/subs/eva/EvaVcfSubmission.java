@@ -21,14 +21,12 @@ import static uk.ac.ebi.subs.utils.TestUtils.assertNoErrorsInValidationResult;
 
 @Category({DevEnv.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Ignore
 public class EvaVcfSubmission {
 
     private static PropertiesManager pm = PropertiesManager.getInstance();
     private static String token;
     private static String submissionUrl;
 
-    private static final String projectAlias = TestUtils.getRandomAlias();
     private static final String studyAlias = TestUtils.getRandomAlias();
     private static final String sampleAlias = TestUtils.getRandomAlias();
     private static final String analysisAlias = TestUtils.getRandomAlias();
@@ -39,12 +37,11 @@ public class EvaVcfSubmission {
     public static void setUp() throws Exception {
         token = TestUtils.getJWTToken(pm.getAuthenticationUrl(), pm.getAapUsername(), pm.getAapPassword());
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
-        TestUtils.createProject(token, submissionUrl, projectAlias);
     }
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createStudy(token, "enaStudies", submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        String studyUrl = TestUtils.createEVAStudy(token, "evaStudies", submissionUrl, studyAlias, null, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
@@ -55,12 +52,16 @@ public class EvaVcfSubmission {
         addSample(submissionUrl, sampleAlias, token, pm);
     }
 
+// TODO: These following 2 methods are flagged as ignored tests while we are waiting for the DC move + VCF file content validation
+
+    @Ignore
     @Test
     public void C_uploadFile() throws Exception {
         UploadUtils.uploadFile(token, submissionUrl, fileName);
         TestUtils.waitForFileValidationCompletion(token, submissionUrl);
     }
 
+    @Ignore
     @Test
     public void D_addAnalysis() throws Exception {
         String analysisJson = TestJsonUtils.getSeqVarAnalysisJson(analysisAlias, studyAlias, sampleAlias, fileName, fileType);

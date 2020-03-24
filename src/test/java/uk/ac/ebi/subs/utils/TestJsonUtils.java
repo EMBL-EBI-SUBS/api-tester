@@ -73,14 +73,8 @@ public class TestJsonUtils {
         return json.replace(RELEASE_DATE, LocalDate.now().minusDays(10).toString());
     }
 
-    public static String getSeqVarAnalysisJson(
-
-            String alias,
-            String studyAlias,
-            String sampleAlias,
-            String fileName,
-            String fileType
-    ) throws IOException {
+    public static String getSeqVarAnalysisJson(String alias, String studyAlias, String sampleAlias, String fileName,
+                                               String fileType ) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource("SeqVarAnalysis.json").getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
@@ -93,12 +87,14 @@ public class TestJsonUtils {
         return json;
     }
 
-    public static String getStudyJson(String alias, String projectAlias, String teamName) throws IOException {
-        File file = new File(ClassLoader.getSystemClassLoader().getResource("Study.json").getFile());
+    public static String getStudyJson(String studyResourceName, String alias, String projectAlias, String teamName) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource(studyResourceName).getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
         String json = template.replace(ALIAS, alias);
-        json = json.replace(PROJECT_ALIAS, projectAlias);
+        if (projectAlias != null) {
+            json = json.replace(PROJECT_ALIAS, projectAlias);
+        }
         json = json.replace(TEAM_NAME, teamName);
         return json;
     }
