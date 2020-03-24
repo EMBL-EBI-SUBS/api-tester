@@ -52,22 +52,24 @@ public class EvaVcfSubmission {
         addSample(submissionUrl, sampleAlias, token, pm);
     }
 
-// TODO: These following 2 methods are commented out while we are waiting for the DC move + VCF file content validation
+// TODO: These following 2 methods are flagged as ignored tests while we are waiting for the DC move + VCF file content validation
 
-//    @Test
-//    public void C_uploadFile() throws Exception {
-//        UploadUtils.uploadFile(token, submissionUrl, fileName);
-//        TestUtils.waitForFileValidationCompletion(token, submissionUrl);
-//    }
+    @Ignore
+    @Test
+    public void C_uploadFile() throws Exception {
+        UploadUtils.uploadFile(token, submissionUrl, fileName);
+        TestUtils.waitForFileValidationCompletion(token, submissionUrl);
+    }
 
-//    @Test
-//    public void D_addAnalysis() throws Exception {
-//        String analysisJson = TestJsonUtils.getSeqVarAnalysisJson(analysisAlias, studyAlias, sampleAlias, fileName, fileType);
-//        String analysisUrl = TestUtils.createSubmittable(token, "variantCalls", submissionUrl, analysisJson);
-//        TestUtils.waitForValidationResults(token, analysisUrl);
-//        ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(analysisUrl, token);
-//        assertNoErrorsInValidationResult(validationResult);
-//    }
+    @Ignore
+    @Test
+    public void D_addAnalysis() throws Exception {
+        String analysisJson = TestJsonUtils.getSeqVarAnalysisJson(analysisAlias, studyAlias, sampleAlias, fileName, fileType);
+        String analysisUrl = TestUtils.createSubmittable(token, "variantCalls", submissionUrl, analysisJson);
+        TestUtils.waitForValidationResults(token, analysisUrl);
+        ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(analysisUrl, token);
+        assertNoErrorsInValidationResult(validationResult);
+    }
 
     @Test
     public void F_submit() throws IOException, InterruptedException {
