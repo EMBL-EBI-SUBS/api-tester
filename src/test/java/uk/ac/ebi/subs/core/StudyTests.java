@@ -44,7 +44,10 @@ public class StudyTests {
         submissionUrl = TestUtils.createSubmission(token, pm.getSubmissionsApiTemplatedUrl(), pm.getSubmitterEmail(), pm.getTeamName());
         TestUtils.createProject(token, submissionUrl, projectAlias);
 
-        studyUrl = TestUtils.createStudy(token, "enaStudies", submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        studyUrl = TestUtils.createStudy(token, "Study.json", "enaStudies",
+                submissionUrl, studyAlias, null, "Original title for Study",
+                "Original description for Study", projectAlias, pm.getTeamName());
+
         studyValidationResultsUrl = studyUrl + "/validationResult";
     }
 
@@ -54,7 +57,10 @@ public class StudyTests {
         String content =
                 TestJsonUtils.getStudyJson(
                         "Study.json",
+                        null,
                         TestUtils.getRandomAlias(),
+                        "Title for Study",
+                        "Description for Study",
                         projectAlias,
                         pm.getTeamName()
 
@@ -78,9 +84,13 @@ public class StudyTests {
         StringEntity payload = new StringEntity(
                 TestJsonUtils.getStudyJson(
                         "Study.json",
+                        null,
                         studyAlias,
+                        "Title for Study",
+                        "Description for Study",
                         projectAlias,
                         pm.getTeamName()
+
                 )
         );
         request.setEntity(payload);

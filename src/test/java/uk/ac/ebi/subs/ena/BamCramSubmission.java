@@ -44,7 +44,10 @@ public class BamCramSubmission {
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createStudy(token, "enaStudies", submissionUrl, studyAlias, projectAlias, pm.getTeamName());
+        String studyUrl = TestUtils.createStudy(token, "Study.json", "enaStudies",
+                submissionUrl, studyAlias, null, "Title for Study",
+                "Description for Study", projectAlias, pm.getTeamName());
+
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);
@@ -57,7 +60,9 @@ public class BamCramSubmission {
 
     @Test
     public void C_addAssay() throws Exception {
-        String assayUrl = TestUtils.createAssay(token, "sequencingExperiments", submissionUrl, assayAlias, studyAlias, sampleAlias);
+        String assayUrl = TestUtils.createAssay(token, "Assay.json", "sequencingExperiments",
+                submissionUrl, assayAlias, null, "Title for Assay",
+                "Description for Assay", studyAlias, sampleAlias);
         TestUtils.waitForValidationResults(token, assayUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(assayUrl, token);
         assertNoErrorsInValidationResult(validationResult);

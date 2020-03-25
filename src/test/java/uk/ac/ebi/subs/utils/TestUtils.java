@@ -103,12 +103,17 @@ public class TestUtils {
         return createSubmittable(token, "projects", submissionUrl, content);
     }
 
-
-    public static String createStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
+    public static String createStudy(String token, String studyResourceName, String dataType,
+                                     String submissionUrl, String studyAlias, String accessionId,
+                                     String title, String description,
+                                     String projectAlias, String teamName) throws IOException {
         String content =
                 TestJsonUtils.getStudyJson(
-                        "Study.json",
+                        studyResourceName,
+                        accessionId,
                         studyAlias,
+                        title,
+                        description,
                         projectAlias,
                         teamName
                 );
@@ -117,19 +122,6 @@ public class TestUtils {
         return createSubmittable(token, dataType, submissionUrl, content);
     }
 
-
-    public static String createEVAStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, String teamName) throws IOException {
-        String content =
-                TestJsonUtils.getStudyJson(
-                        "EVA_Study.json",
-                        studyAlias,
-                        projectAlias,
-                        teamName
-                );
-
-
-        return createSubmittable(token, dataType, submissionUrl, content);
-    }
 
     public static String createMLStudy(String token, String dataType, String submissionUrl, String studyAlias, String projectAlias, Map<String,
             String> metabolightsProtocolsRefs, String teamName) throws IOException {
@@ -182,10 +174,17 @@ public class TestUtils {
     }
 
 
-    public static String createAssay(String token, String dataType, String submissionUrl, String assayAlias, String studyAlias, String sampleAlias) throws IOException {
+    public static String createAssay(String token, String assayResourceName, String dataType,
+                                     String submissionUrl, String assayAlias, String accessionId,
+                                     String title, String description,
+                                     String studyAlias, String sampleAlias) throws IOException {
         String content =
                 TestJsonUtils.getAssayJson(
+                        assayResourceName,
+                        accessionId,
                         assayAlias,
+                        title,
+                        description,
                         sampleAlias,
                         studyAlias
                 );
@@ -543,6 +542,5 @@ public class TestUtils {
         }
         throw new RuntimeException("Gave up waiting for file validation results on " + fileListUrl);
     }
-
 }
 
