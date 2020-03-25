@@ -41,7 +41,9 @@ public class EvaVcfSubmission {
 
     @Test
     public void A_addStudy() throws Exception {
-        String studyUrl = TestUtils.createEVAStudy(token, "evaStudies", submissionUrl, studyAlias, null, pm.getTeamName());
+        String studyUrl = TestUtils.createStudy(token, "EVA_Study.json", "evaStudies",
+                submissionUrl, studyAlias, null, "Title for Study",
+                "Description for Study", null, pm.getTeamName());
         TestUtils.waitForValidationResults(token, studyUrl);
         ValidationResult validationResult = TestUtils.getValidationResultForSubmittable(studyUrl, token);
         assertNoErrorsInValidationResult(validationResult);

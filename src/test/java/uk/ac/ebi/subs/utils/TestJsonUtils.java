@@ -17,8 +17,14 @@ public class TestJsonUtils {
     private static final String RELEASE_DATE = "{release.date.placeholder}";
 
     private static final String STUDY_ALIAS = "{studyAlias.placeholder}";
+    private static final String STUDY_ACCESSION_ID = "{studyAccession.placeholder}";
+    private static final String STUDY_TITLE = "{studyTitle.placeholder}";
+    private static final String STUDY_DESCRIPTION = "{studyDescription.placeholder}";
     private static final String SAMPLE_ALIAS = "{sampleAlias.placeholder}";
     private static final String ASSAY_ALIAS = "{assayAlias.placeholder}";
+    private static final String ASSAY_ACCESSION_ID = "{assayAccession.placeholder}";
+    private static final String ASSAY_TITLE = "{assayTitle.placeholder}";
+    private static final String ASSAY_DESCRIPTION = "{assayDescription.placeholder}";
     private static final String FILE_NAME = "{fileName.placeholder}";
     private static final String FILE_TYPE = "{fileType.placeholder}";
     private static final String PROTOCOL_ALIAS = "{protocolAlias.placeholder}";
@@ -87,11 +93,21 @@ public class TestJsonUtils {
         return json;
     }
 
-    public static String getStudyJson(String studyResourceName, String alias, String projectAlias, String teamName) throws IOException {
+    public static String getStudyJson(String studyResourceName, String accessionId, String alias,
+                                      String title, String description,
+                                      String projectAlias, String teamName) throws IOException {
         File file = new File(ClassLoader.getSystemClassLoader().getResource(studyResourceName).getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
-        String json = template.replace(ALIAS, alias);
+        String json = template.replace(STUDY_TITLE, title != null ? title : "Study title");
+        json = json.replace(STUDY_DESCRIPTION, description != null ? description : "Study description");
+
+        if (accessionId != null) {
+            json = json.replace(STUDY_ACCESSION_ID, accessionId);
+        }
+        if (alias != null) {
+            json = json.replace(ALIAS, alias);
+        }
         if (projectAlias != null) {
             json = json.replace(PROJECT_ALIAS, projectAlias);
         }
@@ -107,11 +123,21 @@ public class TestJsonUtils {
         return json.replace(RELEASE_DATE, releaseDate);
     }
 
-    public static String getAssayJson(String alias, String sampleAlias, String studyAlias) throws IOException {
-        File file = new File(ClassLoader.getSystemClassLoader().getResource("Assay.json").getFile());
+    public static String getAssayJson(String assayResourceName, String accessionId, String alias,
+                                      String title, String description,
+                                      String sampleAlias, String studyAlias) throws IOException {
+        File file = new File(ClassLoader.getSystemClassLoader().getResource(assayResourceName).getFile());
         String template = new String(Files.readAllBytes(Paths.get(file.getPath())));
 
-        String json = template.replace(ALIAS, alias);
+        String json = template.replace(ASSAY_TITLE, title != null ? title : "Assay title");
+        json = json.replace(ASSAY_DESCRIPTION, description != null ? description : "Assay description");
+
+        if (accessionId != null) {
+            json = json.replace(ASSAY_ACCESSION_ID, accessionId);
+        }
+        if (alias != null) {
+            json = json.replace(ALIAS, alias);
+        }
 
         json = json.replace(SAMPLE_ALIAS, sampleAlias);
         json = json.replace(STUDY_ALIAS, studyAlias);

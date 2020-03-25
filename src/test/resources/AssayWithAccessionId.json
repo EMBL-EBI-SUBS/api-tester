@@ -1,0 +1,57 @@
+{
+  "accession": "{assayAccession.placeholder}",
+  "title": "{assayTitle.placeholder}",
+  "description": "{assayDescription.placeholder}",
+  "attributes": {
+    "library_strategy": [
+      {
+        "value": "{library_strategy.placeholder}"
+      }
+    ],
+    "library_source": [
+      {
+        "value": "GENOMIC"
+      }
+    ],
+    "library_selection": [
+      {
+        "value": "RANDOM"
+      }
+    ],
+    "library_layout": [
+      {
+        "value": "SINGLE"
+      }
+    ],
+    "platform_type": [
+      {
+        "value": "ILLUMINA"
+      }
+    ],
+    "instrument_model": [
+      {
+        "value": "Illumina HiSeq 2000"
+      }
+    ],
+    "design_description": [
+      {
+        "value": "a design description"
+      }
+    ],
+    "library_name": [
+      {
+        "value": "a library name"
+      }
+    ]
+  },
+  "studyRef": {
+    "alias": "{studyAlias.placeholder}"
+  },
+  "sampleUses": [
+    {
+      "sampleRef": {
+        "alias": "{sampleAlias.placeholder}"
+      }
+    }
+  ]
+}

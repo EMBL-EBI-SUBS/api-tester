@@ -1,0 +1,26 @@
+{
+  "accession": "{studyAccession.placeholder}",
+  "title": "{studyTitle.placeholder}",
+  "description": "{studyDescription.placeholder}",
+  "attributes": {
+    "study_type": [
+      {
+        "value": "{study_type.placeholder}"
+      }
+    ],
+    "Project Coordinator": [
+      {
+        "value": "John Doe"
+      }
+    ],
+    "study_abstract": [
+      {
+        "value": "study abstract"
+      }
+    ]
+  },
+  "projectRef": {
+    "alias": "{projectAlias.placeholder}",
+    "team": "{team.name.placeholder}"
+  }
+}
